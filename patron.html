@@ -325,7 +325,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- GARSON MODAL -->
 <div class="modal-bg" id="garson-modal">
-  <div class="modal" style="border-radius:18px;padding:22px">
+  <div class="modal" style="border-radius:18px;padding:22px;max-height:90vh;overflow-y:auto">
     <div style="font-size:15px;font-weight:800;color:var(--mt);margin-bottom:14px" id="garson-modal-t">Yeni Garson Ekle</div>
     <div style="margin-bottom:8px"><div class="lb-l">Ad Soyad</div><input class="inp lb-inp" id="gy-ad" placeholder="Zeynep K." style="margin-bottom:0"></div>
     <div style="margin-bottom:8px"><div class="lb-l">Kısa Harf (Avatar)</div><input class="inp lb-inp" id="gy-harf" placeholder="Z" maxlength="2" style="margin-bottom:0;width:80px"></div>
@@ -339,7 +339,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- MENÜ MODAL -->
 <div class="modal-bg" id="menu-modal">
-  <div class="modal" style="border-radius:18px;padding:22px">
+  <div class="modal" style="border-radius:18px;padding:22px;max-height:90vh;overflow-y:auto">
     <div style="font-size:15px;font-weight:800;color:var(--mt);margin-bottom:14px" id="menu-modal-t">Yeni Ürün Ekle</div>
     <div style="margin-bottom:8px"><div class="lb-l">Ürün Adı</div><input class="inp lb-inp" id="mu-ad" placeholder="Adana Kebap" style="margin-bottom:0"></div>
     <div style="margin-bottom:8px"><div class="lb-l">Emoji</div><input class="inp lb-inp" id="mu-em" placeholder="🥩" style="margin-bottom:0;width:80px"></div>
@@ -357,6 +357,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div><div class="lb-l">Satış Fiyatı (₺)</div><input class="inp" id="mu-fiyat" type="number" placeholder="0" style="width:100%"></div>
       <div><div class="lb-l">Maliyet (₺)</div><input class="inp" id="mu-maliyet" type="number" placeholder="0" style="width:100%"></div>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+      <button class="btn yes" onclick="menuKaydet()">✅ Kaydet</button>
+      <button class="btn ik" onclick="document.getElementById('menu-modal').classList.remove('ak')">İptal</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
