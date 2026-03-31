@@ -1023,7 +1023,7 @@ async function menuKaydet(){
   }
   document.getElementById('menu-modal').classList.remove('ak');
   await menuYonetimYukle();
-  alert('Kaydedildi!');
+ restoranKaydet()
 }
 
 async function menuAktifToggle(id, mevcutDurum){
@@ -1193,7 +1193,15 @@ async function garsonSilOnay(id){
   await garsonYonetimYukle();
 }
 
-
+async function restoranKaydet(){
+  var ad = document.getElementById('r-ad').value.trim();
+  var masa = parseInt(document.getElementById('r-masa').value)||20;
+  if(!ad){alert('Restoran adi bos!');return;}
+  await SB.patch('ayarlar','key=eq.restoran_bilgi',{value:{ad:ad,masa:masa}}).catch(async function(){
+    await SB.post('ayarlar',{key:'restoran_bilgi',value:{ad:ad,masa:masa}});
+  });
+  alert('Kaydedildi!');
+}
 </script>
 </body>
 </html>
