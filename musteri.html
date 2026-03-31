@@ -662,10 +662,10 @@ async function menuDBdenYukle(){
   const data = await SB.get('menu', 'aktif=eq.true&order=kat.asc,ad.asc');
   if(data && data.length){
     // ST.s.menu'yu güncelle
-    ST.s.menu = data.map(u=>({
+    ST.s.menu = data.map(function(u){ return {
       id:u.id, ad:u.ad, em:u.em||'🍽️',
       kat:u.kat, fiyat:u.fiyat, aktif:true, image_url:u.image_url||null
-    }));
+    }; });
   }
 }
 

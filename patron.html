@@ -994,27 +994,36 @@ function menuDuzenle(id){
   document.getElementById('mu-maliyet').value = u.maliyet||0;
   if(document.getElementById('mu-resim')) document.getElementById('mu-resim').value = u.image_url||'';
   var resimInp = document.getElementById('mu-resim');
-  if(resimInp) resimInp.value = u.resim||'';
+  if(resimInp) resimInp.value = u.image_url||'';
   document.getElementById('menu-modal').classList.add('ak');
 }
 
 async function menuKaydet(){
-  const ad = document.getElementById('mu-ad').value.trim();
-  const em = document.getElementById('mu-em').value.trim()||'🍽️';
-  const kat = document.getElementById('mu-kat').value;
-  const fiyat = parseFloat(document.getElementById('mu-fiyat').value)||0;
-  const maliyet = parseFloat(document.getElementById('mu-maliyet').value)||0;
-  if(!ad||!fiyat){ alert("Ürün adı ve fiyat zorunlu!"); return; }
-
+  var ad = (document.getElementById('mu-ad').value||'').trim();
+  var em = (document.getElementById('mu-em').value||'').trim()||'🍽️';
+  var kat = document.getElementById('mu-kat').value;
+  var fiyat = parseFloat(document.getElementById('mu-fiyat').value)||0;
+  var maliyet = parseFloat(document.getElementById('mu-maliyet').value)||0;
+  var resim = '';
+  var resimEl = document.getElementById('mu-resim');
+  if(resimEl) resim = resimEl.value.trim();
+  if(!ad||!fiyat){ alert('Urun adi ve fiyat zorunlu!'); return; }
+  console.log('Kaydediliyor:', {ad,em,kat,fiyat,maliyet,resim,duzenleMenuId});
   if(duzenleMenuId){
-    await SB.patch('menu','id=eq.'+duzenleMenuId,{ad,em,kat,fiyat,maliyet});
+    var sonuc = await SB.patch('menu','id=eq.'+duzenleMenuId,{
+      ad:ad, em:em, kat:kat, fiyat:fiyat, maliyet:maliyet, image_url:resim||null
+    });
+    console.log('Patch sonuc:', sonuc);
   } else {
-    const id = 'm_'+Date.now();
-    await SB.post('menu',{id,ad,em,kat,fiyat,maliyet,aktif:true});
+    var yeniId = 'm_'+Date.now();
+    var sonuc2 = await SB.post('menu',{
+      id:yeniId, ad:ad, em:em, kat:kat, fiyat:fiyat, maliyet:maliyet, aktif:true, image_url:resim||null
+    });
+    console.log('Post sonuc:', sonuc2);
   }
   document.getElementById('menu-modal').classList.remove('ak');
   await menuYonetimYukle();
-  alert("Kaydedildi! Musteri ekranina aninda yansidi.");
+  alert('Kaydedildi!');
 }
 
 async function menuAktifToggle(id, mevcutDurum){
