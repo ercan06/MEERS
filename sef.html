@@ -617,7 +617,7 @@ function stokRender(){
       +'<div style="flex:1"><div style="font-size:12px;font-weight:600;color:'+(kritik?'#ff8a80':'#fff')+'">'+s.ad+'</div>'
       +'<div style="font-size:10px;color:rgba(255,255,255,.4)">Mevcut: '+s.miktar+' '+s.birim+'</div></div>'
       +'<input type="number" min="0" step="0.1" placeholder="Ekle" style="width:70px;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:11px" id="stok-inp-'+s.ad.replace(/ /g,'_')+'">'
-      +'<button onclick="stokEkle(''+s.ad+'','stok-inp-'+s.ad.replace(/ /g,'_')+'')" style="padding:4px 8px;border-radius:6px;background:var(--bas);color:#fff;border:none;font-size:11px;cursor:pointer">Ekle</button>'
+      +'<button data-ad="'+s.ad+'" onclick="stokEkleBtn(this)" style="padding:4px 8px;border-radius:6px;background:var(--bas);color:#fff;border:none;font-size:11px;cursor:pointer">Ekle</button>'
       +'</div>';
   }).join('');
 }
