@@ -468,8 +468,8 @@ function renderMenu(kat){
       +(stokBitti?'<div class="mi-stok-uyari">Tükendi</div>':'')
       +'</div>'
       +'<div class="mi-kontrol">'
-      +(adet>0?'<button class="mi-btn azalt" onclick="azalt(''+u.id+'')">−</button><div class="mi-adet">'+adet+'</div>':'')
-      +(stokBitti?'':'<button class="mi-btn ekle" onclick="ekle(''+u.id+'',''+u.ad+'',''+u.em+'','+u.fiyat+')">+</button>')
+      +(adet>0?'<button class="mi-btn azalt" data-id="'+u.id+'" onclick="azaltBtn(this)">−</button><div class="mi-adet">'+adet+'</div>':'')
+      +(stokBitti?'':'<button class="mi-btn ekle" data-id="'+u.id+'" data-ad="'+u.ad+'" data-em="'+u.em+'" data-fiyat="'+u.fiyat+'" onclick="ekleBtn(this)">+</button>')
       +'</div></div>';
   }).join('');
   sepetGuncelle();
@@ -669,6 +669,18 @@ async function menuDBdenYukle(){
   }
 }
 
+
+function ekleBtn(btn){
+  var id=btn.getAttribute('data-id');
+  var ad=btn.getAttribute('data-ad');
+  var em=btn.getAttribute('data-em');
+  var fiyat=parseFloat(btn.getAttribute('data-fiyat'));
+  ekle(id,ad,em,fiyat);
+}
+function azaltBtn(btn){
+  var id=btn.getAttribute('data-id');
+  azalt(id);
+}
 </script>
 </body>
 </html>
