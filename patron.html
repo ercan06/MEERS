@@ -357,8 +357,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div><div class="lb-l">Satış Fiyatı (₺)</div><input class="inp" id="mu-fiyat" type="number" placeholder="0" style="width:100%"></div>
       <div><div class="lb-l">Maliyet (₺)</div><input class="inp" id="mu-maliyet" type="number" placeholder="0" style="width:100%"></div>
     </div>
-    <div sty
-// ── SUPABASE KONFIGURASYON ──
+
+<script>
 const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg';
 
@@ -1176,6 +1176,7 @@ async function garsonSilOnay(id){
   await SB.delete('garsonlar','id=eq.'+id);
   await garsonYonetimYukle();
 }
+
 
 </script>
 </body>
