@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lezzet Kebap — Şef Ekranı</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --siyah:#1A1A1A;--siyah-mat:#2C2C2C;--siyah-3:#3A3A3A;
+  --altin:#D4A017;--altin-ac:#F0C040;
+  --vurgu:#C8420A;--vurgu-ac:#E85020;
+  --yesil:#2D6A2D;--yesil-ac:#E8F5E8;
+  --kirmizi:#C0392B;--kirmizi-ac:#FDECEA;
+  --uyari:#E8952A;--uyari-ac:#FEF0E0;
+  --border:rgba(212,160,23,.2);
+  --metin:#F5F0E8;--silik:#9A8870;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--siyah);color:var(--metin);display:flex;flex-direction:column}
+
+/* ── TOPBAR ── */
+.topbar{background:linear-gradient(135deg,#0D0D0D,var(--siyah-mat));border-bottom:2px solid var(--altin);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tb-sol{display:flex;align-items:center;gap:12px}
+.tb-logo{font-size:22px}
+.tb-t{font-size:16px;font-weight:800;color:var(--altin);letter-spacing:-.3px}
+.tb-sub{font-size:11px;color:var(--silik);margin-top:1px}
+.tb-ortа{display:flex;gap:6px;align-items:center}
+.kat-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--silik);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.kat-btn.ak{background:linear-gradient(135deg,var(--altin),var(--altin-ac));color:var(--siyah);border-color:var(--altin)}
+.tb-sag{display:flex;align-items:center;gap:12px}
+.saat{font-size:20px;font-weight:800;color:var(--altin);font-variant-numeric:tabular-nums;letter-spacing:1px}
+.stok-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--silik);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px}
+.stok-btn.uyari{border-color:var(--kirmizi);color:var(--kirmizi);background:rgba(192,57,43,.1);animation:yanip 1.5s ease-in-out infinite}
+@keyframes yanip{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* ── ANA LAYOUT ── */
+.main{flex:1;overflow:hidden;display:grid;gap:0}
+/* TV/Yatay: 3 sütun */
+@media (min-width:1024px){
+  .main{grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr}
+  .sutun{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+  .sutun:last-child{border-right:none}
+}
+/* Tablet dikey */
+@media (min-width:600px) and (max-width:1023px){
+  .main{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+  .sutun{border-right:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+  .sutun:nth-child(2){border-right:none}
+  .sutun:nth-child(3){border-right:none;border-bottom:none}
+  .sutun:nth-child(4){display:none}
+}
+/* Telefon */
+@media (max-width:599px){
+  .main{grid-template-columns:1fr;overflow-y:auto}
+  .sutun{border-bottom:1px solid var(--border);display:flex;flex-direction:column}
+}
+.sutun-h{padding:10px 14px;background:rgba(0,0,0,.3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.sh-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:7px}
+.sh-badge{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+.sh-badge.yeni{background:rgba(192,57,43,.25);color:#E57373;border:1px solid rgba(192,57,43,.3)}
+.sh-badge.islem{background:rgba(232,149,42,.2);color:var(--uyari);border:1px solid rgba(232,149,42,.3)}
+.sh-badge.hazir{background:rgba(45,106,45,.25);color:#81C784;border:1px solid rgba(45,106,45,.3)}
+.sh-badge.ozet{background:rgba(212,160,23,.2);color:var(--altin);border:1px solid rgba(212,160,23,.3)}
+.sutun-ic{flex:1;overflow-y:auto;padding:8px;scrollbar-width:thin;scrollbar-color:var(--siyah-3) transparent}
+.sutun-ic::-webkit-scrollbar{width:4px}
+.sutun-ic::-webkit-scrollbar-track{background:transparent}
+.sutun-ic::-webkit-scrollbar-thumb{background:var(--siyah-3);border-radius:2px}
+
+/* ── SİPARİŞ KARTI ── */
+.sp-k{border-radius:12px;padding:12px 13px;margin-bottom:8px;border:1.5px solid var(--border);background:var(--siyah-mat);position:relative;overflow:hidden;transition:all .2s}
+.sp-k.yeni{border-color:rgba(192,57,43,.5);background:linear-gradient(135deg,#1E0A0A,var(--siyah-mat))}
+.sp-k.islem{border-color:rgba(232,149,42,.4);background:linear-gradient(135deg,#1E1208,var(--siyah-mat))}
+.sp-k.hazir{border-color:rgba(45,106,45,.5);background:linear-gradient(135deg,#0A1E0A,var(--siyah-mat))}
+/* Aciliyet çizgisi sol */
+.sp-k::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.sp-k.yeni::before{background:var(--kirmizi)}
+.sp-k.islem::before{background:var(--uyari)}
+.sp-k.hazir::before{background:var(--yesil)}
+
+.spk-ust{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.spk-masa{font-size:16px;font-weight:800;color:var(--metin)}
+.spk-sure{font-size:12px;font-weight:600;padding:2px 8px;border-radius:8px}
+.spk-sure.normal{background:rgba(212,160,23,.15);color:var(--altin)}
+.spk-sure.gec{background:rgba(232,149,42,.2);color:var(--uyari)}
+.spk-sure.kritik{background:rgba(192,57,43,.25);color:#E57373;animation:yanip 1s ease-in-out infinite}
+.spk-garson{font-size:10px;color:var(--silik);margin-bottom:6px}
+.spk-urunler{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.sp-urun{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:8px;background:rgba(255,255,255,.04)}
+.sp-urun-em{font-size:18px;flex-shrink:0}
+.sp-urun-ad{font-size:13px;font-weight:600;color:var(--metin);flex:1}
+.sp-urun-adet{font-size:13px;font-weight:800;color:var(--altin);flex-shrink:0}
+.sp-urun-kat{font-size:10px;color:var(--silik);margin-top:1px}
+.sp-not{background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.2);border-radius:8px;padding:6px 10px;margin-bottom:8px;font-size:11px;color:var(--altin);display:flex;align-items:flex-start;gap:6px}
+.spk-alt{display:flex;gap:6px}
+.spk-btn{flex:1;padding:9px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.spk-btn.basla{background:linear-gradient(135deg,var(--uyari),#C87010);color:#fff}
+.spk-btn.hazir{background:linear-gradient(135deg,var(--yesil),#1E4D1E);color:#fff}
+.spk-btn.iptal{background:rgba(192,57,43,.15);color:#E57373;border:1px solid rgba(192,57,43,.3)}
+.spk-btn:active{transform:scale(.96)}
+
+/* ── ÖZET SUTUNU ── */
+.ozet-stat{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px}
+.os-k{background:var(--siyah-mat);border-radius:10px;padding:10px 12px;border:1px solid var(--border)}
+.os-s{font-size:22px;font-weight:800;color:var(--altin)}
+.os-e{font-size:10px;color:var(--silik);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+
+.urun-ozet{display:flex;flex-direction:column;gap:4px;padding:0 8px 8px}
+.uo-satir{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:var(--siyah-mat);border:1px solid var(--border)}
+.uo-em{font-size:20px;flex-shrink:0}
+.uo-ad{font-size:12px;font-weight:600;color:var(--metin);flex:1}
+.uo-adet{font-size:16px;font-weight:800;color:var(--altin);flex-shrink:0}
+.uo-bar{height:3px;background:rgba(212,160,23,.1);border-radius:2px;margin-top:4px;overflow:hidden}
+.uo-bar-ic{height:100%;background:linear-gradient(90deg,var(--altin),var(--altin-ac));border-radius:2px}
+
+/* ── STOK PANEL ── */
+.stok-grid{display:flex;flex-direction:column;gap:5px;padding:8px}
+.stok-satir{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;background:var(--siyah-mat);border:1px solid var(--border)}
+.stok-satir.kritik{border-color:rgba(192,57,43,.4);background:rgba(192,57,43,.08)}
+.stok-satir.uyari{border-color:rgba(232,149,42,.35);background:rgba(232,149,42,.06)}
+.stok-em{font-size:20px;flex-shrink:0}
+.stok-ad{font-size:12px;font-weight:600;color:var(--metin);flex:1}
+.stok-miktar{font-size:13px;font-weight:700;flex-shrink:0}
+.stok-satir.kritik .stok-miktar{color:#E57373}
+.stok-satir.uyari .stok-miktar{color:var(--uyari)}
+.stok-satir.normal .stok-miktar{color:#81C784}
+.stok-durum{font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;text-transform:uppercase;flex-shrink:0}
+.stok-satir.kritik .stok-durum{background:rgba(192,57,43,.2);color:#E57373}
+.stok-satir.uyari .stok-durum{background:rgba(232,149,42,.15);color:var(--uyari)}
+.stok-satir.normal .stok-durum{background:rgba(45,106,45,.15);color:#81C784}
+.stok-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:4px;overflow:hidden}
+.stok-bar-ic{height:100%;border-radius:2px;transition:width .5s}
+.stok-satir.kritik .stok-bar-ic{background:#E57373}
+.stok-satir.uyari .stok-bar-ic{background:var(--uyari)}
+.stok-satir.normal .stok-bar-ic{background:#81C784}
+
+/* ── BİLDİRİM FLASH ── */
+@keyframes flashGir{0%{transform:translateY(-60px);opacity:0}15%{transform:translateY(0);opacity:1}80%{transform:translateY(0);opacity:1}100%{transform:translateY(-60px);opacity:0}}
+.flash{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-60px);background:linear-gradient(135deg,var(--yesil),#1E4D1E);border:1px solid rgba(45,106,45,.5);color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:700;z-index:200;pointer-events:none;display:none;white-space:nowrap}
+.flash.ak{display:block;animation:flashGir 3s ease forwards}
+
+/* BEKLEME ZAMANLAYICI renk */
+.bos-ic{display:flex;align-items:center;justify-content:center;height:100px;color:var(--silik);font-size:13px;flex-direction:column;gap:8px}
+.bos-ic span{font-size:28px}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-sol">
+    <div class="tb-logo">??‍??</div>
+    <div><div class="tb-t">Lezzet Kebap</div><div class="tb-sub">Mutfak Ekranı</div></div>
+  </div>
+  <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap" id="kat-row">
+    <div class="kat-btn ak" onclick="katSec('tumu',this)">Tümü</div>
+    <div class="kat-btn" onclick="katSec('Izgara',this)">?? Izgara</div>
+    <div class="kat-btn" onclick="katSec('Pide',this)">?? Pide</div>
+    <div class="kat-btn" onclick="katSec('Corbalar',this)">?? Çorba</div>
+    <div class="kat-btn" onclick="katSec('Tatlilar',this)">?? Tatlı</div>
+    <div class="kat-btn" onclick="katSec('Icecekler',this)">?? İçecek</div>
+  </div>
+  <div class="tb-sag">
+    <div class="saat" id="saat">00:00</div>
+    <div class="stok-btn" id="stok-btn" onclick="stokToggle()">⚠️ Stok</div>
+  </div>
+</div>
+
+<!-- ANA -->
+<div class="main" id="main">
+
+  <!-- SÜTUN 1: YENİ SİPARİŞLER -->
+  <div class="sutun">
+    <div class="sutun-h">
+      <div class="sh-t">
+        <span style="color:var(--kirmizi)">??</span> Yeni Siparişler
+        <span class="sh-badge yeni" id="b-yeni">0</span>
+      </div>
+    </div>
+    <div class="sutun-ic" id="ic-yeni"></div>
+  </div>
+
+  <!-- SÜTUN 2: HAZIRLANIYOR -->
+  <div class="sutun">
+    <div class="sutun-h">
+      <div class="sh-t">
+        <span style="color:var(--uyari)">??</span> Hazırlanıyor
+        <span class="sh-badge islem" id="b-islem">0</span>
+      </div>
+    </div>
+    <div class="sutun-ic" id="ic-islem"></div>
+  </div>
+
+  <!-- SÜTUN 3: ÖZET + STOK -->
+  <div class="sutun" id="sutun-ozet">
+    <div class="sutun-h">
+      <div class="sh-t">
+        <span style="color:var(--altin)">??</span> Günlük Özet
+        <span class="sh-badge ozet" id="b-ozet">0 porsiyon</span>
+      </div>
+    </div>
+    <div class="sutun-ic">
+      <div class="ozet-stat" id="ozet-stat"></div>
+      <div style="font-size:10px;font-weight:700;color:var(--silik);text-transform:uppercase;letter-spacing:.06em;padding:4px 8px 6px">En çok üretilen</div>
+      <div class="urun-ozet" id="urun-ozet"></div>
+      <div style="font-size:10px;font-weight:700;color:var(--silik);text-transform:uppercase;letter-spacing:.06em;padding:10px 8px 6px;border-top:1px solid var(--border);margin-top:4px">Stok Durumu</div>
+      <div class="stok-grid" id="stok-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BİLDİRİM -->
+<div class="flash" id="flash"></div>
+
+<script>
+
+const SUPA_URL = "https://vdrjyngywjzuniwvsjtk.supabase.co";
+const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg";
+const SB = {
+  h: {
+    "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg",
+    "Content-Type": "application/json"
+  },
+  async get(t, q) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t+"?"+(q||""), {headers:this.h});
+      if(!r.ok) return [];
+      return await r.json();
+    } catch(e) { console.error("SB.get hatasi:", e); return []; }
+  },
+  async post(t, d) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t, {
+        method:"POST",
+        headers:Object.assign({},this.h,{"Prefer":"return=representation"}),
+        body:JSON.stringify(d)
+      });
+      return await r.json();
+    } catch(e) { console.error("SB.post hatasi:", e); return null; }
+  },
+  async patch(t, q, d) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t+"?"+q, {
+        method:"PATCH",
+        headers:Object.assign({},this.h,{"Prefer":"return=representation"}),
+        body:JSON.stringify(d)
+      });
+      return await r.json();
+    } catch(e) { console.error("SB.patch hatasi:", e); return null; }
+  },
+  async del(t, q) {
+    try {
+      await fetch(SUPA_URL+"/rest/v1/"+t+"?"+q, {method:"DELETE",headers:this.h});
+    } catch(e) { console.error("SB.del hatasi:", e); }
+  }
+};
+function parseUrunler(u) {
+  if(!u) return [];
+  if(typeof u === "string") { try { u = JSON.parse(u); } catch(e) { return []; } }
+  if(!Array.isArray(u)) return [];
+  return u.map(function(x) {
+    if(typeof x === "string") return {ad:x, adet:1, em:"", not:""};
+    return {ad:x.ad||"", adet:x.adet||1, em:x.em||"", not:x.not||""};
+  });
+}
+function urunMetin(urunler) {
+  var arr = parseUrunler(urunler);
+  if(!arr.length) return "Siparis yok";
+  return arr.map(function(u) { return (u.em?" ":"") + u.ad + " x" + u.adet; }).join(", ");
+}
+
+
+// ── VERİ ──
+const MENU_URUNLER = {
+  'Adana Kebap':   {em:'??',kat:'Izgara'},
+  'Tavuk Sis':     {em:'??',kat:'Izgara'},
+  'Kofte':         {em:'??',kat:'Izgara'},
+  'Kasarli Pide':  {em:'??',kat:'Pide'},
+  'Lahmacun':      {em:'??',kat:'Pide'},
+  'Etli Pide':     {em:'??',kat:'Pide'},
+  'Mercimek Corbasi':{em:'??',kat:'Corbalar'},
+  'Ezogelin':      {em:'??',kat:'Corbalar'},
+  'Baklava':       {em:'??',kat:'Tatlilar'},
+  'Sutlac':        {em:'??',kat:'Tatlilar'},
+  'Kadayif':       {em:'??',kat:'Tatlilar'},
+  'Ayran':         {em:'??',kat:'Icecekler'},
+  'Salgam':        {em:'??',kat:'Icecekler'},
+  'Kola':          {em:'??',kat:'Icecekler'},
+  'Cay':           {em:'??',kat:'Icecekler'},
+};
+
+let siparisler = [
+  {id:1001,masa:3,garson:'Zeynep K.',durum:'yeni',dk:2,
+   urunler:[{ad:'Adana Kebap',adet:2,not:''},{ad:'Ayran',adet:2,not:''}],not:''},
+  {id:1002,masa:5,garson:'Zeynep K.',durum:'yeni',dk:7,
+   urunler:[{ad:'Kasarli Pide',adet:1,not:''},{ad:'Mercimek Corbasi',adet:2,not:'Az tuzlu'}],not:'Bir cobasi az tuzlu'},
+  {id:1003,masa:8,garson:'Mehmet A.',durum:'islem',dk:11,
+   urunler:[{ad:'Tavuk Sis',adet:2,not:''},{ad:'Baklava',adet:1,not:''},{ad:'Cay',adet:2,not:''}],not:''},
+  {id:1004,masa:2,garson:'Mehmet A.',durum:'islem',dk:4,
+   urunler:[{ad:'Kofte',adet:1,not:'Iyi pismis'},{ad:'Ayran',adet:1,not:''}],not:'Kofte iyi pismis olsun'},
+  {id:1005,masa:6,garson:'Fatma S.',durum:'yeni',dk:1,
+   urunler:[{ad:'Lahmacun',adet:3,not:''},{ad:'Salgam',adet:3,not:''}],not:''},
+];
+
+// Günlük üretim sayaçları
+let uretim = {
+  'Adana Kebap':8,'Tavuk Sis':6,'Kofte':4,'Kasarli Pide':11,
+  'Lahmacun':9,'Mercimek Corbasi':14,'Baklava':7,'Ayran':22,'Cay':31,
+};
+
+// Stok
+let stok = [
+  {em:'??',ad:'Dana Kiyma',miktar:3.2,max:10,birim:'kg',sinir:3},
+  {em:'??',ad:'Tavuk Gogsu',miktar:4.5,max:8,birim:'kg',sinir:2},
+  {em:'??',ad:'Un',miktar:8,max:20,birim:'kg',sinir:4},
+  {em:'??',ad:'Sogan',miktar:2.1,max:5,birim:'kg',sinir:1},
+  {em:'??',ad:'Domates',miktar:0.8,max:4,birim:'kg',sinir:1},
+  {em:'??',ad:'Zeytinyagi',miktar:1.5,max:5,birim:'lt',sinir:1},
+  {em:'??',ad:'Sutlac Malz.',miktar:6,max:10,birim:'porsiyon',sinir:3},
+  {em:'??',ad:'Cay',miktar:12,max:30,birim:'porsiyon',sinir:5},
+];
+
+let aktifKat = 'tumu';
+let stokAcik = false;
+let sayacInt = null;
+
+// ── SAAT ──
+function saatGuncelle(){
+  const n=new Date();
+  document.getElementById('saat').textContent=
+    String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
+}
+setInterval(saatGuncelle,1000);
+saatGuncelle();
+
+// Sipariş dakikalarını artır
+setInterval(()=>{
+  siparisler.forEach(s=>{if(s.durum!=='hazir')s.dk++;});
+  render();
+},60000);
+
+// ── KATEGORİ ──
+function katSec(kat,el){
+  aktifKat=kat;
+  document.querySelectorAll('.kat-btn').forEach(b=>b.classList.remove('ak'));
+  el.classList.add('ak');
+  render();
+}
+
+function spKatEsles(sp){
+  if(aktifKat==='tumu') return true;
+  return sp.urunler.some(u=>{
+    const m=MENU_URUNLER[u.ad];
+    return m&&m.kat===aktifKat;
+  });
+}
+
+// ── SÜRE RENK ──
+function sureClass(dk){
+  if(dk>=15) return 'kritik';
+  if(dk>=8)  return 'gec';
+  return 'normal';
+}
+
+// ── SİPARİŞ KARTI ──
+function spKartHtml(sp){
+  const filtreli = aktifKat==='tumu'
+    ? sp.urunler
+    : sp.urunler.filter(u=>{const m=MENU_URUNLER[u.ad];return m&&m.kat===aktifKat;});
+
+  const urunlerHtml = filtreli.map(u=>{
+    const m=MENU_URUNLER[u.ad]||{em:'??️'};
+    return `<div class="sp-urun">
+      <div class="sp-urun-em">${m.em}</div>
+      <div style="flex:1"><div class="sp-urun-ad">${u.ad}</div>${u.not?`<div class="sp-urun-kat" style="color:var(--altin)">Not: ${u.not}</div>`:`<div class="sp-urun-kat">${m.kat||''}</div>`}</div>
+      <div class="sp-urun-adet">x${u.adet}</div>
+    </div>`;
+  }).join('');
+
+  const notHtml = sp.not
+    ? `<div class="sp-not">?? <span>${sp.not}</span></div>` : '';
+
+  const btnHtml = sp.durum==='yeni'
+    ? `<button class="spk-btn basla" onclick="spBasla('${sp.id}')">▶ Hazırlamaya Başla</button>
+       <button class="spk-btn iptal" style="flex:0;padding:9px 12px" onclick="spIptal(${sp.id})">✕</button>`
+    : `<button class="spk-btn hazir" onclick="spHazir('${sp.id}')">✅ Hazır — Garson Çağır</button>`;
+
+  return `<div class="sp-k ${sp.durum}" id="sp-${sp.id}">
+    <div class="spk-ust">
+      <div class="spk-masa">Masa ${sp.masa}</div>
+      <div class="spk-sure ${sureClass(sp.dk)}">${sp.dk} dk</div>
+    </div>
+    <div class="spk-garson">Garson: ${sp.garson}</div>
+    <div class="spk-urunler">${urunlerHtml}</div>
+    ${notHtml}
+    <div class="spk-alt">${btnHtml}</div>
+  </div>`;
+}
+
+// ── AKSİYONLAR ──
+function spBasla(id){
+  var sp = siparisler.find(function(x){ return x.id===id || x.id===String(id); });
+  if(!sp){ console.log('Siparis bulunamadi id:', id); return; }
+  sp.durum = 'islem';
+  sipDurumDB(id, 'islem');
+  flash('Masa '+sp.masa+' hazirlaniyor...');
+  render();
+}
+
+function spHazir(id){
+  var sp = siparisler.find(function(x){ return x.id===id || x.id===String(id); });
+  if(!sp){ console.log('Siparis bulunamadi id:', id); return; }
+  sp.durum = 'hazir';
+  sp.urunler.forEach(function(u){ uretim[u.ad]=(uretim[u.ad]||0)+u.adet; });
+  sipDurumDB(id, 'hazir');
+  SB.patch('masalar','no=eq.'+sp.masa,{durum:'hazir',updated_at:new Date().toISOString()}).catch(function(){});
+  flash('Masa '+sp.masa+' HAZIR! Garson bildirildi 🔔');
+  setTimeout(function(){
+    siparisler=siparisler.filter(function(x){ return x.id!==id; });
+    render();
+  },3000);
+  render();
+}
+
+function spIptal(id){
+  siparisler=siparisler.filter(x=>x.id!==id);
+  render();
+}
+
+// ── STOK ──
+function stokToggle(){
+  // Stok bilgisi zaten özet sütununda — sadece vurgu yap
+  document.getElementById('sutun-ozet').scrollIntoView({behavior:'smooth'});
+  flash('Stok durumu ozet sutununda gosteriliyor');
+}
+
+// ── FLASH ──
+function flash(msg){
+  const el=document.getElementById('flash');
+  el.textContent=msg;
+  el.className='flash ak';
+  setTimeout(()=>el.className='flash',3000);
+}
+
+// ── DEMO: Yeni sipariş gel ──
+let demoSayac=0;
+const DEMO_SP=[
+  {masa:11,garson:'Can Y.',urunler:[{ad:'Etli Pide',adet:2,not:''},{ad:'Ayran',adet:2,not:''}],not:''},
+  {masa:4, garson:'Fatma S.',urunler:[{ad:'Sutlac',adet:1,not:'Extra tatli'},{ad:'Cay',adet:2,not:''}],not:'Sutlac extra tatli'},
+  {masa:7, garson:'Zeynep K.',urunler:[{ad:'Adana Kebap',adet:1,not:'Az acili'},{ad:'Ezogelin',adet:1,not:''}],not:'Adana az acili olsun'},
+];
+setTimeout(()=>{
+  const s=DEMO_SP[demoSayac%DEMO_SP.length];
+  siparisler.push({id:Date.now(),masa:s.masa,garson:s.garson,durum:'yeni',dk:0,urunler:s.urunler,not:s.not});
+  demoSayac++;
+  flash('YENİ SİPARİŞ! Masa '+s.masa+' ➕');
+  render();
+},8000);
+setTimeout(()=>{
+  const s=DEMO_SP[(demoSayac)%DEMO_SP.length];
+  siparisler.push({id:Date.now()+1,masa:s.masa,garson:s.garson,durum:'yeni',dk:0,urunler:s.urunler,not:s.not});
+  flash('YENİ SİPARİŞ! Masa '+s.masa+' ➕');
+  render();
+},20000);
+
+// ── ANA RENDER ──
+function render(){
+  const yeni=siparisler.filter(s=>s.durum==='yeni'&&spKatEsles(s))
+    .sort((a,b)=>b.dk-a.dk);
+  const islem=siparisler.filter(s=>s.durum==='islem'&&spKatEsles(s))
+    .sort((a,b)=>b.dk-a.dk);
+  const hazirSay=siparisler.filter(s=>s.durum==='hazir').length;
+
+  document.getElementById('b-yeni').textContent=yeni.length;
+  document.getElementById('b-islem').textContent=islem.length;
+
+  // Stok uyarısı
+  const kritikStok=stok.filter(s=>s.miktar<=s.sinir);
+  const stokBtn=document.getElementById('stok-btn');
+  if(kritikStok.length>0){
+    stokBtn.className='stok-btn uyari';
+    stokBtn.textContent='⚠️ '+kritikStok.length+' Kritik Stok';
+  } else {
+    stokBtn.className='stok-btn';
+    stokBtn.textContent='✅ Stok Normal';
+  }
+
+  // Sütunlar
+  document.getElementById('ic-yeni').innerHTML=yeni.length
+    ?yeni.map(spKartHtml).join('')
+    :'<div class="bos-ic"><span>✅</span>Yeni sipariş yok</div>';
+  document.getElementById('ic-islem').innerHTML=islem.length
+    ?islem.map(spKartHtml).join('')
+    :'<div class="bos-ic"><span>??‍??</span>Hazırlanan sipariş yok</div>';
+
+  // Özet istatistikler
+  const toplamUretim=Object.values(uretim).reduce((s,v)=>s+v,0);
+  const toplamSip=siparisler.length;
+  document.getElementById('b-ozet').textContent=toplamUretim+' porsiyon';
+  document.getElementById('ozet-stat').innerHTML=`
+    <div class="os-k"><div class="os-s">${yeni.length+islem.length}</div><div class="os-e">Aktif Sipariş</div></div>
+    <div class="os-k"><div class="os-s" style="color:var(--yesil);font-size:18px">₺${(toplamUretim*42).toLocaleString('tr-TR')}</div><div class="os-e">Tahmini Ciro</div></div>
+    <div class="os-k"><div class="os-s">${toplamUretim}</div><div class="os-e">Porsiyon</div></div>
+    <div class="os-k"><div class="os-s" style="color:var(--kirmizi)">${yeni.filter(s=>s.dk>=10).length}</div><div class="os-e">Geciken</div></div>
+  `;
+
+  // En çok üretilen
+  const uretimSirali=Object.entries(uretim)
+    .sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const maxU=uretimSirali[0]?.[1]||1;
+  document.getElementById('urun-ozet').innerHTML=uretimSirali.map(([ad,sayi])=>{
+    const m=MENU_URUNLER[ad]||{em:'??️'};
+    return `<div class="uo-satir">
+      <div class="uo-em">${m.em}</div>
+      <div style="flex:1"><div class="uo-ad">${ad}</div>
+        <div class="uo-bar"><div class="uo-bar-ic" style="width:${Math.round(sayi/maxU*100)}%"></div></div>
+      </div>
+      <div class="uo-adet">${sayi}</div>
+    </div>`;
+  }).join('');
+
+  // Stok
+  const stokSirali=[...stok].sort((a,b)=>{
+    const aKrit=a.miktar<=a.sinir?0:a.miktar<=a.sinir*2?1:2;
+    const bKrit=b.miktar<=b.sinir?0:b.miktar<=b.sinir*2?1:2;
+    return aKrit-bKrit;
+  });
+  document.getElementById('stok-grid').innerHTML=stokSirali.map(s=>{
+    const yuzde=Math.round(s.miktar/s.max*100);
+    const cls=s.miktar<=s.sinir?'kritik':s.miktar<=s.sinir*2?'uyari':'normal';
+    const durum=s.miktar<=s.sinir?'KRİTİK':s.miktar<=s.sinir*2?'AZALDI':'Normal';
+    return `<div class="stok-satir ${cls}">
+      <div class="stok-em">${s.em}</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="stok-ad">${s.ad}</div>
+          <div class="stok-durum">${durum}</div>
+        </div>
+        <div class="stok-bar"><div class="stok-bar-ic" style="width:${yuzde}%"></div></div>
+      </div>
+      <div class="stok-miktar" style="margin-left:8px">${s.miktar}${s.birim}</div>
+    </div>`;
+  }).join('');
+}
+
+render();
+
+// ── SUPABASE DB YÜKLEME ──
+async function siparisleriDBden(){
+  try {
+    var data = await SB.get('siparisler','durum=in.(yeni,hazirlaniyor,islem,hazir)&order=created_at.asc');
+    if(!data){ return; }
+    if(!data.length){ 
+      siparisler = [];
+      render();
+      return;
+    }
+    siparisler = data.map(function(s){
+      var arr = parseUrunler(s.urunler);
+      return {
+        id: String(s.id),
+        masa: s.masa_no,
+        garson: s.garson_ad || '-',
+        durum: (s.durum==='hazirlaniyor'?'islem':s.durum) || 'yeni',
+        dk: Math.floor((Date.now()-new Date(s.created_at).getTime())/60000),
+        eskalasyon: false,
+        urunler: arr,
+        not: s.not_text || ''
+      };
+    });
+    render();
+  } catch(err) {
+    console.error('DB hatasi:', err);
+  }
+}
+
+// Başlat
+siparisleriDBden();
+setInterval(function(){ siparisleriDBden().catch(function(){}); }, 3000);
+
+
+async function sipDurumDB(id, durum){
+  await SB.patch('siparisler','id=eq.'+id,{durum:durum,updated_at:new Date().toISOString()});
+}
+
+// ── STOK GİRİŞİ ──
+var stokPanelAcik = false;
+var dbStokListesi = [];
+
+async function stokPanelToggle(){
+  stokPanelAcik = !stokPanelAcik;
+  var panel = document.getElementById('stok-panel');
+  if(!panel) return;
+  if(stokPanelAcik){
+    panel.style.display = 'block';
+    await stokYukle();
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+async function stokYukle(){
+  var data = await SB.get('stok','order=ad.asc');
+  if(data) dbStokListesi = data;
+  stokRender();
+}
+
+function stokRender(){
+  var el = document.getElementById('stok-liste');
+  if(!el) return;
+  var html = '';
+  dbStokListesi.forEach(function(s){
+    var kritik = parseFloat(s.miktar) <= parseFloat(s.sinir);
+    var safeId = s.ad.replace(/ /g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+    html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08)">';
+    html += '<span style="font-size:16px">'+(s.em||'📦')+'</span>';
+    html += '<div style="flex:1">';
+    html += '<div style="font-size:12px;font-weight:600;color:'+(kritik?'#ff8a80':'#fff')+'">'+s.ad+'</div>';
+    html += '<div style="font-size:10px;color:rgba(255,255,255,.4)">Mevcut: '+s.miktar+' '+s.birim+'</div>';
+    html += '</div>';
+    html += '<input type="number" min="0" step="0.1" placeholder="Ekle" id="sinp_'+safeId+'" style="width:70px;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:11px">';
+    html += '<button data-ad="'+s.ad+'" data-inp="sinp_'+safeId+'" onclick="stokEkleBtn(this)" style="padding:4px 8px;border-radius:6px;background:var(--bas);color:#fff;border:none;font-size:11px;cursor:pointer">Ekle</button>';
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
+
+
+async function stokEkleBtn(btn){
+  var ad = btn.getAttribute('data-ad');
+  var inp = btn.parentElement.querySelector('.stok-inp[data-ad="'+ad+'"]');
+  if(!inp) return;
+  var miktar = parseFloat(inp.value);
+  if(!miktar || miktar <= 0){ return; }
+  var stok = dbStokListesi.find(function(s){ return s.ad === ad; });
+  if(!stok) return;
+  var yeniMiktar = parseFloat(stok.miktar) + miktar;
+  await SB.patch('stok','ad=eq.'+ad,{
+    miktar: yeniMiktar,
+    updated_at: new Date().toISOString()
+  });
+  inp.value = '';
+  flash(ad + ' stoku guncellendi: ' + yeniMiktar + ' ' + stok.birim);
+  await stokYukle();
+}
+</script>
+
+<!-- STOK PANELİ -->
+<div id="stok-panel" style="display:none;position:fixed;top:52px;right:0;width:320px;height:calc(100vh - 52px);background:#1A1A1A;border-left:2px solid var(--al);z-index:50;overflow-y:auto;padding:14px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div style="font-size:14px;font-weight:700;color:var(--al)">📦 Stok Girişi</div>
+    <button onclick="stokPanelToggle()" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:18px;cursor:pointer">✕</button>
+  </div>
+  <div id="stok-liste"></div>
+</div>
+</body>
+</html>
