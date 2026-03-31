@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Lezzet Kebap — Kasiyer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --s:#1A1A1A;--sm:#2C2C2C;--al:#D4A017;--aac:#F0C040;
+  --bas:#2D6A2D;--bac:#E8F5E8;--teh:#C0392B;--tac:#FDECEA;
+  --uya:#E8952A;--uac:#FEF0E0;--mt:#1A1A1A;--si:#9A7B65;
+  --kr:#FDF6EE;--yz:#FFF8F2;--ik:#F5E6D3;--bd:#EDD9C0;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--kr);min-height:100vh}
+/* GİRİŞ */
+#giris{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1A1A1A,#2C2C2C);padding:24px}
+.lb{background:var(--yz);border-radius:24px;padding:32px 28px;width:100%;max-width:360px;border:1px solid var(--bd)}
+.lb-logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--s),var(--sm));border:2px solid var(--al);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 12px}
+.lb-t{font-size:20px;font-weight:800;color:var(--mt);text-align:center;margin-bottom:4px}
+.lb-a{font-size:12px;color:var(--si);text-align:center;margin-bottom:20px}
+.lb-label{font-size:10px;font-weight:600;color:var(--si);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.inp{width:100%;padding:11px 14px;border-radius:11px;border:1.5px solid var(--bd);font-size:14px;background:var(--yz);color:var(--mt);outline:none;margin-bottom:10px}
+.inp:focus{border-color:var(--al)}
+.lb-btn{width:100%;padding:13px;border-radius:13px;background:linear-gradient(135deg,var(--s),var(--sm));color:#fff;border:1.5px solid var(--al);font-size:14px;font-weight:700;cursor:pointer;margin-top:4px}
+.hata{color:var(--teh);font-size:12px;font-weight:600;text-align:center;margin-top:8px;display:none}
+/* PANEL */
+#panel{display:none;flex-direction:column;min-height:100vh}
+.topbar{background:linear-gradient(135deg,var(--s),var(--sm));padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--al);flex-shrink:0}
+.tb-t{font-size:15px;font-weight:800;color:#fff}
+.tb-saat{font-size:14px;font-weight:700;color:var(--al);font-variant-numeric:tabular-nums}
+.tb-cikis{padding:4px 10px;border-radius:8px;border:1px solid rgba(212,160,23,.3);color:var(--al);font-size:11px;font-weight:600;cursor:pointer}
+/* ÖZET */
+.ozet{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px;background:var(--sm);border-bottom:1px solid rgba(212,160,23,.2)}
+.oz-k{background:rgba(255,255,255,.06);border-radius:10px;padding:8px;text-align:center;border:1px solid rgba(212,160,23,.12)}
+.oz-s{font-size:18px;font-weight:800;color:var(--al)}
+.oz-e{font-size:9px;color:rgba(255,255,255,.4);margin-top:2px;text-transform:uppercase}
+/* MASA GRID */
+.masa-grid{padding:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media(min-width:500px){.masa-grid{grid-template-columns:repeat(5,1fr)}}
+.mk{border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;border:2px solid;transition:all .15s}
+.mk.bos{background:var(--yz);border-color:var(--bd);color:var(--si)}
+.mk.dolu{background:rgba(232,149,42,.1);border-color:var(--uya);color:var(--uya)}
+.mk.hazir{background:rgba(45,106,45,.12);border-color:var(--bas);color:var(--bas)}
+.mk.bekliyor{background:rgba(192,57,43,.1);border-color:var(--teh);color:var(--teh)}
+.mk-no{font-size:17px;font-weight:800}
+.mk-garson{font-size:9px;margin-top:2px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-tutar{font-size:10px;font-weight:700;margin-top:2px}
+/* MASA DETAY MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.ak{display:flex}
+.modal{background:var(--yz);border-radius:24px 24px 0 0;padding:20px 18px 32px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-t{font-size:18px;font-weight:800;color:var(--mt);margin-bottom:4px}
+.modal-a{font-size:12px;color:var(--si);margin-bottom:14px}
+.sp-satir{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)}
+.sp-satir:last-child{border-bottom:none}
+.sp-ad{flex:1;font-size:13px;color:var(--mt)}
+.sp-adet{font-size:12px;color:var(--si);margin-top:1px}
+.sp-fiyat{font-size:13px;font-weight:700;color:var(--al)}
+.toplam-bar{display:flex;justify-content:space-between;font-size:16px;font-weight:800;color:var(--mt);padding:12px 0;border-top:2px solid var(--bd);margin-top:8px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.btn{padding:12px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;border:none}
+.btn.nakit{background:linear-gradient(135deg,var(--bas),#1E4D1E);color:#fff}
+.btn.kart{background:linear-gradient(135deg,var(--al),var(--aac));color:var(--s)}
+.btn.kapat{background:var(--ik);color:var(--si)}
+.badge{padding:3px 8px;border-radius:7px;font-size:10px;font-weight:700;display:inline-block}
+.badge.yeni{background:rgba(212,160,23,.15);color:var(--al)}
+.badge.hazirlaniyor{background:var(--uac);color:var(--uya)}
+.badge.hazir{background:var(--bac);color:var(--bas)}
+.badge.tamamlandi{background:var(--ik);color:var(--si)}
+@keyframes tGir{from{transform:translateX(-50%) translateY(20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--s);color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;z-index:200;border:1px solid var(--al);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .3s}
+.toast.ak{opacity:1;animation:tGir .3s ease}
+</style>
+</head>
+<body>
+
+<div id="giris">
+  <div class="lb">
+    <div class="lb-logo">💳</div>
+    <div class="lb-t">Kasiyer Paneli</div>
+    <div class="lb-a">Lezzet Kebap</div>
+    <div class="lb-label">Kullanıcı Adı</div>
+    <input class="inp" id="k-ad" value="kasiyer1" placeholder="kasiyer1">
+    <div class="lb-label">Şifre</div>
+    <input class="inp" type="password" id="k-sifre" value="1234" placeholder="1234" onkeydown="if(event.key==='Enter')girisYap()">
+    <button class="lb-btn" onclick="girisYap()">Giriş Yap</button>
+    <div class="hata" id="giris-hata">Hatalı kullanıcı adı veya şifre!</div>
+  </div>
+</div>
+
+<div id="panel">
+  <div class="topbar">
+    <div>
+      <div class="tb-t">💳 Kasiyer Paneli</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.4)" id="tb-kullanici">—</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="tb-saat" id="tb-saat">00:00</div>
+      <div class="tb-cikis" onclick="cikis()">Çıkış</div>
+    </div>
+  </div>
+
+  <div class="ozet">
+    <div class="oz-k"><div class="oz-s" id="oz-dolu">0</div><div class="oz-e">Dolu Masa</div></div>
+    <div class="oz-k"><div class="oz-s" id="oz-ciro">₺0</div><div class="oz-e">Bugün Ciro</div></div>
+    <div class="oz-k"><div class="oz-s" id="oz-bekleyen">0</div><div class="oz-e">Hesap Bekleyen</div></div>
+  </div>
+
+  <div class="masa-grid" id="masa-grid"></div>
+</div>
+
+<!-- MASA DETAY -->
+<div class="modal-bg" id="modal-detay">
+  <div class="modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="modal-t" id="det-baslik">Masa —</div>
+      <div style="font-size:11px;color:var(--si)" id="det-garson">—</div>
+    </div>
+    <div class="modal-a" id="det-sure">—</div>
+    <div id="det-siparisler"></div>
+    <div class="toplam-bar">
+      <span>Toplam</span>
+      <span id="det-toplam">₺0</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn nakit" onclick="odemeAl('nakit')">💵 Nakit</button>
+      <button class="btn kart" onclick="odemeAl('kart')">💳 Kart</button>
+    </div>
+    <button class="btn kapat" style="width:100%;margin-top:8px" onclick="modalKapat()">Kapat</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+const SUPA_URL = "https://vdrjyngywjzuniwvsjtk.supabase.co";
+const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg";
+const SB = {
+  h: {
+    "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg",
+    "Content-Type": "application/json"
+  },
+  async get(t, q) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t+"?"+(q||""), {headers:this.h});
+      if(!r.ok) return [];
+      return await r.json();
+    } catch(e) { console.error("SB.get hatasi:", e); return []; }
+  },
+  async post(t, d) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t, {
+        method:"POST",
+        headers:Object.assign({},this.h,{"Prefer":"return=representation"}),
+        body:JSON.stringify(d)
+      });
+      return await r.json();
+    } catch(e) { console.error("SB.post hatasi:", e); return null; }
+  },
+  async patch(t, q, d) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t+"?"+q, {
+        method:"PATCH",
+        headers:Object.assign({},this.h,{"Prefer":"return=representation"}),
+        body:JSON.stringify(d)
+      });
+      return await r.json();
+    } catch(e) { console.error("SB.patch hatasi:", e); return null; }
+  },
+  async del(t, q) {
+    try {
+      await fetch(SUPA_URL+"/rest/v1/"+t+"?"+q, {method:"DELETE",headers:this.h});
+    } catch(e) { console.error("SB.del hatasi:", e); }
+  }
+};
+function parseUrunler(u) {
+  if(!u) return [];
+  if(typeof u === "string") { try { u = JSON.parse(u); } catch(e) { return []; } }
+  if(!Array.isArray(u)) return [];
+  return u.map(function(x) {
+    if(typeof x === "string") return {ad:x, adet:1, em:"", not:""};
+    return {ad:x.ad||"", adet:x.adet||1, em:x.em||"", not:x.not||""};
+  });
+}
+function urunMetin(urunler) {
+  var arr = parseUrunler(urunler);
+  if(!arr.length) return "Siparis yok";
+  return arr.map(function(u) { return (u.em?" ":"") + u.ad + " x" + u.adet; }).join(", ");
+}
+
+var aktifMasaNo = null;
+var dbMasalar = [];
+var dbSiparisler = [];
+var dbOdemeler = [];
+var pollingInt = null;
+var gunlukCiro = 0;
+
+// Saat
+setInterval(function() {
+  var n = new Date();
+  var el = document.getElementById("tb-saat");
+  if(el) el.textContent = String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");
+}, 1000);
+
+// Giriş — sabit kasiyer/mudur şifresi
+async function girisYap() {
+  var ad = document.getElementById("k-ad").value.trim();
+  var sifre = document.getElementById("k-sifre").value.trim();
+  var hata = document.getElementById("giris-hata");
+  hata.style.display = "none";
+  // Ayarlardan kontrol et
+  try {
+    var ayar = await SB.get("ayarlar", "key=eq.kasiyer_giris");
+    var dogruAd = "kasiyer1", dogruSifre = "1234";
+    if(ayar && ayar.length) {
+      dogruAd = ayar[0].value.kullanici || "kasiyer1";
+      dogruSifre = ayar[0].value.sifre || "1234";
+    }
+    if(ad !== dogruAd || sifre !== dogruSifre) {
+      // Mudur girişi de dene
+      var mudurAyar = await SB.get("ayarlar", "key=eq.patron_giris");
+      var mudurAd = "patron", mudurSifre = "1234";
+      if(mudurAyar && mudurAyar.length) {
+        mudurAd = mudurAyar[0].value.kullanici || "patron";
+        mudurSifre = mudurAyar[0].value.sifre || "1234";
+      }
+      if(ad !== mudurAd || sifre !== mudurSifre) {
+        hata.style.display = "block";
+        document.getElementById("k-sifre").value = "";
+        return;
+      }
+    }
+  } catch(ex) {
+    // DB erişim yoksa varsayılan
+    if((ad !== "kasiyer1" || sifre !== "1234") && (ad !== "patron" || sifre !== "1234")) {
+      hata.style.display = "block";
+      return;
+    }
+  }
+  document.getElementById("giris").style.display = "none";
+  document.getElementById("panel").style.display = "flex";
+  document.getElementById("panel").style.flexDirection = "column";
+  document.getElementById("tb-kullanici").textContent = ad;
+  await yukle();
+  pollingInt = setInterval(yukle, 4000);
+}
+
+function cikis() {
+  if(pollingInt) { clearInterval(pollingInt); pollingInt = null; }
+  document.getElementById("giris").style.display = "flex";
+  document.getElementById("panel").style.display = "none";
+}
+
+// Veri yükle
+async function yukle() {
+  var r = await Promise.all([
+    SB.get("masalar", "order=no.asc"),
+    SB.get("siparisler", "durum=in.(yeni,hazirlaniyor,islem,hazir)&order=created_at.asc"),
+    SB.get("odemeler", "order=created_at.desc&limit=50")
+  ]);
+  if(r[0] && r[0].length) dbMasalar = r[0];
+  if(r[1]) dbSiparisler = r[1];
+  if(r[2]) {
+    dbOdemeler = r[2];
+    // Bugünkü ciro
+    var bugun = new Date().toISOString().slice(0,10);
+    gunlukCiro = dbOdemeler
+      .filter(function(o) { return o.created_at && o.created_at.slice(0,10) === bugun; })
+      .reduce(function(s, o) { return s + parseFloat(o.toplam||0); }, 0);
+  }
+  render();
+}
+
+function render() {
+  renderOzet();
+  renderMasaGrid();
+}
+
+function renderOzet() {
+  var dolu = dbMasalar.filter(function(m) { return m.durum && m.durum !== "bos"; }).length;
+  var bekleyen = dbMasalar.filter(function(m) { return m.durum === "bekliyor"; }).length;
+  document.getElementById("oz-dolu").textContent = dolu;
+  document.getElementById("oz-ciro").textContent = "₺" + Math.round(gunlukCiro).toLocaleString("tr-TR");
+  document.getElementById("oz-bekleyen").textContent = bekleyen;
+}
+
+function renderMasaGrid() {
+  var html = "";
+  dbMasalar.forEach(function(m) {
+    var durum = m.durum || "bos";
+    var garsonAd = m.garson_ad || "-";
+    var kisa = garsonAd === "-" ? "" : garsonAd.split(" ")[0];
+    var toplam = parseFloat(m.toplam || 0);
+    html += "<div class='mk " + durum + "' onclick='masaDetay(" + m.no + ")'>";
+    html += "<div class='mk-no'>" + m.no + "</div>";
+    if(kisa && durum !== "bos") html += "<div class='mk-garson'>" + kisa + "</div>";
+    if(toplam > 0) html += "<div class='mk-tutar'>₺" + Math.round(toplam) + "</div>";
+    if(durum === "bos") html += "<div class='mk-garson'>Boş</div>";
+    html += "</div>";
+  });
+  document.getElementById("masa-grid").innerHTML = html;
+}
+
+function masaDetay(no) {
+  aktifMasaNo = no;
+  var masa = dbMasalar.find(function(m) { return parseInt(m.no) === parseInt(no); });
+  if(!masa) return;
+  var sps = dbSiparisler.filter(function(s) { return parseInt(s.masa_no) === parseInt(no); });
+  document.getElementById("det-baslik").textContent = "Masa " + no;
+  document.getElementById("det-garson").textContent = "Garson: " + (masa.garson_ad || "-");
+  document.getElementById("det-sure").textContent = masa.durum === "bos" ? "Boş masa" : "Durum: " + (masa.durum || "-");
+
+  // Siparişleri listele
+  if(!sps.length) {
+    document.getElementById("det-siparisler").innerHTML =
+      "<div style='text-align:center;color:var(--si);padding:16px;font-size:13px'>Bu masada aktif sipariş yok</div>";
+    document.getElementById("det-toplam").textContent = "₺" + parseFloat(masa.toplam||0).toLocaleString("tr-TR");
+  } else {
+    var html = "";
+    sps.forEach(function(sp) {
+      var arr = parseUrunler(sp.urunler);
+      html += "<div style='margin-bottom:8px;padding:8px;background:var(--ik);border-radius:8px'>";
+      html += "<div style='display:flex;justify-content:space-between;margin-bottom:4px'>";
+      html += "<div style='font-size:11px;font-weight:600;color:var(--si)'>Sipariş #" + sp.id.slice(-6) + "</div>";
+      html += "<span class='badge " + sp.durum + "'>" + durumYazi(sp.durum) + "</span></div>";
+      if(!arr.length) {
+        html += "<div style='font-size:12px;color:var(--si)'>" + (sp.not_text||"Urun bilgisi yok") + "</div>";
+      } else {
+        arr.forEach(function(u) {
+          html += "<div class='sp-satir'>";
+          html += "<div class='sp-ad'>" + (u.em ? u.em+" " : "") + u.ad + "<div class='sp-adet'>x" + u.adet + "</div></div>";
+          html += "<div class='sp-fiyat'>₺" + (u.fiyat ? (u.fiyat * u.adet) : "—") + "</div>";
+          html += "</div>";
+        });
+      }
+      if(sp.not_text) html += "<div style='font-size:11px;color:var(--uya);margin-top:4px'>Not: " + sp.not_text + "</div>";
+      html += "</div>";
+    });
+    document.getElementById("det-siparisler").innerHTML = html;
+    document.getElementById("det-toplam").textContent = "₺" + parseFloat(masa.toplam||0).toLocaleString("tr-TR");
+  }
+  document.getElementById("modal-detay").classList.add("ak");
+}
+
+function durumYazi(d) {
+  var map = {yeni:"Yeni", hazirlaniyor:"Hazırlanıyor", islem:"Hazırlanıyor", hazir:"HAZIR", tamamlandi:"Tamam"};
+  return map[d] || d;
+}
+
+async function odemeAl(yontem) {
+  var masa = dbMasalar.find(function(m) { return parseInt(m.no) === parseInt(aktifMasaNo); });
+  if(!masa) return;
+  var toplam = parseFloat(masa.toplam || 0);
+  if(toplam <= 0) { toast("Bu masada ödeme alınacak tutar yok!"); return; }
+  var odemeId = "od_" + Date.now();
+  // Ödeme kaydet
+  await SB.post("odemeler", {
+    id: odemeId,
+    masa_no: aktifMasaNo,
+    yontem: yontem,
+    toplam: toplam,
+    garson_id: masa.garson_id,
+    garson_ad: masa.garson_ad || "-",
+    created_at: new Date().toISOString()
+  });
+  // Siparişleri tamamlandı yap
+  var sps = dbSiparisler.filter(function(s) { return parseInt(s.masa_no) === parseInt(aktifMasaNo); });
+  for(var i = 0; i < sps.length; i++) {
+    await SB.patch("siparisler", "id=eq." + sps[i].id, {
+      durum: "tamamlandi",
+      updated_at: new Date().toISOString()
+    });
+  }
+  // Masayı sıfırla
+  await SB.patch("masalar", "no=eq." + aktifMasaNo, {
+    durum: "bos",
+    garson_id: null,
+    garson_ad: "-",
+    toplam: 0,
+    sure: 0,
+    updated_at: new Date().toISOString()
+  });
+  modalKapat();
+  toast("Ödeme alındı! ₺" + toplam.toLocaleString("tr-TR") + " — " + (yontem === "nakit" ? "Nakit" : "Kart"));
+  // Fiş aç
+  window.open("fis.html?odeme=" + odemeId + "&masa=" + aktifMasaNo + "&toplam=" + toplam + "&yontem=" + yontem, "_blank");
+  await yukle();
+}
+
+function modalKapat() {
+  document.getElementById("modal-detay").classList.remove("ak");
+  aktifMasaNo = null;
+}
+
+var toastTimer = null;
+function toast(msg) {
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("ak");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.classList.remove("ak"); }, 3000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Lezzet Kebap — Dijital Fiş</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--s:#1A1A1A;--al:#D4A017;--bas:#2D6A2D;--bac:#E8F5E8;--kr:#FDF6EE;--bd:#EDD9C0;--mt:#1A1A1A;--si:#9A7B65}
+body{font-family:'Courier New',monospace;background:var(--kr);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:20px}
+.fis{width:100%;max-width:360px;background:#fff;border-radius:4px;padding:0;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.fis-ic{padding:24px 20px}
+/* DELIKLI KENAR */
+.delik{height:20px;background:repeating-linear-gradient(90deg,transparent,transparent 14px,var(--kr) 14px,var(--kr) 20px);margin:0}
+.logo-alan{text-align:center;padding:16px 0 8px;border-bottom:2px dashed #ddd;margin-bottom:16px}
+.logo-t{font-size:20px;font-weight:900;color:var(--s);letter-spacing:2px}
+.logo-a{font-size:11px;color:var(--si);margin-top:3px}
+.fis-t{font-size:11px;color:var(--si);text-align:center;margin-bottom:12px}
+.fis-no{font-size:13px;font-weight:700;color:var(--s);text-align:center;margin-bottom:16px}
+/* ÜRÜNLER */
+.urunler{margin-bottom:14px}
+.urun-satir{display:flex;align-items:flex-start;gap:6px;padding:5px 0;border-bottom:1px dotted #eee;font-size:12px}
+.urun-satir:last-child{border-bottom:none}
+.u-adet{font-weight:700;color:var(--s);flex-shrink:0;width:20px}
+.u-ad{flex:1;color:var(--mt);line-height:1.3}
+.u-not{font-size:10px;color:var(--si)}
+.u-fiyat{font-weight:700;color:var(--s);flex-shrink:0;text-align:right}
+/* TOPLAMLAR */
+.toplam-alan{border-top:2px solid var(--s);padding-top:12px;margin-top:8px}
+.toplam-satir{display:flex;justify-content:space-between;font-size:12px;padding:3px 0}
+.toplam-satir.ana{font-size:16px;font-weight:900;color:var(--s);border-top:1px dashed #ddd;margin-top:6px;padding-top:8px}
+.odeme-yontem{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:var(--bac);border-radius:8px;margin:14px 0;font-size:12px;font-weight:700;color:var(--bas)}
+/* PUAN */
+.puan-alan{text-align:center;padding:12px;background:linear-gradient(135deg,var(--s),#2C2C2C);border-radius:10px;margin:12px 0}
+.puan-kazanc{font-size:22px;font-weight:900;color:var(--al)}
+.puan-t{font-size:10px;color:rgba(255,255,255,.6);margin-top:3px}
+.puan-top{font-size:12px;color:rgba(255,255,255,.5);margin-top:5px}
+/* ALT */
+.fis-alt{text-align:center;font-size:10px;color:var(--si);padding:12px 0;border-top:2px dashed #ddd;margin-top:14px;line-height:1.8}
+/* BUTONLAR */
+.btn-grup{display:flex;flex-direction:column;gap:8px;padding:0 0 8px}
+.btn{width:100%;padding:12px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn.wp{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff}
+.btn.indir{background:linear-gradient(135deg,var(--s),#2C2C2C);color:#fff;border:1.5px solid var(--al)}
+.btn.yorum{background:linear-gradient(135deg,var(--al),#F0C040);color:var(--s)}
+.ayrac{text-align:center;font-size:18px;margin:8px 0;letter-spacing:4px;color:#ddd}
+</style>
+</head>
+<body>
+<div class="fis">
+  <div class="delik"></div>
+  <div class="fis-ic">
+    <div class="logo-alan">
+      <div class="logo-t">🍽️ LEZZET KEBAP</div>
+      <div class="logo-a" id="fis-adres">İstanbul / Kadıköy</div>
+    </div>
+    <div class="fis-t" id="fis-tarih">—</div>
+    <div class="fis-no" id="fis-no">FİŞ NO: —</div>
+    <div class="urunler" id="urunler"></div>
+    <div class="toplam-alan" id="toplam-alan"></div>
+    <div class="odeme-yontem" id="odeme-yontem">💵 NAKİT ÖDENDİ</div>
+    <div class="puan-alan">
+      <div class="puan-kazanc" id="puan-kazanc">+0 ⭐</div>
+      <div class="puan-t">Bu ziyaretten puan kazandınız</div>
+      <div class="puan-top" id="puan-top">Toplam: 0 puan</div>
+    </div>
+    <div class="ayrac">· · · · · · · ·</div>
+    <div class="btn-grup">
+      <button class="btn wp" onclick="wpGonder()">
+        💬 WhatsApp'a Gönder
+      </button>
+      <button class="btn yorum" onclick="yorumAc()">
+        ⭐ Google Yorum Yaz (+20 Puan)
+      </button>
+      <button class="btn indir" onclick="window.print()">
+        🖨️ Yazdır / Kaydet
+      </button>
+    </div>
+    <div class="fis-alt">
+      Bizi tercih ettiğiniz için teşekkürler!<br>
+      lezzetkebap.com · 0212 XXX XX XX<br>
+      <strong>Afiyet Olsun!</strong>
+    </div>
+  </div>
+  <div class="delik"></div>
+</div>
+
+<script>
+// URL parametrelerinden veya localStorage'dan fiş verisi al
+function fisiOlustur(){
+  // Demo veri veya URL'den al
+  const params=new URLSearchParams(location.search);
+  const odemeId=params.get('odeme');
+
+  let odeme=null;
+  try{
+    const raw=localStorage.getItem('lezzet_kebap_v2');
+    if(raw&&odemeId){
+      const data=JSON.parse(raw);
+      odeme=data.odemeler&&data.odemeler.find(o=>o.id===odemeId);
+    }
+  }catch(e){}
+
+  // Demo veri
+  if(!odeme){
+    odeme={
+      id:'od_demo_001',masaNo:5,yontem:'nakit',toplam:425,
+      garsonAd:'Zeynep K.',tel:'0532 *** **11',
+      tarih:new Date().toISOString(),
+      urunler:[
+        {ad:'Adana Kebap',em:'🥩',adet:2,fiyat:180},
+        {ad:'Ayran',em:'🥛',adet:2,fiyat:25},
+        {ad:'Baklava',em:'🍮',adet:1,fiyat:80},
+      ],
+      puanKazanc:42, puanTop:186,
+    };
+  }
+
+  // Fiş doldur
+  const tarih=new Date(odeme.tarih);
+  document.getElementById('fis-tarih').textContent=
+    tarih.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'})+
+    ' · '+tarih.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})+
+    ' · Masa '+odeme.masaNo;
+  document.getElementById('fis-no').textContent='FİŞ NO: '+odeme.id.slice(-8).toUpperCase();
+
+  // Ürünler
+  document.getElementById('urunler').innerHTML=odeme.urunler.map(u=>`
+    <div class="urun-satir">
+      <div class="u-adet">${u.adet}x</div>
+      <div style="flex:1"><div class="u-ad">${u.em} ${u.ad}</div></div>
+      <div class="u-fiyat">₺${u.fiyat*u.adet}</div>
+    </div>`).join('');
+
+  // Toplamlar
+  const ara=odeme.urunler.reduce((s,u)=>s+u.fiyat*u.adet,0);
+  const kdv=Math.round(ara*0.08);
+  document.getElementById('toplam-alan').innerHTML=`
+    <div class="toplam-satir"><span>Ara Toplam</span><span>₺${ara}</span></div>
+    <div class="toplam-satir"><span>KDV (%8)</span><span>₺${kdv}</span></div>
+    ${odeme.puanKullan?`<div class="toplam-satir" style="color:var(--bas)"><span>Puan İndirimi</span><span>-₺${odeme.puanKullan}</span></div>`:''}
+    <div class="toplam-satir ana"><span>TOPLAM</span><span>₺${odeme.toplam}</span></div>`;
+
+  // Ödeme yöntemi
+  document.getElementById('odeme-yontem').textContent=odeme.yontem==='nakit'?'💵 NAKİT ÖDENDİ':'💳 KART İLE ÖDENDİ';
+
+  // Puan
+  document.getElementById('puan-kazanc').textContent='+'+(odeme.puanKazanc||Math.floor(odeme.toplam/10))+' ⭐';
+  document.getElementById('puan-top').textContent='Toplam: '+(odeme.puanTop||0)+' puan';
+
+  // Global için sakla
+  window._odeme=odeme;
+}
+
+function wpGonder(){
+  if(!window._odeme)return;
+  const o=window._odeme;
+  const tarih=new Date(o.tarih);
+  const satirlar=o.urunler.map(u=>`• ${u.adet}x ${u.ad} = ₺${u.fiyat*u.adet}`).join('\n');
+  const metin=`🍽️ *LEZZET KEBAP* — Dijital Fiş\n\n`+
+    `Tarih: ${tarih.toLocaleDateString('tr-TR')} ${tarih.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}\n`+
+    `Masa: ${o.masaNo} · Garson: ${o.garsonAd||'—'}\n\n`+
+    `*Siparişler:*\n${satirlar}\n\n`+
+    `*Toplam: ₺${o.toplam}*\n`+
+    `Ödeme: ${o.yontem==='nakit'?'Nakit':'Kart'}\n\n`+
+    `⭐ ${Math.floor(o.toplam/10)} puan kazandınız!\n\n`+
+    `Teşekkürler! Afiyet olsun 🙏`;
+  const enc=encodeURIComponent(metin);
+  const tel=o.tel?o.tel.replace(/\D/g,''):'';
+  window.open(`https://wa.me/${tel?'90'+tel.slice(1):''}?text=${enc}`,'_blank');
+}
+
+function yorumAc(){
+  window.open('https://g.page/r/lezzetkebap/review','_blank');
+  // Puan ekle
+  const raw=localStorage.getItem('lezzet_kebap_v2');
+  if(raw&&window._odeme&&window._odeme.tel){
+    try{
+      const data=JSON.parse(raw);
+      if(data.musteriler&&data.musteriler[window._odeme.tel]){
+        data.musteriler[window._odeme.tel].puan=(data.musteriler[window._odeme.tel].puan||0)+20;
+        localStorage.setItem('lezzet_kebap_v2',JSON.stringify(data));
+      }
+    }catch(e){}
+  }
+}
+
+fisiOlustur();
+</script>
+</body>
+</html>

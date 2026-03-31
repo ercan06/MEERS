@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Lezzet SaaS — Restoran Kaydı</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --s:#1A1A1A;--sm:#2C2C2C;--al:#D4A017;--aac:#F0C040;
+  --bas:#2D6A2D;--bac:#E8F5E8;--teh:#C0392B;--tac:#FDECEA;
+  --kr:#FDF6EE;--yz:#FFF8F2;--ik:#F5E6D3;--bd:#EDD9C0;--mt:#1A1A1A;--si:#9A7B65;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(135deg,#0D0D0D,#1A1A1A);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.wrap{width:100%;max-width:480px}
+/* ADIM GÖSTERGESİ */
+.adim-bar{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:28px}
+.adim-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .3s}
+.adim-dot.ak{background:var(--al);width:28px;border-radius:5px}
+.adim-dot.tamam{background:var(--bas)}
+/* KART */
+.kart{background:var(--yz);border-radius:24px;padding:28px 24px;border:1px solid var(--bd);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.kart-ust{text-align:center;margin-bottom:24px}
+.kart-em{font-size:48px;margin-bottom:12px;display:block}
+.kart-t{font-size:22px;font-weight:800;color:var(--mt);margin-bottom:6px}
+.kart-a{font-size:13px;color:var(--si);line-height:1.5}
+/* FORM */
+.f-grup{margin-bottom:14px}
+.f-label{font-size:11px;font-weight:600;color:var(--si);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;display:block}
+.f-inp{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--bd);font-size:14px;background:var(--yz);color:var(--mt);outline:none}
+.f-inp:focus{border-color:var(--al)}
+.f-sel{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--bd);font-size:14px;background:var(--yz);color:var(--mt);outline:none;cursor:pointer}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* PLAN KARTLARI */
+.planlar{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.plan-k{border-radius:14px;padding:14px 16px;border:2px solid var(--bd);background:var(--yz);cursor:pointer;transition:all .2s}
+.plan-k.secili{border-color:var(--al);background:rgba(212,160,23,.06)}
+.plan-ust{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.plan-ad{font-size:14px;font-weight:700;color:var(--mt)}
+.plan-fiyat{font-size:18px;font-weight:800;color:var(--al)}
+.plan-ozellik{font-size:11px;color:var(--si);line-height:1.6}
+.plan-badge{background:linear-gradient(135deg,var(--al),var(--aac));color:var(--s);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700}
+/* QR KUTULAR */
+.qr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.qr-k{border-radius:10px;padding:8px;text-align:center;background:var(--yz);border:1px solid var(--bd)}
+.qr-no{font-size:12px;font-weight:700;color:var(--mt)}
+.qr-img{width:40px;height:40px;background:var(--s);border-radius:6px;margin:4px auto;display:flex;align-items:center;justify-content:center}
+.qr-link{font-size:8px;color:var(--si);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* BUTONLAR */
+.ileri-btn{width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,var(--s),var(--sm));color:#fff;border:1.5px solid var(--al);font-size:14px;font-weight:700;cursor:pointer;margin-top:16px}
+.geri-btn{width:100%;padding:11px;border-radius:12px;background:var(--ik);color:var(--si);border:none;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
+/* TAMAMLANDI */
+.tamamlandi{text-align:center}
+.tamamlandi-em{font-size:64px;display:block;margin-bottom:16px}
+.ek-linkler{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.ek-link{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:1px solid var(--bd);background:var(--yz);text-decoration:none;color:var(--mt);font-size:13px;font-weight:600;cursor:pointer}
+.ek-link:hover{border-color:var(--al);background:var(--ik)}
+.ek-em{font-size:20px;flex-shrink:0}
+.ozet-satir{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid var(--bd)}
+.ozet-satir:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="adim-bar" id="adim-bar"></div>
+  <div class="kart" id="kart-ic"></div>
+</div>
+
+<script>
+let adim=0;
+const TOPLAM_ADIM=5;
+let formData={
+  ad:'', tur:'', il:'', ilce:'', tel:'', email:'',
+  masaSayisi:10, plan:'baslangic',
+  sahip:'', sifre:'',
+};
+
+const ADIMLAR=[
+  {em:'🍽️',t:'Restoranınızı Kaydedin',a:'Lezzet Kebap\'a hoş geldiniz. Dakikalar içinde QR menünüz hazır olacak.'},
+  {em:'🏪',t:'Restoran Bilgileri',a:'Restoranınız hakkında temel bilgileri girin.'},
+  {em:'💳',t:'Plan Seçin',a:'Size uygun paketi seçin.'},
+  {em:'📲',t:'QR Kodlar Hazır',a:'Her masanız için QR kod oluşturuldu.'},
+  {em:'✅',t:'Kurulum Tamamlandı!',a:'Restoranınız aktif. Panellere giriş yapabilirsiniz.'},
+];
+
+function renderAdimBar(){
+  document.getElementById('adim-bar').innerHTML=Array.from({length:TOPLAM_ADIM},(_,i)=>`<div class="adim-dot${i===adim?' ak':i<adim?' tamam':''}"></div>`).join('');
+}
+
+function render(){
+  renderAdimBar();
+  const a=ADIMLAR[adim];
+  let html=`<div class="kart-ust"><span class="kart-em">${a.em}</span><div class="kart-t">${a.t}</div><div class="kart-a">${a.a}</div></div>`;
+  if(adim===0) html+=renderAdim0();
+  else if(adim===1) html+=renderAdim1();
+  else if(adim===2) html+=renderAdim2();
+  else if(adim===3) html+=renderAdim3();
+  else if(adim===4) html+=renderAdim4();
+  document.getElementById('kart-ic').innerHTML=html;
+}
+
+function renderAdim0(){
+  return `<div class="f-grup">
+    <label class="f-label">Sahip Adı Soyadı</label>
+    <input class="f-inp" id="f-sahip" placeholder="Ahmet Yilmaz" value="${formData.sahip}" oninput="formData.sahip=this.value">
+  </div>
+  <div class="f-grup">
+    <label class="f-label">E-posta</label>
+    <input class="f-inp" id="f-email" type="email" placeholder="ahmet@email.com" value="${formData.email}" oninput="formData.email=this.value">
+  </div>
+  <div class="f-grup">
+    <label class="f-label">Şifre</label>
+    <input class="f-inp" id="f-sifre" type="password" placeholder="En az 6 karakter" oninput="formData.sifre=this.value">
+  </div>
+  <button class="ileri-btn" onclick="ileri()">Devam Et →</button>`;
+}
+
+function renderAdim1(){
+  return `<div class="f-grup">
+    <label class="f-label">Restoran Adı</label>
+    <input class="f-inp" placeholder="Lezzet Kebap" value="${formData.ad}" oninput="formData.ad=this.value">
+  </div>
+  <div class="f-row">
+    <div class="f-grup">
+      <label class="f-label">Restoran Türü</label>
+      <select class="f-sel" onchange="formData.tur=this.value">
+        <option value="">Seçin</option>
+        <option ${formData.tur==='Kebapçı'?'selected':''}>Kebapçı</option>
+        <option ${formData.tur==='Pideci'?'selected':''}>Pideci</option>
+        <option ${formData.tur==='Fastfood'?'selected':''}>Fastfood</option>
+        <option ${formData.tur==='Kafeterya'?'selected':''}>Kafeterya</option>
+        <option ${formData.tur==='Diğer'?'selected':''}>Diğer</option>
+      </select>
+    </div>
+    <div class="f-grup">
+      <label class="f-label">Masa Sayısı</label>
+      <input class="f-inp" type="number" min="1" max="100" value="${formData.masaSayisi}" oninput="formData.masaSayisi=parseInt(this.value)||10">
+    </div>
+  </div>
+  <div class="f-row">
+    <div class="f-grup">
+      <label class="f-label">İl</label>
+      <input class="f-inp" placeholder="İstanbul" value="${formData.il}" oninput="formData.il=this.value">
+    </div>
+    <div class="f-grup">
+      <label class="f-label">İlçe</label>
+      <input class="f-inp" placeholder="Kadıköy" value="${formData.ilce}" oninput="formData.ilce=this.value">
+    </div>
+  </div>
+  <div class="f-grup">
+    <label class="f-label">Telefon</label>
+    <input class="f-inp" type="tel" placeholder="0212 XXX XX XX" value="${formData.tel}" oninput="formData.tel=this.value">
+  </div>
+  <button class="ileri-btn" onclick="ileri()">Devam Et →</button>
+  <button class="geri-btn" onclick="geri()">← Geri</button>`;
+}
+
+function renderAdim2(){
+  const planlar=[
+    {id:'baslangic',ad:'Başlangıç',fiyat:'₺499/ay',badge:'',ozellik:'10 masa · QR menü · Sipariş takibi · Temel raporlar'},
+    {id:'profesyonel',ad:'Profesyonel',fiyat:'₺899/ay',badge:'Popüler',ozellik:'30 masa · Garson uygulaması · Stok takibi · Prim sistemi · WhatsApp'},
+    {id:'kurumsal',ad:'Kurumsal',fiyat:'₺1499/ay',badge:'',ozellik:'Sınırsız masa · Tüm özellikler · Öncelikli destek · Özel entegrasyon'},
+  ];
+  return planlar.map(p=>`
+    <div class="plan-k${formData.plan===p.id?' secili':''}" onclick="planSec('${p.id}')">
+      <div class="plan-ust">
+        <div class="plan-ad">${p.ad} ${p.badge?`<span class="plan-badge">${p.badge}</span>`:''}</div>
+        <div class="plan-fiyat">${p.fiyat}</div>
+      </div>
+      <div class="plan-ozellik">${p.ozellik}</div>
+    </div>`).join('')+
+    `<button class="ileri-btn" onclick="ileri()">Bu Planla Devam Et →</button>
+    <button class="geri-btn" onclick="geri()">← Geri</button>`;
+}
+
+function renderAdim3(){
+  const masalar=Math.min(formData.masaSayisi,12);
+  const qrler=Array.from({length:masalar},(_,i)=>{
+    const no=i+1;
+    return `<div class="qr-k">
+      <div class="qr-no">Masa ${no}</div>
+      <div class="qr-img">
+        <svg width="30" height="30" viewBox="0 0 30 30"><rect width="30" height="30" fill="#1A1A1A"/>
+          <rect x="2" y="2" width="11" height="11" rx="1" fill="none" stroke="#D4A017" stroke-width="1.5"/>
+          <rect x="17" y="2" width="11" height="11" rx="1" fill="none" stroke="#D4A017" stroke-width="1.5"/>
+          <rect x="2" y="17" width="11" height="11" rx="1" fill="none" stroke="#D4A017" stroke-width="1.5"/>
+          <rect x="5" y="5" width="5" height="5" fill="#D4A017"/>
+          <rect x="20" y="5" width="5" height="5" fill="#D4A017"/>
+          <rect x="5" y="20" width="5" height="5" fill="#D4A017"/>
+          <rect x="17" y="17" width="3" height="3" fill="#D4A017"/>
+          <rect x="22" y="17" width="3" height="3" fill="#D4A017"/>
+          <rect x="17" y="22" width="3" height="3" fill="#D4A017"/>
+        </svg>
+      </div>
+      <div class="qr-link">masa${no}.qr</div>
+    </div>`;
+  }).join('');
+  return `<div class="qr-grid">${qrler}</div>
+    <div style="background:var(--bac);border-radius:10px;padding:10px;font-size:12px;color:var(--bas);text-align:center;margin-bottom:4px">
+      ✅ ${masalar} masa için QR oluşturuldu. Yazdırıp masaya koyabilirsiniz.
+    </div>
+    <button class="ileri-btn" onclick="ileri()">Kurulumu Tamamla →</button>
+    <button class="geri-btn" onclick="geri()">← Geri</button>`;
+}
+
+function renderAdim4(){
+  const ozet=[
+    ['Restoran',formData.ad||'—'],
+    ['Plan',formData.plan==='baslangic'?'Başlangıç ₺499/ay':formData.plan==='profesyonel'?'Profesyonel ₺899/ay':'Kurumsal ₺1499/ay'],
+    ['Masa Sayısı',formData.masaSayisi],
+    ['Konum',(formData.il||'—')+(formData.ilce?' / '+formData.ilce:'')],
+  ];
+  return `<div class="tamamlandi">
+    <span class="tamamlandi-em">🎉</span>
+    <div style="margin-bottom:16px">${ozet.map(([k,v])=>`<div class="ozet-satir"><span style="color:var(--si)">${k}</span><span style="font-weight:700">${v}</span></div>`).join('')}</div>
+    <div class="ek-linkler">
+      <div class="ek-link" onclick="panelAc('patron.html')"><div class="ek-em">👔</div><div><div>Patron Paneline Git</div><div style="font-size:11px;color:var(--si)">Ciro, raporlar, ayarlar</div></div><div style="margin-left:auto">→</div></div>
+      <div class="ek-link" onclick="panelAc('kasiyer.html')"><div class="ek-em">💳</div><div><div>Kasiyer Paneline Git</div><div style="font-size:11px;color:var(--si)">Masa yönetimi, ödeme</div></div><div style="margin-left:auto">→</div></div>
+      <div class="ek-link" onclick="panelAc('garson.html')"><div class="ek-em">👨‍💼</div><div><div>Garson Uygulaması</div><div style="font-size:11px;color:var(--si)">Masalar, sipariş takibi</div></div><div style="margin-left:auto">→</div></div>
+      <div class="ek-link" onclick="panelAc('sef.html')"><div class="ek-em">👨‍🍳</div><div><div>Şef / Mutfak Ekranı</div><div style="font-size:11px;color:var(--si)">Sipariş hazırlama</div></div><div style="margin-left:auto">→</div></div>
+    </div>
+  </div>`;
+}
+
+function planSec(id){
+  formData.plan=id;
+  render();
+}
+function ileri(){
+  if(adim===0&&(!formData.sahip||!formData.email)){showUyari('Ad ve e-posta zorunlu!');return;}
+  if(adim===1&&!formData.ad){showUyari('Restoran adı zorunlu!');return;}
+  if(adim<TOPLAM_ADIM-1){adim++;render();}
+}
+function geri(){if(adim>0){adim--;render();}}
+function panelAc(sayfa){window.open(sayfa,'_blank');}
+function showUyari(msg){
+  let el=document.getElementById('uyari');
+  if(!el){el=document.createElement('div');el.id='uyari';
+    el.style.cssText='background:var(--tac);color:var(--teh);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;margin-bottom:10px;text-align:center;border:1px solid rgba(192,57,43,.3)';
+    document.getElementById('kart-ic').insertBefore(el,document.getElementById('kart-ic').lastElementChild);}
+  el.textContent=msg;
+  setTimeout(()=>el&&el.remove(),3000);
+}
+render();
+</script>
+</body>
+</html>
