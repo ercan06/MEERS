@@ -359,6 +359,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
       <button class="btn yes" onclick="menuKaydet()">✅ Kaydet</butt
 
+<script>
 // ── SUPABASE KONFIGURASYON ──
 const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg';
@@ -1162,14 +1163,6 @@ function qrAc(masaNo){
   var url = SITE_URL + 'musteri.html?masa=' + masaNo;
   window.open(url, '_blank');
 }
-ap(function(g){return g.id;})) : 0;
-    await SB.post('garsonlar',{id:maxId+1,ad:ad,harf:harf,sifre:sifre,aktif:true});
-  }
-  document.getElementById('garson-modal').classList.remove('ak');
-  await garsonYonetimYukle();
-  alert("Garson kaydedildi!");
-}
-
 async function garsonAktifToggle(id, mevcutDurum){
   await SB.patch('garsonlar','id=eq.'+id,{aktif:!mevcutDurum});
   await garsonYonetimYukle();
