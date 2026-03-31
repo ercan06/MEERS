@@ -413,7 +413,7 @@ function telFormat(inp){
 // ── GİRİŞ ──
 function girisYap(){
   const tel=document.getElementById('tel-inp').value.trim();
-  if(tel.length<10){showToast('Geçerli bir telefon numarası girin!');return;}
+  if(tel.length<7){showToast('Geçerli bir telefon numarası girin!');return;}
   musteri=ST.musteriGetir(tel);
   // DB'den güncel puan yükle
   SB.get('musteriler','tel=eq.'+tel).then(data=>{
@@ -461,7 +461,7 @@ function renderMenu(kat){
     const stokBitti = stokBitenler.indexOf(u.id) >= 0;
     const adet=sepet[u.id]?sepet[u.id].adet:0;
     return '<div class="menu-item'+(stokBitti?' stok-yok':'')+'">'
-      +(u.resim?'<img src="'+u.resim+'" style="width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0">':'<div class="mi-em">'+u.em+'</div>')
+      +(u.image_url?'<img src="'+u.image_url+'" style="width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0">':'<div class="mi-em">'+u.em+'</div>')
       +'<div class="mi-bilgi">'
       +'<div class="mi-ad">'+u.ad+'</div>'
       +'<div class="mi-fiyat">₺'+u.fiyat+'</div>'
@@ -664,7 +664,7 @@ async function menuDBdenYukle(){
     // ST.s.menu'yu güncelle
     ST.s.menu = data.map(u=>({
       id:u.id, ad:u.ad, em:u.em||'🍽️',
-      kat:u.kat, fiyat:u.fiyat, aktif:true
+      kat:u.kat, fiyat:u.fiyat, aktif:true, image_url:u.image_url||null
     }));
   }
 }
