@@ -1199,7 +1199,7 @@ async function restoranKaydet(){
   if(!ad){alert('Restoran adi bos!');return;}
   await SB.patch('ayarlar','key=eq.restoran_bilgi',{value:{ad:ad,masa:masa}}).catch(async function(){
     await SB.post('ayarlar',{key:'restoran_bilgi',value:{ad:ad,masa:masa}});
-  });
+  }); 
   alert('Kaydedildi!');
 }
 </script>
