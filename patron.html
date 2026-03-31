@@ -181,6 +181,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="tab-btn" onclick="tabGec('ayarlar',this)">⚙️ Ayarlar</button>
     <button class="tab-btn" onclick="tabGec('menu-yonetim',this)">🍽️ Menü Yönetimi</button>
     <button class="tab-btn" onclick="tabGec('garson-yonetim',this)">👨‍💼 Garsonlar</button>
+    <button class="tab-btn" onclick="tabGec('qr-kodlar',this)">📱 QR Kodlar</button>
   </div>
   <div class="content">
 
@@ -269,6 +270,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
     </div>
 
+
+    <!-- QR KODLAR -->
+    <div class="tp" id="tp-qr-kodlar">
+      <div class="kart">
+        <div class="kart-h">
+          <div class="kart-ht">📱 Masa QR Kodları</div>
+          <div style="font-size:11px;color:var(--si)">Tıkla → Yazdır</div>
+        </div>
+        <div class="kart-body">
+          <div style="margin-bottom:12px;font-size:12px;color:var(--si)">Her QR kodu tıklayarak yeni sekmede aç, Ctrl+P ile yazdır ve masaya koy.</div>
+          <div id="qr-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- MENÜ YÖNETİMİ -->
     <div class="tp" id="tp-menu-yonetim">
       <div class="kart">
@@ -341,22 +357,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div><div class="lb-l">Maliyet (₺)</div><input class="inp" id="mu-maliyet" type="number" placeholder="0" style="width:100%"></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
-      <button class="btn yes" onclick="menuKaydet()">✅ Kaydet</button>
-      <button class="btn ik" onclick="document.getElementById('menu-modal').classList.remove('ak')">İptal</button>
-    </div>
-  </div>
-</div>
-
-<!-- GİDER MODAL -->
-<div class="modal-bg" id="gider-modal">
-  <div class="modal">
-    <div style="font-size:15px;font-weight:800;color:var(--mt);margin-bottom:14px">Gider Ekle</div>
-    <div style="margin-bottom:8px"><div class="lb-l">Kategori</div>
-      <select class="inp" id="g-kat" style="width:100%">
-        <option>Malzeme/Hammadde</option><option>Personel Maasi</option><option>Kira</option>
-        <option>Elektrik/Su/Gaz</option><option>Bakim/Onarim</option><option>Diger</option>
-      </select></div>
-<script>
+      <button class="btn yes" onclick="menuKaydet()">✅ Kaydet</butt
 
 // ── SUPABASE KONFIGURASYON ──
 const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
@@ -888,6 +889,7 @@ function giderKaydet(){
 
 // ── RENDER HEPSİ ──
 function renderHepsi(){
+  qrKodlariRender();
   garsonYonetimYukle().catch(function(){});
   menuYonetimYukle().catch(function(){});
   // Sync renderlar
@@ -1117,6 +1119,50 @@ async function garsonKaydet(){
     await SB.patch('garsonlar','id=eq.'+duzenleGarsonId,{ad:ad,harf:harf,sifre:sifre});
   } else {
     var maxId = garsonListesi.length ? Math.max.apply(null,garsonListesi.map(function(g){return g.id;})) : 0;
+    await SB.post('garsonlar',{id:maxId+1,ad:ad,harf:harf,sifre:sifre,aktif:true});
+  }
+  document.getElementById('garson-modal').classList.remove('ak');
+  await garsonYonetimYukle();
+  alert("Garson kaydedildi!");
+}
+
+async function garsonAktifToggle(id, mevcutDurum){
+  await SB.patch('garsonlar','id=eq.'+id,{aktif:!mevcutDurum});
+  await garsonYonetimYukle();
+}
+
+async function garsonSilOnay(id){
+  var g = garsonListesi.find(function(x){ return x.id===id; });
+  if(!g) return;
+  if(!confirm(g.ad+" garsonunu silmek istediginizden emin misiniz?")) return;
+  await SB.delete('garsonlar','id=eq.'+id);
+  await garsonYonetimYukle();
+}
+
+// ── QR KODLAR ──
+var SITE_URL = window.location.origin + window.location.pathname.replace('patron.html','');
+
+function qrKodlariRender(){
+  var el = document.getElementById('qr-grid');
+  if(!el) return;
+  var html = '';
+  for(var i = 1; i <= 20; i++){
+    var url = SITE_URL + 'musteri.html?masa=' + i;
+    var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=' + encodeURIComponent(url);
+    html += '<div style="background:var(--yz);border-radius:12px;border:1px solid var(--bd);padding:10px;text-align:center;cursor:pointer" onclick="qrAc('+i+')" title="Masa '+i+' QR">';
+    html += '<img src="'+qrUrl+'" width="80" height="80" style="border-radius:6px" loading="lazy">';
+    html += '<div style="font-size:12px;font-weight:700;color:var(--mt);margin-top:6px">Masa '+i+'</div>';
+    html += '<div style="font-size:9px;color:var(--si);margin-top:2px">Tıkla → Yazdır</div>';
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function qrAc(masaNo){
+  var url = SITE_URL + 'musteri.html?masa=' + masaNo;
+  window.open(url, '_blank');
+}
+ap(function(g){return g.id;})) : 0;
     await SB.post('garsonlar',{id:maxId+1,ad:ad,harf:harf,sifre:sifre,aktif:true});
   }
   document.getElementById('garson-modal').classList.remove('ak');

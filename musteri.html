@@ -184,6 +184,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <script>
+var stokBitenler = []; // Stoku biten menu id'leri
+
+// Stok durumunu DB'den kontrol et
+async function stokDurumunuYukle(){
+  try{
+    var stokData = await SB.get('stok','miktar=lte.sinir');
+    var menuData = await SB.get('menu','aktif=eq.true');
+    stokBitenler = [];
+    if(!stokData || !menuData) return;
+    // Stok biten malzeme isimlerini bul
+    var bitenMalzemeler = stokData.map(function(s){ return s.ad; });
+    // Bu malzemeyi kullanan menü itemlerini bul
+    // stokDusur mapping'i kullan
+    var STOK_MAP = {
+      'm1':['Dana Kiyma'],'m2':['Tavuk Gogsu'],'m3':['Dana Kiyma'],
+      'm4':['Un'],'m5':['Un','Dana Kiyma'],'m6':['Un','Dana Kiyma'],
+      'm13':['Cay']
+    };
+    Object.keys(STOK_MAP).forEach(function(menuId){
+      var malzemeler = STOK_MAP[menuId];
+      var bitti = malzemeler.some(function(m){ return bitenMalzemeler.indexOf(m) >= 0; });
+      if(bitti) stokBitenler.push(menuId);
+    });
+  }catch(e){}
+}
+
 // ── SUPABASE KONFIGURASYON ──
 const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg';
@@ -408,7 +434,7 @@ function girisYap(){
   document.getElementById('hs-seviye').textContent=(musteri.seviye||1)+'.Seviye';
   document.getElementById('hs-ziyaret').textContent=musteri.ziyaret||0;
   // Menüyü DB'den yükle
-  menuDBdenYukle().then(()=>{ renderKatlar(); renderMenu('Tumu'); }).catch(()=>{ renderKatlar(); renderMenu('Tumu'); });
+  Promise.all([menuDBdenYukle(), stokDurumunuYukle()]).then(function(){ renderKatlar(); renderMenu('Tumu'); }).catch(function(){ renderKatlar(); renderMenu('Tumu'); });
 }
 
 // ── KATEGORİ ──
@@ -431,21 +457,20 @@ function katSec(kat,el){
 function renderMenu(kat){
   const items=ST.menuGetir(kat);
   document.getElementById('menu-list').innerHTML=items.map(u=>{
-    const kontrol=ST.stokOk(u.id);
+    // Stok durumunu kontrol et — stokBitenler listesinden
+    const stokBitti = stokBitenler.indexOf(u.id) >= 0;
     const adet=sepet[u.id]?sepet[u.id].adet:0;
-    return `<div class="menu-item${!kontrol.ok?' stok-yok':''}">
-      <div class="mi-em">${u.em}</div>
-      <div class="mi-bilgi">
-        <div class="mi-ad">${u.ad}</div>
-        <div class="mi-fiyat">₺${u.fiyat}</div>
-        ${!kontrol.ok?'<div class="mi-stok-uyari">Stok tükendi</div>':''}
-      </div>
-      <div class="mi-kontrol">
-        ${adet>0?`<button class="mi-btn azalt" onclick="azalt('${u.id}')">−</button>
-        <div class="mi-adet">${adet}</div>`:``}
-        <button class="mi-btn ekle" onclick="ekle('${u.id}','${u.ad}','${u.em}',${u.fiyat})">+</button>
-      </div>
-    </div>`;
+    return '<div class="menu-item'+(stokBitti?' stok-yok':'')+'">'
+      +'<div class="mi-em">'+u.em+'</div>'
+      +'<div class="mi-bilgi">'
+      +'<div class="mi-ad">'+u.ad+'</div>'
+      +'<div class="mi-fiyat">₺'+u.fiyat+'</div>'
+      +(stokBitti?'<div class="mi-stok-uyari">Tükendi</div>':'')
+      +'</div>'
+      +'<div class="mi-kontrol">'
+      +(adet>0?'<button class="mi-btn azalt" onclick="azalt(''+u.id+'')">−</button><div class="mi-adet">'+adet+'</div>':'')
+      +(stokBitti?'':'<button class="mi-btn ekle" onclick="ekle(''+u.id+'',''+u.ad+'',''+u.em+'','+u.fiyat+')">+</button>')
+      +'</div></div>';
   }).join('');
   sepetGuncelle();
 }

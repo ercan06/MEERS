@@ -584,6 +584,70 @@ setInterval(function(){ siparisleriDBden().catch(function(){}); }, 3000);
 async function sipDurumDB(id, durum){
   await SB.patch('siparisler','id=eq.'+id,{durum:durum,updated_at:new Date().toISOString()});
 }
+
+// ── STOK GİRİŞİ ──
+var stokPanelAcik = false;
+var dbStokListesi = [];
+
+async function stokPanelToggle(){
+  stokPanelAcik = !stokPanelAcik;
+  var panel = document.getElementById('stok-panel');
+  if(!panel) return;
+  if(stokPanelAcik){
+    panel.style.display = 'block';
+    await stokYukle();
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+async function stokYukle(){
+  var data = await SB.get('stok','order=ad.asc');
+  if(data) dbStokListesi = data;
+  stokRender();
+}
+
+function stokRender(){
+  var el = document.getElementById('stok-liste');
+  if(!el) return;
+  el.innerHTML = dbStokListesi.map(function(s){
+    var kritik = parseFloat(s.miktar) <= parseFloat(s.sinir);
+    return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08)">'
+      +'<span style="font-size:16px">'+s.em+'</span>'
+      +'<div style="flex:1"><div style="font-size:12px;font-weight:600;color:'+(kritik?'#ff8a80':'#fff')+'">'+s.ad+'</div>'
+      +'<div style="font-size:10px;color:rgba(255,255,255,.4)">Mevcut: '+s.miktar+' '+s.birim+'</div></div>'
+      +'<input type="number" min="0" step="0.1" placeholder="Ekle" style="width:70px;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:11px" id="stok-inp-'+s.ad.replace(/ /g,'_')+'">'
+      +'<button onclick="stokEkle(''+s.ad+'','stok-inp-'+s.ad.replace(/ /g,'_')+'')" style="padding:4px 8px;border-radius:6px;background:var(--bas);color:#fff;border:none;font-size:11px;cursor:pointer">Ekle</button>'
+      +'</div>';
+  }).join('');
+}
+
+async function stokEkleBtn(btn){
+  var ad = btn.getAttribute('data-ad');
+  var inp = btn.parentElement.querySelector('.stok-inp[data-ad="'+ad+'"]');
+  if(!inp) return;
+  var miktar = parseFloat(inp.value);
+  if(!miktar || miktar <= 0){ return; }
+  var stok = dbStokListesi.find(function(s){ return s.ad === ad; });
+  if(!stok) return;
+  var yeniMiktar = parseFloat(stok.miktar) + miktar;
+  await SB.patch('stok','ad=eq.'+ad,{
+    miktar: yeniMiktar,
+    updated_at: new Date().toISOString()
+  });
+  inp.value = '';
+  flash(ad + ' stoku guncellendi: ' + yeniMiktar + ' ' + stok.birim);
+  await stokYukle();
+}
 </script>
+
+<!-- STOK PANELİ -->
+<div id="stok-panel" style="display:none;position:fixed;top:52px;right:0;width:320px;height:calc(100vh - 52px);background:#1A1A1A;border-left:2px solid var(--al);z-index:50;overflow-y:auto;padding:14px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div style="font-size:14px;font-weight:700;color:var(--al)">📦 Stok Girişi</div>
+    <button onclick="stokPanelToggle()" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:18px;cursor:pointer">✕</button>
+  </div>
+  <div id="stok-liste"></div>
+</div>
 </body>
 </html>
