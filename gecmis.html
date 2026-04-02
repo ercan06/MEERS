@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MEER'S — Adisyon Geçmişi</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --s:#1A1A1A;--sm:#2C2C2C;--al:#D4A017;--aac:#F0C040;
+  --bas:#2D6A2D;--bac:#E8F5E8;--teh:#C0392B;--tac:#FDECEA;
+  --uya:#E8952A;--uac:#FEF0E0;--mt:#1A1A1A;--si:#9A7B65;
+  --kr:#FDF6EE;--bd:#EDD9C0;--yz:#FFF8F2;--ik:#F5E6D3;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--kr);min-height:100vh}
+.topbar{background:linear-gradient(135deg,var(--s),var(--sm));padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--al)}
+.tb-t{font-size:16px;font-weight:800;color:#fff}
+.btn{padding:7px 14px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer}
+.btn-ik{background:rgba(255,255,255,.15);color:#fff}
+.filtreler{padding:10px 12px;background:var(--sm);display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(212,160,23,.2)}
+.filtre-btn{padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)}
+.filtre-btn.ak{background:var(--al);color:var(--s)}
+.tarih-inp{padding:6px 10px;border-radius:8px;border:1px solid rgba(212,160,23,.3);background:rgba(255,255,255,.08);color:#fff;font-size:11px;outline:none}
+.ozet{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px 12px;background:var(--sm);border-bottom:1px solid rgba(212,160,23,.1)}
+.oz-k{background:rgba(255,255,255,.06);border-radius:10px;padding:8px;text-align:center;border:1px solid rgba(212,160,23,.12)}
+.oz-s{font-size:18px;font-weight:800;color:var(--al)}
+.oz-e{font-size:9px;color:rgba(255,255,255,.4);margin-top:2px;text-transform:uppercase}
+.content{padding:10px 12px}
+.adisyon-k{background:var(--yz);border-radius:12px;border:1px solid var(--bd);margin-bottom:8px;overflow:hidden;cursor:pointer}
+.adisyon-h{padding:10px 12px;display:flex;align-items:center;justify-content:space-between}
+.adisyon-sol{display:flex;align-items:center;gap:10px}
+.adisyon-masa{font-size:18px;font-weight:800;color:var(--mt)}
+.adisyon-bilgi{font-size:11px;color:var(--si);margin-top:2px}
+.adisyon-tutar{font-size:16px;font-weight:800;color:var(--al)}
+.adisyon-yontem{font-size:10px;font-weight:700;padding:3px 7px;border-radius:6px}
+.adisyon-yontem.nakit{background:var(--bac);color:var(--bas)}
+.adisyon-yontem.kart{background:rgba(52,152,219,.15);color:#3498db}
+.adisyon-detay{padding:0 12px 10px;border-top:1px solid var(--bd);display:none}
+.adisyon-detay.ak{display:block}
+.urun-satir{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--bd);color:var(--mt)}
+.urun-satir:last-child{border-bottom:none}
+.bos{text-align:center;padding:40px;color:var(--si)}
+.bos span{font-size:32px;display:block;margin-bottom:8px}
+.yukle-btn{width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--yz);color:var(--si);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-t">📋 Adisyon Geçmişi</div>
+  <button class="btn btn-ik" onclick="history.back()">← Geri</button>
+</div>
+
+<div class="filtreler">
+  <button class="filtre-btn ak" onclick="filtreSec('bugun',this)">Bugün</button>
+  <button class="filtre-btn" onclick="filtreSec('hafta',this)">Bu Hafta</button>
+  <button class="filtre-btn" onclick="filtreSec('ay',this)">Bu Ay</button>
+  <button class="filtre-btn" onclick="filtreSec('hepsi',this)">Tümü</button>
+  <input type="date" class="tarih-inp" id="tarih-bas" onchange="tarihFiltre()">
+  <input type="date" class="tarih-inp" id="tarih-bit" onchange="tarihFiltre()">
+</div>
+
+<div class="ozet">
+  <div class="oz-k"><div class="oz-s" id="oz-adet">0</div><div class="oz-e">Adisyon</div></div>
+  <div class="oz-k"><div class="oz-s" id="oz-ciro">₺0</div><div class="oz-e">Toplam</div></div>
+  <div class="oz-k"><div class="oz-s" id="oz-nakit">₺0</div><div class="oz-e">Nakit</div></div>
+  <div class="oz-k"><div class="oz-s" id="oz-kart">₺0</div><div class="oz-e">Kart</div></div>
+</div>
+
+<div class="content" id="liste"></div>
+
+<script>
+
+const SUPA_URL = "https://vdrjyngywjzuniwvsjtk.supabase.co";
+const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg";
+const SB = {
+  h: {
+    "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg",
+    "Content-Type": "application/json"
+  },
+  async get(t, q) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t+"?"+(q||""), {headers:this.h});
+      if(!r.ok) return [];
+      return await r.json();
+    } catch(e) { console.error("SB.get hatasi:", e); return []; }
+  },
+  async post(t, d) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t, {
+        method:"POST",
+        headers:Object.assign({},this.h,{"Prefer":"return=representation"}),
+        body:JSON.stringify(d)
+      });
+      return await r.json();
+    } catch(e) { console.error("SB.post hatasi:", e); return null; }
+  },
+  async patch(t, q, d) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t+"?"+q, {
+        method:"PATCH",
+        headers:Object.assign({},this.h,{"Prefer":"return=representation"}),
+        body:JSON.stringify(d)
+      });
+      return await r.json();
+    } catch(e) { console.error("SB.patch hatasi:", e); return null; }
+  },
+  async del(t, q) {
+    try {
+      await fetch(SUPA_URL+"/rest/v1/"+t+"?"+q, {method:"DELETE",headers:this.h});
+    } catch(e) { console.error("SB.del hatasi:", e); }
+  }
+};
+function parseUrunler(u) {
+  if(!u) return [];
+  if(typeof u === "string") { try { u = JSON.parse(u); } catch(e) { return []; } }
+  if(!Array.isArray(u)) return [];
+  return u.map(function(x) {
+    if(typeof x === "string") return {ad:x, adet:1, em:"", not:""};
+    return {ad:x.ad||"", adet:x.adet||1, em:x.em||"", not:x.not||""};
+  });
+}
+function urunMetin(urunler) {
+  var arr = parseUrunler(urunler);
+  if(!arr.length) return "Siparis yok";
+  return arr.map(function(u) { return (u.em?" ":"") + u.ad + " x" + u.adet; }).join(", ");
+}
+
+var tumOdemeler = [];
+var aktifFiltre = 'bugun';
+
+async function yukle(){
+  document.getElementById('liste').innerHTML = '<div class="bos"><span>⏳</span>Yükleniyor...</div>';
+  var data = await SB.get('odemeler','order=created_at.desc&limit=200');
+  if(!data){ document.getElementById('liste').innerHTML = '<div class="bos"><span>❌</span>Veri yüklenemedi</div>'; return; }
+  tumOdemeler = data;
+  render();
+}
+
+function filtreSec(f, btn){
+  aktifFiltre = f;
+  document.querySelectorAll('.filtre-btn').forEach(function(b){ b.classList.remove('ak'); });
+  if(btn) btn.classList.add('ak');
+  // Tarih inputlarını temizle
+  document.getElementById('tarih-bas').value = '';
+  document.getElementById('tarih-bit').value = '';
+  render();
+}
+
+function tarihFiltre(){
+  aktifFiltre = 'ozel';
+  document.querySelectorAll('.filtre-btn').forEach(function(b){ b.classList.remove('ak'); });
+  render();
+}
+
+function filtreUygula(){
+  var bugun = new Date().toISOString().slice(0,10);
+  return tumOdemeler.filter(function(o){
+    var tarih = o.created_at ? o.created_at.slice(0,10) : '';
+    if(aktifFiltre==='bugun') return tarih===bugun;
+    if(aktifFiltre==='hafta'){
+      var haftaOnce = new Date();
+      haftaOnce.setDate(haftaOnce.getDate()-7);
+      return new Date(tarih) >= haftaOnce;
+    }
+    if(aktifFiltre==='ay'){
+      var ayOnce = new Date();
+      ayOnce.setDate(ayOnce.getDate()-30);
+      return new Date(tarih) >= ayOnce;
+    }
+    if(aktifFiltre==='ozel'){
+      var bas = document.getElementById('tarih-bas').value;
+      var bit = document.getElementById('tarih-bit').value;
+      if(bas && tarih < bas) return false;
+      if(bit && tarih > bit) return false;
+      return true;
+    }
+    return true;
+  });
+}
+
+function render(){
+  var liste = filtreUygula();
+  // Özet
+  var ciro = liste.reduce(function(s,o){ return s+parseFloat(o.toplam||0); },0);
+  var nakit = liste.filter(function(o){ return o.yontem==='nakit'; }).reduce(function(s,o){ return s+parseFloat(o.toplam||0); },0);
+  var kart = liste.filter(function(o){ return o.yontem==='kart'; }).reduce(function(s,o){ return s+parseFloat(o.toplam||0); },0);
+  document.getElementById('oz-adet').textContent = liste.length;
+  document.getElementById('oz-ciro').textContent = '₺'+Math.round(ciro).toLocaleString('tr-TR');
+  document.getElementById('oz-nakit').textContent = '₺'+Math.round(nakit).toLocaleString('tr-TR');
+  document.getElementById('oz-kart').textContent = '₺'+Math.round(kart).toLocaleString('tr-TR');
+  // Liste
+  var el = document.getElementById('liste');
+  if(!liste.length){ el.innerHTML = '<div class="bos"><span>📭</span>Bu dönemde adisyon yok</div>'; return; }
+  el.innerHTML = liste.map(function(o,i){
+    var tarih = o.created_at ? new Date(o.created_at) : new Date();
+    var tarihStr = tarih.toLocaleDateString('tr-TR') + ' ' + tarih.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+    return '<div class="adisyon-k" onclick="detayToggle('+i+')">'
+      +'<div class="adisyon-h">'
+      +'<div class="adisyon-sol">'
+      +'<div class="adisyon-masa">Masa '+o.masa_no+'</div>'
+      +'<div><div class="adisyon-bilgi">'+tarihStr+'</div>'
+      +'<div class="adisyon-bilgi">Garson: '+(o.garson_ad||'-')+'</div></div>'
+      +'</div>'
+      +'<div style="text-align:right">'
+      +'<div class="adisyon-tutar">₺'+parseFloat(o.toplam||0).toLocaleString('tr-TR')+'</div>'
+      +'<div class="adisyon-yontem '+(o.yontem||'nakit')+'">'+(o.yontem==='kart'?'💳 Kart':'💵 Nakit')+'</div>'
+      +'</div>'
+      +'</div>'
+      +'<div class="adisyon-detay" id="detay-'+i+'">'
+      +'<div style="font-size:11px;color:var(--si);padding:6px 0;margin-bottom:4px">Ödeme ID: '+o.id+'</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function detayToggle(i){
+  var el = document.getElementById('detay-'+i);
+  el.classList.toggle('ak');
+}
+
+yukle();
+</script>
+</body>
+</html>
