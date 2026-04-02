@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MEER'S — Paket Servis</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --s:#1A1A1A;--sm:#2C2C2C;--al:#D4A017;--aac:#F0C040;
+  --bas:#2D6A2D;--bac:#E8F5E8;--teh:#C0392B;--tac:#FDECEA;
+  --uya:#E8952A;--uac:#FEF0E0;--mt:#1A1A1A;--si:#9A7B65;
+  --kr:#FDF6EE;--bd:#EDD9C0;--yz:#FFF8F2;--ik:#F5E6D3;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--kr);min-height:100vh}
+.topbar{background:linear-gradient(135deg,var(--s),var(--sm));padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--al)}
+.tb-t{font-size:16px;font-weight:800;color:#fff}
+.btn-geri{padding:7px 14px;border-radius:8px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);font-size:12px;font-weight:700;cursor:pointer}
+.wrap{display:grid;grid-template-columns:1fr 360px;height:calc(100vh - 52px)}
+@media(max-width:700px){.wrap{grid-template-columns:1fr;height:auto;overflow:auto}}
+.sol{overflow-y:auto;padding:12px;border-right:1px solid var(--bd)}
+.sag{background:var(--yz);overflow-y:auto;padding:12px;display:flex;flex-direction:column}
+.blm{font-size:11px;font-weight:700;color:var(--si);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;margin-top:14px}
+.blm:first-child{margin-top:0}
+.tip-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.tip-k{border-radius:12px;padding:12px;text-align:center;cursor:pointer;border:2px solid var(--bd);background:var(--yz);transition:all .15s}
+.tip-k.ak{border-color:var(--al);background:var(--ik)}
+.tip-em{font-size:24px;margin-bottom:4px}
+.tip-ad{font-size:13px;font-weight:700;color:var(--mt)}
+.inp{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--bd);font-size:13px;background:var(--yz);color:var(--mt);outline:none;margin-bottom:8px}
+.inp:focus{border-color:var(--al)}
+.kat-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.kat-btn{padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:var(--ik);color:var(--si)}
+.kat-btn.ak{background:var(--s);color:var(--al)}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mu-k{background:var(--yz);border-radius:12px;border:1.5px solid var(--bd);padding:10px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s}
+.mu-k.secili{border-color:var(--al);background:var(--ik)}
+.mu-em{font-size:22px;flex-shrink:0}
+.mu-ad{font-size:12px;font-weight:700;color:var(--mt)}
+.mu-fiyat{font-size:11px;color:var(--al);font-weight:700;margin-top:2px}
+.mu-badge{margin-left:auto;background:var(--al);color:var(--s);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.sure-grid{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.sure-k{padding:6px 12px;border-radius:8px;border:1.5px solid var(--bd);background:var(--yz);font-size:11px;font-weight:700;cursor:pointer;color:var(--si)}
+.sure-k.ak{border-color:var(--al);background:var(--ik);color:var(--mt)}
+.sag-t{font-size:14px;font-weight:800;color:var(--mt);margin-bottom:10px}
+.sepet-bos{text-align:center;padding:30px;color:var(--si);font-size:13px;flex:1}
+.sp-satir{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)}
+.sp-ad{flex:1;font-size:13px;color:var(--mt)}
+.sp-kontrol{display:flex;align-items:center;gap:5px}
+.sp-btn{width:26px;height:26px;border-radius:7px;border:1px solid var(--bd);background:var(--yz);font-size:14px;cursor:pointer;color:var(--mt);display:flex;align-items:center;justify-content:center}
+.sp-adet{font-size:13px;font-weight:700;color:var(--mt);min-width:20px;text-align:center}
+.sp-fiyat{font-size:13px;font-weight:700;color:var(--al);min-width:50px;text-align:right}
+.toplam-blk{border-top:2px solid var(--bd);padding-top:10px;margin-top:auto}
+.t-satir{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;color:var(--mt)}
+.t-satir.buyuk{font-size:18px;font-weight:800}
+.siparis-btn{width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,var(--al),var(--aac));color:var(--s);border:none;font-size:15px;font-weight:800;cursor:pointer;margin-top:10px}
+.siparis-btn:disabled{opacity:.5;cursor:not-allowed}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--s);color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;z-index:200;border:1px solid var(--al);display:none;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-t">🛵 Paket Servis</div>
+  <button class="btn-geri" onclick="history.back()">← Geri</button>
+</div>
+<div class="wrap">
+  <div class="sol">
+    <div class="blm">Sipariş Tipi</div>
+    <div class="tip-grid">
+      <div class="tip-k ak" id="tip-gel" onclick="tipSec('gel')">
+        <div class="tip-em">🏃</div>
+        <div class="tip-ad">Gel Al</div>
+      </div>
+      <div class="tip-k" id="tip-teslimat" onclick="tipSec('teslimat')">
+        <div class="tip-em">🛵</div>
+        <div class="tip-ad">Eve Teslimat</div>
+      </div>
+    </div>
+    <div class="blm">Müşteri Bilgileri</div>
+    <input class="inp" id="mst-ad" placeholder="Ad Soyad">
+    <input class="inp" id="mst-tel" placeholder="Telefon" type="tel">
+    <input class="inp" id="mst-adres" placeholder="Teslimat Adresi" style="display:none">
+    <div class="blm">Tahmini Süre</div>
+    <div class="sure-grid">
+      <div class="sure-k ak" data-sure="15" onclick="sureSec(this)">15 dk</div>
+      <div class="sure-k" data-sure="20" onclick="sureSec(this)">20 dk</div>
+      <div class="sure-k" data-sure="30" onclick="sureSec(this)">30 dk</div>
+      <div class="sure-k" data-sure="45" onclick="sureSec(this)">45 dk</div>
+      <div class="sure-k" data-sure="60" onclick="sureSec(this)">60 dk</div>
+    </div>
+    <input class="inp" id="mst-not" placeholder="Sipariş Notu">
+    <div class="blm">Menü</div>
+    <div class="kat-nav" id="kat-nav"></div>
+    <div class="menu-grid" id="menu-grid"></div>
+  </div>
+  <div class="sag">
+    <div class="sag-t">🛒 Sepet</div>
+    <div id="sepet-ic"><div class="sepet-bos">Menüden ürün seçin</div></div>
+    <div id="toplam-blk" style="display:none" class="toplam-blk">
+      <div class="t-satir"><span>Ara Toplam</span><span id="t-ara">₺0</span></div>
+      <div class="t-satir" id="t-teslimat-satir" style="display:none"><span>Teslimat</span><span>₺15</span></div>
+      <div class="t-satir buyuk"><span>Toplam</span><span id="t-genel">₺0</span></div>
+      <button class="siparis-btn" id="sp-btn" onclick="siparisOnayla()">📦 Siparişi Onayla</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg';
+
+const SB = {
+  get headers(){
+    return {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+    };
+  },
+  async get(tablo, params=''){
+    const r = await fetch(SUPABASE_URL+'/rest/v1/'+tablo+'?'+params, {headers:this.headers});
+    if(!r.ok) return [];
+    return r.json();
+  },
+  async post(tablo, data){
+    const r = await fetch(SUPABASE_URL+'/rest/v1/'+tablo, {
+      method:'POST', headers:{...this.headers,'Prefer':'return=representation'}, body:JSON.stringify(data)
+    });
+    return r.json();
+  },
+  async patch(tablo, filter, data){
+    const r = await fetch(SUPABASE_URL+'/rest/v1/'+tablo+'?'+filter, {
+      method:'PATCH', headers:{...this.headers,'Prefer':'return=representation'}, body:JSON.stringify(data)
+    });
+    return r.json();
+  },
+  async delete(tablo, filter){
+    await fetch(SUPABASE_URL+'/rest/v1/'+tablo+'?'+filter, {method:'DELETE', headers:this.headers});
+  },
+  poll(tablo, callback, interval=3000){
+    let son = null;
+    return setInterval(async ()=>{
+      try{
+        const veri = await this.get(tablo,'order=updated_at.desc&limit=100');
+        const hash = JSON.stringify(veri);
+        if(hash !== son){ son=hash; callback(veri); }
+      }catch(e){}
+    }, interval);
+  }
+};
+
+var menuListesi = [];
+var sepet = {};
+var aktifKat = 'Tumu';
+var aktifTip = 'gel';
+var aktifSure = '15';
+
+function hesaplaToplam() {
+  var items = Object.values(sepet).filter(function(u) { return u.adet > 0; });
+  var ara = items.reduce(function(s, u) { return s + u.fiyat * u.adet; }, 0);
+  var teslimat = aktifTip === 'teslimat' ? 15 : 0;
+  return { ara: ara, teslimat: teslimat, toplam: ara + teslimat };
+}
+
+function guncelleToplam() {
+  var t = hesaplaToplam();
+  document.getElementById('t-ara').textContent = '₺' + t.ara;
+  document.getElementById('t-genel').textContent = '₺' + t.toplam;
+}
+
+function tipSec(tip) {
+  aktifTip = tip;
+  document.getElementById('tip-gel').classList.toggle('ak', tip === 'gel');
+  document.getElementById('tip-teslimat').classList.toggle('ak', tip === 'teslimat');
+  document.getElementById('mst-adres').style.display = tip === 'teslimat' ? 'block' : 'none';
+  document.getElementById('t-teslimat-satir').style.display = tip === 'teslimat' ? 'flex' : 'none';
+  guncelleToplam();
+}
+
+function sureSec(el) {
+  aktifSure = el.getAttribute('data-sure');
+  document.querySelectorAll('.sure-k').forEach(function(k) { k.classList.remove('ak'); });
+  el.classList.add('ak');
+}
+
+function katSec(kat) {
+  aktifKat = kat;
+  renderKatlar();
+  renderMenu();
+}
+
+function renderKatlar() {
+  var katlar = ['Tumu'];
+  menuListesi.forEach(function(u) {
+    if (katlar.indexOf(u.kat) < 0) katlar.push(u.kat);
+  });
+  var html = '';
+  katlar.forEach(function(k) {
+    html += '<button class="kat-btn' + (k === aktifKat ? ' ak' : '') + '" data-kat="' + k + '" onclick="katSec(this.dataset.kat)">' + (k === 'Tumu' ? 'Tümü' : k) + '</button>';
+  });
+  document.getElementById('kat-nav').innerHTML = html;
+}
+
+function renderMenu() {
+  var items = aktifKat === 'Tumu' ? menuListesi : menuListesi.filter(function(u) { return u.kat === aktifKat; });
+  var html = '';
+  items.forEach(function(u) {
+    var adet = sepet[u.id] ? sepet[u.id].adet : 0;
+    var gorsel = u.image_url
+      ? '<img src="' + u.image_url + '" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0">'
+      : '<div class="mu-em">' + (u.em || '') + '</div>';
+    var badge = adet > 0 ? '<div class="mu-badge">' + adet + '</div>' : '';
+    html += '<div class="mu-k' + (adet > 0 ? ' secili' : '') + '"'
+      + ' data-id="' + u.id + '" data-ad="' + u.ad.replace(/"/g, '') + '"'
+      + ' data-em="' + (u.em || '') + '" data-fiyat="' + u.fiyat + '"'
+      + ' onclick="urunEkle(this)">'
+      + gorsel
+      + '<div><div class="mu-ad">' + u.ad + '</div><div class="mu-fiyat">₺' + u.fiyat + '</div></div>'
+      + badge + '</div>';
+  });
+  document.getElementById('menu-grid').innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--si)">Ürün yok</div>';
+}
+
+function urunEkle(el) {
+  var id = el.getAttribute('data-id');
+  var ad = el.getAttribute('data-ad');
+  var em = el.getAttribute('data-em');
+  var fiyat = parseFloat(el.getAttribute('data-fiyat'));
+  if (!sepet[id]) sepet[id] = { id: id, ad: ad, em: em, fiyat: fiyat, adet: 0 };
+  sepet[id].adet++;
+  renderMenu();
+  renderSepet();
+}
+
+function urunAzalt(id) {
+  if (!sepet[id]) return;
+  sepet[id].adet--;
+  if (sepet[id].adet <= 0) delete sepet[id];
+  renderMenu();
+  renderSepet();
+}
+
+function urunArtir(id, ad, em, fiyat) {
+  if (!sepet[id]) sepet[id] = { id: id, ad: ad, em: em, fiyat: fiyat, adet: 0 };
+  sepet[id].adet++;
+  renderMenu();
+  renderSepet();
+}
+
+function renderSepet() {
+  var items = Object.values(sepet).filter(function(u) { return u.adet > 0; });
+  var el = document.getElementById('sepet-ic');
+  var blk = document.getElementById('toplam-blk');
+  if (!items.length) {
+    el.innerHTML = '<div class="sepet-bos">Menuden urun secin</div>';
+    blk.style.display = 'none';
+    return;
+  }
+  var html = '';
+  items.forEach(function(u) {
+    html += '<div class="sp-satir">';
+    html += '<div class="sp-ad">' + (u.em || '') + ' ' + u.ad + '</div>';
+    html += '<div class="sp-kontrol">';
+    html += '<button class="sp-btn azalt-btn" data-spid="' + u.id + '">-</button>';
+    html += '<div class="sp-adet">' + u.adet + '</div>';
+    html += '<button class="sp-btn artir-btn" data-spid="' + u.id + '">+</button>';
+    html += '</div>';
+    html += '<div class="sp-fiyat">&#8378;' + (u.fiyat * u.adet) + '</div>';
+    html += '</div>';
+  });
+  el.innerHTML = html;
+  // Event listener ile butonları bağla
+  el.querySelectorAll('.azalt-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { urunAzalt(this.getAttribute('data-spid')); });
+  });
+  el.querySelectorAll('.artir-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.getAttribute('data-spid');
+      var u = sepet[id];
+      if (u) urunArtir(id, u.ad, u.em, u.fiyat);
+    });
+  });
+  blk.style.display = 'block';
+  guncelleToplam();
+}
+
+async function siparisOnayla() {
+  var ad = document.getElementById('mst-ad').value.trim();
+  var tel = document.getElementById('mst-tel').value.trim();
+  var adres = document.getElementById('mst-adres').value.trim();
+  var not = document.getElementById('mst-not').value.trim();
+  var items = Object.values(sepet).filter(function(u) { return u.adet > 0; });
+  if (!ad) { toast('Müşteri adı girin'); return; }
+  if (!tel) { toast('Telefon girin'); return; }
+  if (aktifTip === 'teslimat' && !adres) { toast('Teslimat adresi girin'); return; }
+  if (!items.length) { toast('Sepet boş'); return; }
+
+  var btn = document.getElementById('sp-btn');
+  btn.disabled = true;
+  btn.textContent = 'Kaydediliyor...';
+
+  var t = hesaplaToplam();
+  var notMetin = '[' + (aktifTip === 'teslimat' ? 'TESLİMAT: ' + adres : 'GEL AL') + '] Müşteri: ' + ad + ' Tel: ' + tel + (not ? ' | Not: ' + not : '') + ' | ' + aktifSure + ' dk';
+
+  var spData = {
+    id: 'pk_' + Date.now(),
+    masa_no: 0,
+    musteri_tel: tel,
+    urunler: JSON.stringify(items.map(function(u) {
+      return { id: u.id, ad: u.ad, em: u.em, fiyat: u.fiyat, adet: u.adet };
+    })),
+    not_text: notMetin,
+    toplam: t.toplam,
+    durum: 'yeni',
+    garson_id: null,
+    garson_ad: aktifTip === 'teslimat' ? 'Teslimat' : 'Gel Al',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+
+  console.log('Siparis gonderiliyor:', spData);
+  var sonuc = await SB.post('siparisler', spData);
+  console.log('Siparis sonuc:', sonuc);
+
+  if (sonuc) {
+    toast('Sipariş alındı! ' + aktifSure + ' dk içinde hazır');
+    sepet = {};
+    renderMenu();
+    renderSepet();
+    document.getElementById('mst-ad').value = '';
+    document.getElementById('mst-tel').value = '';
+    document.getElementById('mst-adres').value = '';
+    document.getElementById('mst-not').value = '';
+  } else {
+    toast('Hata! Tekrar deneyin');
+  }
+  btn.disabled = false;
+  btn.textContent = '📦 Siparişi Onayla';
+}
+
+var toastT;
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toastT);
+  toastT = setTimeout(function() { t.style.display = 'none'; }, 3000);
+}
+
+async function baslat() {
+  console.log('Baslatiyor...');
+  var d = await SB.get('menu', 'aktif=eq.true&order=kat.asc,ad.asc');
+  console.log('Menu data:', d);
+  if (d && d.length) {
+    menuListesi = d;
+    renderKatlar();
+    renderMenu();
+  } else {
+    document.getElementById('menu-grid').innerHTML = '<div style="padding:20px;color:var(--teh)">Menü yüklenemedi. Konsolu kontrol edin.</div>';
+  }
+}
+
+baslat();
+</script>
+</body>
+</html>
