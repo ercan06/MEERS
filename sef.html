@@ -351,9 +351,10 @@ function katSec(kat,el){
 
 function spKatEsles(sp){
   if(aktifKat==='tumu') return true;
-  return sp.urunler.some(u=>{
-    const m=MENU_URUNLER[u.ad];
-    return m&&m.kat===aktifKat;
+  // Eğer ürünler listede yoksa yine göster
+  return sp.urunler.some(function(u){
+    var m=MENU_URUNLER[u.ad];
+    return !m || m.kat===aktifKat;
   });
 }
 
@@ -561,8 +562,8 @@ async function siparisleriDBden(){
       var arr = parseUrunler(s.urunler);
       return {
         id: String(s.id),
-        masa: s.masa_no===0 ? (s.garson_ad||'Paket') : s.masa_no,
-        garson: s.garson_ad || '-',
+        masa: s.masa_no===0 ? '📦 Paket' : s.masa_no,
+        garson: s.masa_no===0 ? (s.garson_ad||'Paket') : (s.garson_ad||'-'),
         durum: (s.durum==='hazirlaniyor'?'islem':s.durum) || 'yeni',
         dk: Math.floor((Date.now()-new Date(s.created_at).getTime())/60000),
         eskalasyon: false,

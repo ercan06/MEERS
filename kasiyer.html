@@ -301,6 +301,13 @@ function renderMasaGrid() {
     if(durum === "bos") html += "<div class='mk-garson'>Boş</div>";
     html += "</div>";
   });
+  // Paket siparişleri ekle
+  var paketler = dbSiparisler.filter(function(s){ return parseInt(s.masa_no)===0 && s.durum!=='tamamlandi'; });
+  if(paketler.length){
+    html += "<div class='mk dolu' style='grid-column:span 2;border-color:var(--al);background:rgba(212,160,23,.1)' onclick='masaDetay(0)'>";
+    html += "<div class='mk-no' style='font-size:14px'>📦 Paket</div>";
+    html += "<div class='mk-garson' style='color:var(--al)'>" + paketler.length + " sipariş</div></div>";
+  }
   document.getElementById("masa-grid").innerHTML = html;
 }
 
