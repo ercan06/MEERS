@@ -561,7 +561,7 @@ async function siparisleriDBden(){
       var arr = parseUrunler(s.urunler);
       return {
         id: String(s.id),
-        masa: s.masa_no,
+        masa: s.masa_no===0 ? (s.garson_ad||'Paket') : s.masa_no,
         garson: s.garson_ad || '-',
         durum: (s.durum==='hazirlaniyor'?'islem':s.durum) || 'yeni',
         dk: Math.floor((Date.now()-new Date(s.created_at).getTime())/60000),
