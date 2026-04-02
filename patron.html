@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEER'S — Patron</title>
+<title>Lezzet Kebap — Patron</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -151,7 +151,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="lb">
     <div class="lb-logo">👔</div>
     <div class="lb-t">Patron Paneli</div>
-    <div class="lb-a">MEER'S Yönetim Sistemi</div>
+    <div class="lb-a">Lezzet Kebap Yönetim Sistemi</div>
     <div class="lb-l">Kullanıcı Adı</div>
     <input class="inp lb-inp" id="l-k" value="patron" placeholder="patron">
     <div class="lb-l">Şifre</div>
@@ -162,7 +162,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="panel" id="panel">
   <div class="topbar">
-    <div><div class="tb-t">👔 MEER'S — Patron</div><div class="tb-sub">Yönetim Paneli</div></div>
+    <div><div class="tb-t">👔 Lezzet Kebap — Patron</div><div class="tb-sub">Yönetim Paneli</div></div>
     <div class="tb-sag">
       <div class="tb-saat" id="tb-saat">00:00</div>
       <div class="tb-cikis" onclick="cikis()">Çıkış</div>
@@ -170,6 +170,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="tabs">
     <button class="tab-btn ak" onclick="tabGec('canli',this)">🔴 Canlı</button>
+    <button class="tab-btn" onclick="window.open('masa-plan.html','_blank')">🗺️ Masa Planı</button>
     <button class="tab-btn" onclick="tabGec('ciro',this)">📊 Ciro</button>
     <button class="tab-btn" onclick="tabGec('karsilastirma',this)">📈 Karşılaştırma</button>
     <button class="tab-btn" onclick="tabGec('gelir-gider',this)">💰 Gelir/Gider</button>
@@ -314,7 +315,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="kart"><div class="kart-h"><div class="kart-ht">🏪 Restoran Bilgileri</div></div><div class="kart-body">
         <div class="ing"><div class="ing-l">Restoran Adı</div><input class="inp" id="r-ad" value="MEER'S" style="flex:1"></div>
         <div class="ing"><div class="ing-l">Masa Sayısı</div><input class="inp" id="r-masa" type="number" value="20" style="width:70px"></div>
-        <button class="btn bir" style="margin-top:6px" onclick="restoranKaydet()">Kaydet</button>
+        <button class="btn bir" style="margin-top:6px" id="restoran-kaydet-btn">Kaydet</button>
       </div></div>
     </div>
 
@@ -364,7 +365,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
+
 <script>
+
 const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg';
 
@@ -519,6 +522,26 @@ async function girisYap(){
   document.getElementById('panel').classList.add('ak');
   shiftGridYukle();
   renderHepsi();
+  // Restoran bilgisi yükle
+  setTimeout(function(){
+    SB.get('ayarlar','key=eq.restoran_bilgi').then(function(d){
+      if(d&&d.length){
+        var v=d[0].value;
+        var el=document.getElementById('r-ad');
+        if(el&&v&&v.ad) el.value=v.ad;
+      }
+    });
+  }, 500);
+  // Restoran bilgilerini DB'den yükle
+  SB.get('ayarlar','key=eq.restoran_bilgi').then(function(d){
+    if(d&&d.length&&d[0].value){
+      var v=d[0].value;
+      var rAd=document.getElementById('r-ad');
+      var rMasa=document.getElementById('r-masa');
+      if(rAd) rAd.value=v.ad||'';
+      if(rMasa) rMasa.value=v.masa||20;
+    }
+  }).catch(function(){});
 }
 function cikis(){
   document.getElementById('lw').style.display='flex';
@@ -894,6 +917,14 @@ function giderKaydet(){
 
 // ── RENDER HEPSİ ──
 function renderHepsi(){
+  // Restoran bilgilerini yükle
+  SB.get('ayarlar','key=eq.restoran_bilgi').then(function(d){
+    if(d&&d.length){
+      var v=d[0].value;
+      if(document.getElementById('r-ad')) document.getElementById('r-ad').value=v.ad||'Lezzet Kebap';
+      if(document.getElementById('r-masa')) document.getElementById('r-masa').value=v.masa||20;
+    }
+  }).catch(function(){});
   qrKodlariRender();
   garsonYonetimYukle().catch(function(){});
   menuYonetimYukle().catch(function(){});
@@ -1023,7 +1054,7 @@ async function menuKaydet(){
   }
   document.getElementById('menu-modal').classList.remove('ak');
   await menuYonetimYukle();
- restoranKaydet()
+  alert('Kaydedildi!');
 }
 
 async function menuAktifToggle(id, mevcutDurum){
@@ -1193,15 +1224,52 @@ async function garsonSilOnay(id){
   await garsonYonetimYukle();
 }
 
+
+
 async function restoranKaydet(){
-  var ad = document.getElementById('r-ad').value.trim();
-  var masa = parseInt(document.getElementById('r-masa').value)||20;
-  if(!ad){alert('Restoran adi bos!');return;}
+  var ad = document.getElementById('r-ad') ? document.getElementById('r-ad').value.trim() : '';
+  var masa = document.getElementById('r-masa') ? parseInt(document.getElementById('r-masa').value) : 20;
+  if(!ad){ alert('Restoran adi bos olamaz!'); return; }
   await SB.patch('ayarlar','key=eq.restoran_bilgi',{value:{ad:ad,masa:masa}}).catch(async function(){
     await SB.post('ayarlar',{key:'restoran_bilgi',value:{ad:ad,masa:masa}});
-  }); 
-  alert('Kaydedildi!');
+  });
+  // Sayfa basligini guncelle
+  var baslik = document.querySelector('.tb-t');
+  if(baslik) baslik.textContent = '🏪 ' + ad + ' — Patron';
+  alert('Restoran bilgileri kaydedildi!');
 }
+
+// Restoran kaydet — event listener ile
+document.addEventListener('DOMContentLoaded', function(){
+  var btn = document.getElementById('restoran-kaydet-btn');
+  if(btn){
+    btn.addEventListener('click', function(){
+      restoranKaydet();
+    });
+  }
+});
+
+// restoranKaydet — DB'ye yaz
+async function restoranKaydet(){
+  var adEl = document.getElementById('r-ad');
+  var masaEl = document.getElementById('r-masa');
+  if(!adEl){ alert('Input bulunamadi'); return; }
+  var ad = adEl.value.trim();
+  var masa = masaEl ? parseInt(masaEl.value)||20 : 20;
+  if(!ad){ alert('Restoran adi bos olamaz!'); return; }
+  try{
+    var r = await SB.patch('ayarlar','key=eq.restoran_bilgi',{value:{ad:ad,masa:masa}});
+    if(!r || !r.length){
+      await SB.post('ayarlar',{key:'restoran_bilgi',value:{ad:ad,masa:masa}});
+    }
+    alert('Restoran bilgileri kaydedildi!');
+  } catch(ex){
+    console.error('Restoran kaydet hata:', ex);
+    alert('Hata: ' + ex.message);
+  }
+}
+
 </script>
+
 </body>
 </html>

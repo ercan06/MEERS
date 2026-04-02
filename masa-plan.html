@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MEER'S — Masa Planı</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --s:#1A1A1A;--sm:#2C2C2C;--al:#D4A017;--aac:#F0C040;
+  --bas:#2D6A2D;--bac:#E8F5E8;--teh:#C0392B;--tac:#FDECEA;
+  --uya:#E8952A;--uac:#FEF0E0;--mt:#1A1A1A;--si:#9A7B65;
+  --kr:#FDF6EE;--bd:#EDD9C0;--yz:#FFF8F2;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#1a1a2e;min-height:100vh;color:#fff}
+.topbar{background:linear-gradient(135deg,#1A1A1A,#2C2C2C);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--al);position:sticky;top:0;z-index:100}
+.tb-t{font-size:16px;font-weight:800;color:#fff}
+.tb-sag{display:flex;align-items:center;gap:8px}
+.btn{padding:7px 14px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer}
+.btn-al{background:linear-gradient(135deg,var(--al),var(--aac));color:var(--s)}
+.btn-ik{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.btn-teh{background:var(--teh);color:#fff}
+.btn-bas{background:var(--bas);color:#fff}
+.lejant{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 16px;background:rgba(0,0,0,.3);border-bottom:1px solid rgba(255,255,255,.1)}
+.lej-k{display:flex;align-items:center;gap:4px;font-size:11px;color:rgba(255,255,255,.6)}
+.lej-r{width:14px;height:14px;border-radius:3px;border:2px solid}
+.plan-wrap{position:relative;overflow:auto;height:calc(100vh - 110px)}
+.plan{position:relative;width:1200px;height:800px;background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0px,rgba(255,255,255,.03) 1px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0px,rgba(255,255,255,.03) 1px,transparent 1px,transparent 40px)}
+.masa{position:absolute;cursor:move;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid;transition:box-shadow .15s;font-weight:700}
+.masa.kare{border-radius:8px}
+.masa.yuvarlak{border-radius:50%}
+.masa.bos{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.6)}
+.masa.dolu{background:rgba(232,149,42,.2);border-color:var(--uya);color:var(--uya)}
+.masa.hazir{background:rgba(45,106,45,.2);border-color:var(--bas);color:#6fcf6f}
+.masa.bekliyor{background:rgba(192,57,43,.2);border-color:var(--teh);color:#ff8a80}
+.masa.secili{box-shadow:0 0 0 3px var(--al)!important}
+.masa-no{font-size:18px;font-weight:800}
+.masa-garson{font-size:9px;opacity:.7;margin-top:2px;text-align:center}
+.masa-tutar{font-size:10px;font-weight:700;margin-top:1px}
+.sidebar{position:fixed;right:0;top:0;width:260px;height:100vh;background:#16213e;border-left:1px solid rgba(255,255,255,.1);padding:14px;overflow-y:auto;transform:translateX(100%);transition:transform .3s;z-index:200}
+.sidebar.ak{transform:translateX(0)}
+.sb-t{font-size:14px;font-weight:800;color:var(--al);margin-bottom:12px;display:flex;justify-content:space-between}
+.sb-kapat{cursor:pointer;color:rgba(255,255,255,.4);font-size:18px}
+.sb-row{margin-bottom:10px}
+.sb-label{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.sb-inp{width:100%;padding:7px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none}
+.sb-inp:focus{border-color:var(--al)}
+.sb-sec{display:flex;gap:6px}
+.sb-sec-k{flex:1;padding:8px;border-radius:8px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);cursor:pointer;text-align:center;font-size:11px;color:rgba(255,255,255,.6)}
+.sb-sec-k.ak{border-color:var(--al);color:var(--al);background:rgba(212,160,23,.1)}
+.sb-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:14px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center}
+.modal-bg.ak{display:flex}
+.modal{background:#16213e;border-radius:16px;padding:20px;width:90%;max-width:340px;border:1px solid rgba(212,160,23,.3)}
+.modal-t{font-size:16px;font-weight:800;color:var(--al);margin-bottom:14px}
+.modal-row{margin-bottom:10px}
+.modal-label{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px}
+.modal-inp{width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none}
+.modal-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A1A;color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;z-index:500;border:1px solid var(--al);display:none}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-t">🗺️ Masa Planı</div>
+  <div class="tb-sag">
+    <button class="btn btn-ik" onclick="masaEkle()">+ Masa Ekle</button>
+    <button class="btn btn-al" onclick="planKaydet()">💾 Kaydet</button>
+    <button class="btn btn-ik" onclick="window.location.href='patron.html'">← Geri</button>
+  </div>
+</div>
+
+<div class="lejant">
+  <div class="lej-k"><div class="lej-r" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)"></div>Boş</div>
+  <div class="lej-k"><div class="lej-r" style="background:rgba(232,149,42,.2);border-color:#E8952A"></div>Dolu</div>
+  <div class="lej-k"><div class="lej-r" style="background:rgba(45,106,45,.2);border-color:#2D6A2D"></div>Hazır</div>
+  <div class="lej-k"><div class="lej-r" style="background:rgba(192,57,43,.2);border-color:#C0392B"></div>Hesap</div>
+  <div style="margin-left:auto;font-size:11px;color:rgba(255,255,255,.4)">Masaya tıkla → düzenle · Sürükle → taşı</div>
+</div>
+
+<div class="plan-wrap">
+  <div class="plan" id="plan"></div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sb-t">
+    <span id="sb-baslik">Masa Düzenle</span>
+    <span class="sb-kapat" onclick="sidebarKapat()">✕</span>
+  </div>
+  <div class="sb-row">
+    <div class="sb-label">Masa No</div>
+    <input class="sb-inp" id="sb-no" type="number" min="1" max="50">
+  </div>
+  <div class="sb-row">
+    <div class="sb-label">Kapasite</div>
+    <input class="sb-inp" id="sb-kapasite" type="number" min="1" max="20" value="4">
+  </div>
+  <div class="sb-row">
+    <div class="sb-label">Şekil</div>
+    <div class="sb-sec">
+      <div class="sb-sec-k ak" id="sb-kare" onclick="sekilSec('kare')">⬛ Kare</div>
+      <div class="sb-sec-k" id="sb-yuvarlak" onclick="sekilSec('yuvarlak')">⭕ Yuvarlak</div>
+    </div>
+  </div>
+  <div class="sb-row">
+    <div class="sb-label">Boyut</div>
+    <div class="sb-sec">
+      <div class="sb-sec-k ak" id="sb-kucuk" onclick="boyutSec('kucuk')">Küçük</div>
+      <div class="sb-sec-k" id="sb-orta" onclick="boyutSec('orta')">Orta</div>
+      <div class="sb-sec-k" id="sb-buyuk" onclick="boyutSec('buyuk')">Büyük</div>
+    </div>
+  </div>
+  <div class="sb-btn-row">
+    <button class="btn btn-bas" onclick="masaGuncelle()">✅ Güncelle</button>
+    <button class="btn btn-teh" onclick="masaSil()">🗑️ Sil</button>
+  </div>
+  <div style="margin-top:12px;border-top:1px solid rgba(255,255,255,.1);padding-top:12px">
+    <div class="sb-label">Hızlı İşlemler</div>
+    <button class="btn btn-ik" style="width:100%;margin-top:6px" onclick="birlesimToggle()">🔗 Birleştir/Ayır</button>
+  </div>
+</div>
+
+<!-- YENİ MASA MODAL -->
+<div class="modal-bg" id="modal-yeni">
+  <div class="modal">
+    <div class="modal-t">Yeni Masa Ekle</div>
+    <div class="modal-row">
+      <div class="modal-label">Masa No</div>
+      <input class="modal-inp" id="yeni-no" type="number" min="1" max="50">
+    </div>
+    <div class="modal-row">
+      <div class="modal-label">Kapasite (kişi)</div>
+      <input class="modal-inp" id="yeni-kapasite" type="number" value="4" min="1" max="20">
+    </div>
+    <div class="modal-row">
+      <div class="modal-label">Şekil</div>
+      <div class="sb-sec">
+        <div class="sb-sec-k ak" id="yeni-kare" onclick="yeniSekilSec('kare')">⬛ Kare</div>
+        <div class="sb-sec-k" id="yeni-yuvarlak" onclick="yeniSekilSec('yuvarlak')">⭕ Yuvarlak</div>
+      </div>
+    </div>
+    <div class="modal-btn-row">
+      <button class="btn btn-al" onclick="yeniMasaOnayla()">Ekle</button>
+      <button class="btn btn-ik" onclick="document.getElementById('modal-yeni').classList.remove('ak')">İptal</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+const SUPA_URL = "https://vdrjyngywjzuniwvsjtk.supabase.co";
+const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg";
+const SB = {
+  h: {
+    "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg",
+    "Content-Type": "application/json"
+  },
+  async get(t, q) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t+"?"+(q||""), {headers:this.h});
+      if(!r.ok) return [];
+      return await r.json();
+    } catch(e) { console.error("SB.get hatasi:", e); return []; }
+  },
+  async post(t, d) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t, {
+        method:"POST",
+        headers:Object.assign({},this.h,{"Prefer":"return=representation"}),
+        body:JSON.stringify(d)
+      });
+      return await r.json();
+    } catch(e) { console.error("SB.post hatasi:", e); return null; }
+  },
+  async patch(t, q, d) {
+    try {
+      const r = await fetch(SUPA_URL+"/rest/v1/"+t+"?"+q, {
+        method:"PATCH",
+        headers:Object.assign({},this.h,{"Prefer":"return=representation"}),
+        body:JSON.stringify(d)
+      });
+      return await r.json();
+    } catch(e) { console.error("SB.patch hatasi:", e); return null; }
+  },
+  async del(t, q) {
+    try {
+      await fetch(SUPA_URL+"/rest/v1/"+t+"?"+q, {method:"DELETE",headers:this.h});
+    } catch(e) { console.error("SB.del hatasi:", e); }
+  }
+};
+function parseUrunler(u) {
+  if(!u) return [];
+  if(typeof u === "string") { try { u = JSON.parse(u); } catch(e) { return []; } }
+  if(!Array.isArray(u)) return [];
+  return u.map(function(x) {
+    if(typeof x === "string") return {ad:x, adet:1, em:"", not:""};
+    return {ad:x.ad||"", adet:x.adet||1, em:x.em||"", not:x.not||""};
+  });
+}
+function urunMetin(urunler) {
+  var arr = parseUrunler(urunler);
+  if(!arr.length) return "Siparis yok";
+  return arr.map(function(u) { return (u.em?" ":"") + u.ad + " x" + u.adet; }).join(", ");
+}
+
+// ── VERİ ──
+var masalar = []; // {no, x, y, sekil, boyut, kapasite, durum, garson_ad, toplam}
+var seciliMasa = null;
+var yeniSekil = 'kare';
+var pollingInt = null;
+
+var BOYUTLAR = {
+  kucuk: {w:80, h:80},
+  orta:  {w:110, h:110},
+  buyuk: {w:140, h:80}
+};
+
+// ── BAŞLAT ──
+async function baslat(){
+  await planYukle();
+  await durumYukle();
+  planCiz();
+  pollingInt = setInterval(function(){ durumYukle().then(planCiz); }, 4000);
+}
+
+// Plan konfigürasyonunu DB'den yükle
+async function planYukle(){
+  var d = await SB.get('ayarlar','key=eq.masa_plani');
+  if(d && d.length && d[0].value && d[0].value.masalar){
+    masalar = d[0].value.masalar;
+  } else {
+    // Varsayılan plan — masalar tablosundan al
+    var dbMasalar = await SB.get('masalar','order=no.asc');
+    if(dbMasalar && dbMasalar.length){
+      masalar = dbMasalar.map(function(m, i){
+        var cols = 5;
+        var row = Math.floor(i/cols);
+        var col = i%cols;
+        return {
+          no: m.no,
+          x: 40 + col*160,
+          y: 40 + row*160,
+          sekil: 'kare',
+          boyut: 'orta',
+          kapasite: 4,
+          durum: m.durum||'bos',
+          garson_ad: m.garson_ad||'',
+          toplam: m.toplam||0
+        };
+      });
+    }
+  }
+}
+
+// Canlı durumları DB'den al
+async function durumYukle(){
+  var d = await SB.get('masalar','order=no.asc');
+  if(!d) return;
+  d.forEach(function(m){
+    var masa = masalar.find(function(x){ return parseInt(x.no)===parseInt(m.no); });
+    if(masa){
+      masa.durum = m.durum||'bos';
+      masa.garson_ad = m.garson_ad||'';
+      masa.toplam = m.toplam||0;
+    }
+  });
+}
+
+// Planı çiz
+function planCiz(){
+  var plan = document.getElementById('plan');
+  plan.innerHTML = '';
+  masalar.forEach(function(m){
+    var boyut = BOYUTLAR[m.boyut||'orta'];
+    var el = document.createElement('div');
+    el.className = 'masa ' + (m.sekil||'kare') + ' ' + (m.durum||'bos');
+    if(seciliMasa && seciliMasa.no===m.no) el.classList.add('secili');
+    el.style.left = (m.x||40) + 'px';
+    el.style.top = (m.y||40) + 'px';
+    el.style.width = boyut.w + 'px';
+    el.style.height = boyut.h + 'px';
+    el.innerHTML = '<div class="masa-no">' + m.no + '</div>'
+      + (m.garson_ad && m.durum!=='bos' ? '<div class="masa-garson">' + m.garson_ad.split(' ')[0] + '</div>' : '')
+      + (m.toplam > 0 ? '<div class="masa-tutar">₺' + Math.round(m.toplam) + '</div>' : '');
+    // Tıklama
+    el.addEventListener('click', function(e){
+      if(!e.defaultPrevented) masaSec(m.no);
+    });
+    // Sürükleme
+    suruklemeEkle(el, m);
+    plan.appendChild(el);
+  });
+}
+
+// Sürükleme
+function suruklemeEkle(el, masa){
+  var baslangic = null;
+  el.addEventListener('mousedown', function(e){
+    if(e.button !== 0) return;
+    baslangic = {mx: e.clientX, my: e.clientY, ox: masa.x, oy: masa.y};
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', function(e){
+    if(!baslangic) return;
+    var dx = e.clientX - baslangic.mx;
+    var dy = e.clientY - baslangic.my;
+    masa.x = Math.max(0, baslangic.ox + dx);
+    masa.y = Math.max(0, baslangic.oy + dy);
+    el.style.left = masa.x + 'px';
+    el.style.top = masa.y + 'px';
+    e.preventDefault();
+  });
+  document.addEventListener('mouseup', function(){
+    baslangic = null;
+  });
+  // Dokunmatik
+  el.addEventListener('touchstart', function(e){
+    var t = e.touches[0];
+    baslangic = {mx: t.clientX, my: t.clientY, ox: masa.x, oy: masa.y};
+  }, {passive:true});
+  el.addEventListener('touchmove', function(e){
+    if(!baslangic) return;
+    var t = e.touches[0];
+    masa.x = Math.max(0, baslangic.ox + t.clientX - baslangic.mx);
+    masa.y = Math.max(0, baslangic.oy + t.clientY - baslangic.my);
+    el.style.left = masa.x + 'px';
+    el.style.top = masa.y + 'px';
+  }, {passive:true});
+  el.addEventListener('touchend', function(){ baslangic = null; });
+}
+
+// Masa seç
+function masaSec(no){
+  seciliMasa = masalar.find(function(m){ return m.no===no; });
+  if(!seciliMasa) return;
+  document.getElementById('sb-no').value = seciliMasa.no;
+  document.getElementById('sb-kapasite').value = seciliMasa.kapasite||4;
+  sekilSec(seciliMasa.sekil||'kare');
+  boyutSec(seciliMasa.boyut||'orta');
+  document.getElementById('sidebar').classList.add('ak');
+  planCiz();
+}
+
+function sidebarKapat(){
+  seciliMasa = null;
+  document.getElementById('sidebar').classList.remove('ak');
+  planCiz();
+}
+
+function sekilSec(s){
+  if(seciliMasa) seciliMasa.sekil = s;
+  ['kare','yuvarlak'].forEach(function(x){
+    document.getElementById('sb-'+x).classList.toggle('ak', x===s);
+  });
+}
+
+function boyutSec(b){
+  if(seciliMasa) seciliMasa.boyut = b;
+  ['kucuk','orta','buyuk'].forEach(function(x){
+    document.getElementById('sb-'+x).classList.toggle('ak', x===b);
+  });
+  planCiz();
+}
+
+function masaGuncelle(){
+  if(!seciliMasa) return;
+  seciliMasa.kapasite = parseInt(document.getElementById('sb-kapasite').value)||4;
+  sidebarKapat();
+  toast('Masa ' + seciliMasa.no + ' guncellendi');
+}
+
+async function masaSil(){
+  if(!seciliMasa) return;
+  if(!confirm('Masa ' + seciliMasa.no + ' plandan kaldirilsin mi?')) return;
+  masalar = masalar.filter(function(m){ return m.no!==seciliMasa.no; });
+  sidebarKapat();
+  toast('Masa kaldirildi');
+}
+
+// Yeni masa ekle
+function masaEkle(){
+  var maxNo = masalar.length ? Math.max.apply(null, masalar.map(function(m){ return m.no; })) : 0;
+  document.getElementById('yeni-no').value = maxNo + 1;
+  document.getElementById('modal-yeni').classList.add('ak');
+}
+
+var yeniSekilVal = 'kare';
+function yeniSekilSec(s){
+  yeniSekilVal = s;
+  ['kare','yuvarlak'].forEach(function(x){
+    document.getElementById('yeni-'+x).classList.toggle('ak', x===s);
+  });
+}
+
+async function yeniMasaOnayla(){
+  var no = parseInt(document.getElementById('yeni-no').value);
+  var kap = parseInt(document.getElementById('yeni-kapasite').value)||4;
+  if(!no){ toast('Masa no girin'); return; }
+  if(masalar.find(function(m){ return m.no===no; })){ toast('Bu masa no zaten var'); return; }
+  var yeni = {no:no, x:40, y:40, sekil:yeniSekilVal, boyut:'orta', kapasite:kap, durum:'bos', garson_ad:'', toplam:0};
+  masalar.push(yeni);
+  // DB'ye ekle
+  await SB.post('masalar',{no:no, durum:'bos', garson_id:null, garson_ad:'-', toplam:0}).catch(function(){});
+  document.getElementById('modal-yeni').classList.remove('ak');
+  planCiz();
+  toast('Masa ' + no + ' eklendi');
+}
+
+// Plan kaydet
+async function planKaydet(){
+  var kayit = {masalar: masalar.map(function(m){
+    return {no:m.no, x:m.x, y:m.y, sekil:m.sekil, boyut:m.boyut, kapasite:m.kapasite};
+  })};
+  await SB.patch('ayarlar','key=eq.masa_plani',{value:kayit}).catch(async function(){
+    await SB.post('ayarlar',{key:'masa_plani',value:kayit});
+  });
+  toast('Plan kaydedildi!');
+}
+
+function birlesimToggle(){
+  toast('Birlesim özelliği yakında gelecek');
+}
+
+// Toast
+var toastTimer;
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.style.display='none'; }, 2500);
+}
+
+baslat();
+</script>
+</body>
+</html>
