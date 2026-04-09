@@ -6,51 +6,51 @@
 <title>Paket Servis</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --al:#D4A017;--aac:#F0C040;--bas:#2D6A2D;--teh:#C0392B;
-  --mt:#1A1A1A;--si:#9A7B65;--kr:#FDF6EE;--bd:#EDD9C0;--yz:#FFF8F2;--ik:#F5E6D3;
-}
+:root{--al:#D4A017;--aac:#F0C040;--bas:#2D6A2D;--mt:#1A1A1A;--si:#9A7B65;--kr:#FDF6EE;--bd:#EDD9C0;--yz:#FFF8F2;--ik:#F5E6D3}
 body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
 .hdr{background:linear-gradient(135deg,#1A1A1A,#2C2C2C);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--al)}
 .hdr-t{font-size:16px;font-weight:800;color:#fff}
-.geri{padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.15);color:#fff;border:none;font-size:12px;cursor:pointer}
+.geri{padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.12);color:#fff;border:none;font-size:12px;cursor:pointer}
 .wrap{display:grid;grid-template-columns:1fr 340px;height:calc(100vh - 52px)}
 @media(max-width:700px){.wrap{grid-template-columns:1fr;height:auto}}
 .sol{overflow-y:auto;padding:14px;border-right:1px solid var(--bd)}
-.sag{background:var(--yz);overflow-y:auto;padding:14px;display:flex;flex-direction:column}
-.label{font-size:11px;font-weight:700;color:var(--si);text-transform:uppercase;margin:12px 0 6px}
-.label:first-child{margin-top:0}
-.tip-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
-.tip-k{border-radius:12px;padding:12px;text-align:center;cursor:pointer;border:2px solid var(--bd);background:var(--yz)}
+.sag{background:var(--yz);display:flex;flex-direction:column;padding:14px}
+.lbl{font-size:11px;font-weight:700;color:var(--si);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 7px}
+.lbl:first-child{margin-top:0}
+.tip-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tip-k{border-radius:12px;padding:12px;text-align:center;cursor:pointer;border:2px solid var(--bd);background:var(--yz);transition:all .15s}
 .tip-k.ak{border-color:var(--al);background:var(--ik)}
-.tip-em{font-size:24px}
-.tip-ad{font-size:13px;font-weight:700;color:var(--mt);margin-top:4px}
-.inp{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--bd);font-size:13px;color:var(--mt);outline:none;margin-bottom:8px;background:var(--yz)}
+.tip-em{font-size:26px;margin-bottom:4px}
+.tip-ad{font-size:13px;font-weight:700;color:var(--mt)}
+.inp{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--bd);font-size:13px;color:var(--mt);background:var(--yz);outline:none;margin-bottom:8px}
 .inp:focus{border-color:var(--al)}
-.sure-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.sure-row{display:flex;gap:6px;flex-wrap:wrap}
 .sure-k{padding:6px 12px;border-radius:8px;border:1.5px solid var(--bd);font-size:11px;font-weight:700;cursor:pointer;color:var(--si);background:var(--yz)}
 .sure-k.ak{border-color:var(--al);background:var(--ik);color:var(--mt)}
 .kat-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .kat-btn{padding:6px 12px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:var(--ik);color:var(--si)}
 .kat-btn.ak{background:var(--mt);color:var(--al)}
-.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.m-k{border-radius:12px;border:1.5px solid var(--bd);padding:10px;cursor:pointer;display:flex;align-items:center;gap:8px;background:var(--yz)}
+.menu-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.m-k{border-radius:12px;border:1.5px solid var(--bd);padding:10px;cursor:pointer;display:flex;align-items:center;gap:8px;background:var(--yz);transition:all .15s}
 .m-k.ak{border-color:var(--al);background:var(--ik)}
 .m-em{font-size:22px;flex-shrink:0}
 .m-ad{font-size:12px;font-weight:700;color:var(--mt)}
 .m-fiyat{font-size:11px;color:var(--al);font-weight:700;margin-top:2px}
-.m-badge{margin-left:auto;background:var(--al);color:var(--mt);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
-.sepet-bos{text-align:center;padding:24px;color:var(--si);font-size:13px}
+.m-badge{margin-left:auto;background:var(--al);color:#000;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.sepet-bos{text-align:center;padding:24px;color:var(--si);font-size:13px;flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+.ss-list{flex:1;overflow-y:auto}
 .ss{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)}
 .ss-ad{flex:1;font-size:13px;color:var(--mt)}
-.ss-btn{width:26px;height:26px;border-radius:7px;border:1px solid var(--bd);background:var(--yz);cursor:pointer;font-size:14px;color:var(--mt)}
+.ss-ctrl{display:flex;align-items:center;gap:5px}
+.ss-btn{width:26px;height:26px;border-radius:7px;border:1px solid var(--bd);background:var(--yz);cursor:pointer;font-size:14px;color:var(--mt);display:flex;align-items:center;justify-content:center}
 .ss-adet{font-size:13px;font-weight:700;color:var(--mt);min-width:20px;text-align:center}
 .ss-fiyat{font-size:13px;font-weight:700;color:var(--al);min-width:48px;text-align:right}
-.toplam-bar{border-top:2px solid var(--bd);padding-top:10px;margin-top:auto}
-.t-satir{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;color:var(--mt)}
-.t-satir.buyuk{font-size:18px;font-weight:800;margin-top:4px}
-.sp-btn{width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,var(--al),var(--aac));color:var(--mt);border:none;font-size:15px;font-weight:800;cursor:pointer;margin-top:10px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A1A;color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;z-index:200;border:1px solid var(--al);display:none}
+.top-bar{border-top:2px solid var(--bd);padding-top:10px;margin-top:8px}
+.t-row{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;color:var(--mt)}
+.t-row.big{font-size:18px;font-weight:800;margin-top:6px}
+.onayla-btn{width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,var(--al),var(--aac));color:#000;border:none;font-size:15px;font-weight:800;cursor:pointer;margin-top:10px}
+.onayla-btn:disabled{opacity:.5;cursor:not-allowed}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A1A;color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;border:1px solid var(--al);display:none;z-index:100}
 </style>
 </head>
 <body>
@@ -60,226 +60,229 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
 </div>
 <div class="wrap">
   <div class="sol">
-    <div class="label">Sipariş Tipi</div>
+    <div class="lbl">Sipariş Tipi</div>
     <div class="tip-row">
       <div class="tip-k ak" id="tip-gel" onclick="tipSec('gel')">
         <div class="tip-em">🏃</div>
         <div class="tip-ad">Gel Al</div>
       </div>
-      <div class="tip-k" id="tip-teslimat" onclick="tipSec('teslimat')">
+      <div class="tip-k" id="tip-tes" onclick="tipSec('teslimat')">
         <div class="tip-em">🛵</div>
         <div class="tip-ad">Eve Teslimat</div>
       </div>
     </div>
-    <div class="label">Müşteri Bilgileri</div>
-    <input class="inp" id="mst-ad" placeholder="Ad Soyad">
-    <input class="inp" id="mst-tel" placeholder="Telefon" type="tel">
-    <input class="inp" id="mst-adres" placeholder="Teslimat Adresi" style="display:none">
-    <div class="label">Tahmini Süre</div>
+    <div class="lbl">Müşteri Bilgileri</div>
+    <input class="inp" id="p-ad" placeholder="Ad Soyad">
+    <input class="inp" id="p-tel" placeholder="Telefon" type="tel">
+    <input class="inp" id="p-adres" placeholder="Teslimat Adresi" style="display:none">
+    <div class="lbl">Tahmini Süre</div>
     <div class="sure-row">
-      <div class="sure-k ak" data-sure="15" onclick="sureSec(this)">15 dk</div>
-      <div class="sure-k" data-sure="20" onclick="sureSec(this)">20 dk</div>
-      <div class="sure-k" data-sure="30" onclick="sureSec(this)">30 dk</div>
-      <div class="sure-k" data-sure="45" onclick="sureSec(this)">45 dk</div>
-      <div class="sure-k" data-sure="60" onclick="sureSec(this)">60 dk</div>
+      <div class="sure-k ak" data-s="15" onclick="sureSec(this)">15 dk</div>
+      <div class="sure-k" data-s="20" onclick="sureSec(this)">20 dk</div>
+      <div class="sure-k" data-s="30" onclick="sureSec(this)">30 dk</div>
+      <div class="sure-k" data-s="45" onclick="sureSec(this)">45 dk</div>
+      <div class="sure-k" data-s="60" onclick="sureSec(this)">60 dk</div>
     </div>
-    <input class="inp" id="mst-not" placeholder="Sipariş Notu (isteğe bağlı)">
-    <div class="label">Menü</div>
+    <input class="inp" id="p-not" placeholder="Not (isteğe bağlı)" style="margin-top:8px">
+    <div class="lbl">Menü</div>
     <div class="kat-row" id="kat-row"></div>
-    <div class="menu-grid" id="menu-grid"></div>
+    <div class="menu-list" id="menu-list"></div>
   </div>
   <div class="sag">
-    <div class="label" style="margin-top:0">Sepet</div>
-    <div id="sepet-ic"><div class="sepet-bos">🛒<br>Menüden ürün seçin</div></div>
-    <div id="toplam-bar" class="toplam-bar" style="display:none">
-      <div class="t-satir"><span>Ara Toplam</span><span id="ara-top">₺0</span></div>
-      <div class="t-satir" id="tes-satir" style="display:none"><span>Teslimat (₺15)</span><span>₺15</span></div>
-      <div class="t-satir buyuk"><span>Toplam</span><span id="gen-top">₺0</span></div>
-      <button class="sp-btn" onclick="siparisVer()">📦 Siparişi Onayla</button>
+    <div class="lbl" style="margin-top:0">Sepet</div>
+    <div id="sepet-ic" class="sepet-bos">
+      <span style="font-size:32px">🛒</span>
+      <span>Menüden ürün seçin</span>
+    </div>
+    <div id="top-bar" class="top-bar" style="display:none">
+      <div class="t-row"><span>Ara Toplam</span><span id="t-ara">₺0</span></div>
+      <div class="t-row" id="t-tes-row" style="display:none"><span>Teslimat Ücreti</span><span>₺15</span></div>
+      <div class="t-row big"><span>Toplam</span><span id="t-top">₺0</span></div>
+      <button class="onayla-btn" id="onayla-btn" onclick="siparisVer()">📦 Siparişi Onayla</button>
     </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const SB_URL="https://vdrjyngywjzuniwvsjtk.supabase.co";
-const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg";
+
+const _URL="https://vdrjyngywjzuniwvsjtk.supabase.co",_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg",_H={"apikey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg","Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg","Content-Type":"application/json"};
 const SB={
-  h:{"apikey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg","Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg","Content-Type":"application/json"},
-  async get(t,q){try{const r=await fetch(SB_URL+"/rest/v1/"+t+"?"+(q||""),{headers:this.h});if(!r.ok)return[];return r.json()}catch(e){return[]}},
-  async post(t,d){try{const r=await fetch(SB_URL+"/rest/v1/"+t,{method:"POST",headers:{...this.h,"Prefer":"return=representation"},body:JSON.stringify(d)});return r.json()}catch(e){return null}},
-  async patch(t,q,d){try{const r=await fetch(SB_URL+"/rest/v1/"+t+"?"+q,{method:"PATCH",headers:{...this.h,"Prefer":"return=representation"},body:JSON.stringify(d)});return r.json()}catch(e){return null}},
-  async del(t,q){try{await fetch(SB_URL+"/rest/v1/"+t+"?"+q,{method:"DELETE",headers:this.h})}catch(e){}}
+  async get(t,q){try{const r=await fetch(_URL+"/rest/v1/"+t+"?"+(q||""),{headers:_H});return r.ok?r.json():[]}catch(e){return[]}},
+  async post(t,d){try{const r=await fetch(_URL+"/rest/v1/"+t,{method:"POST",headers:{..._H,"Prefer":"return=representation"},body:JSON.stringify(d)});return r.json()}catch(e){return null}},
+  async patch(t,q,d){try{const r=await fetch(_URL+"/rest/v1/"+t+"?"+q,{method:"PATCH",headers:{..._H,"Prefer":"return=representation"},body:JSON.stringify(d)});return r.json()}catch(e){return null}},
+  async del(t,q){try{await fetch(_URL+"/rest/v1/"+t+"?"+q,{method:"DELETE",headers:_H})}catch(e){}}
 };
-function parseUrunler(u){if(!u)return[];if(typeof u==="string"){try{u=JSON.parse(u)}catch(e){return[]}}if(!Array.isArray(u))return[];return u.map(function(x){if(typeof x==="string")return{ad:x,adet:1,em:"",fiyat:0};return{ad:x.ad||"",adet:x.adet||1,em:x.em||"",fiyat:x.fiyat||0}})};
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function urunStr(u){
+  if(!u)return"";
+  if(typeof u==="string"){try{u=JSON.parse(u)}catch(e){return u}}
+  if(!Array.isArray(u))return"";
+  return u.map(function(x){return(x.em||"")+" "+(x.ad||x)+" x"+(x.adet||1)}).join(", ");
+}
 
-var menu=[];
-var sepet={};
-var aktifKat="Tumu";
-var aktifTip="gel";
-var aktifSure="15";
+var MENU = [];
+var SEPET = {};
+var KAT = "Tumu";
+var TIP = "gel";
+var SURE = "15";
 
-function tipSec(t){
-  aktifTip=t;
-  document.getElementById("tip-gel").classList.toggle("ak",t==="gel");
-  document.getElementById("tip-teslimat").classList.toggle("ak",t==="teslimat");
-  document.getElementById("mst-adres").style.display=t==="teslimat"?"block":"none";
-  document.getElementById("tes-satir").style.display=t==="teslimat"?"flex":"none";
+function tipSec(t) {
+  TIP = t;
+  document.getElementById("tip-gel").classList.toggle("ak", t === "gel");
+  document.getElementById("tip-tes").classList.toggle("ak", t === "teslimat");
+  document.getElementById("p-adres").style.display = t === "teslimat" ? "block" : "none";
+  document.getElementById("t-tes-row").style.display = t === "teslimat" ? "flex" : "none";
   renderToplam();
 }
 
-function sureSec(el){
-  aktifSure=el.getAttribute("data-sure");
-  document.querySelectorAll(".sure-k").forEach(function(k){k.classList.remove("ak");});
+function sureSec(el) {
+  SURE = el.getAttribute("data-s");
+  document.querySelectorAll(".sure-k").forEach(function(k) { k.classList.remove("ak"); });
   el.classList.add("ak");
 }
 
-function renderToplam(){
-  var items=Object.values(sepet).filter(function(u){return u.adet>0;});
-  var ara=items.reduce(function(s,u){return s+u.fiyat*u.adet;},0);
-  var tes=aktifTip==="teslimat"?15:0;
-  document.getElementById("ara-top").textContent="₺"+ara;
-  document.getElementById("gen-top").textContent="₺"+(ara+tes);
+function renderToplam() {
+  var items = Object.values(SEPET).filter(function(u) { return u.adet > 0; });
+  var ara = items.reduce(function(s, u) { return s + u.fiyat * u.adet; }, 0);
+  document.getElementById("t-ara").textContent = "₺" + ara;
+  document.getElementById("t-top").textContent = "₺" + (ara + (TIP === "teslimat" ? 15 : 0));
 }
 
-function renderKatlar(){
-  var katlar=["Tumu"];
-  menu.forEach(function(u){if(katlar.indexOf(u.kat)<0)katlar.push(u.kat);});
-  var html="";
-  katlar.forEach(function(k){
-    html+='<button class="kat-btn'+(k===aktifKat?" ak":"")+'" data-kat="'+k+'" onclick="katSec(this.dataset.kat)">'+(k==="Tumu"?"Tümü":k)+"</button>";
-  });
-  document.getElementById("kat-row").innerHTML=html;
+function renderKatlar() {
+  var katlar = ["Tumu"];
+  MENU.forEach(function(u) { if (katlar.indexOf(u.kat) < 0) katlar.push(u.kat); });
+  document.getElementById("kat-row").innerHTML = katlar.map(function(k) {
+    return '<button class="kat-btn' + (k === KAT ? " ak" : "") + '" data-k="' + k + '" onclick="katSec(this.dataset.k)">' + (k === "Tumu" ? "Tümü" : k) + "</button>";
+  }).join("");
 }
 
-function katSec(kat){
-  aktifKat=kat;
+function katSec(k) {
+  KAT = k;
   renderKatlar();
   renderMenu();
 }
 
-function renderMenu(){
-  var items=aktifKat==="Tumu"?menu:menu.filter(function(u){return u.kat===aktifKat;});
-  var html="";
-  items.forEach(function(u){
-    var adet=sepet[u.id]?sepet[u.id].adet:0;
-    var gorsel=u.image_url
-      ?'<img src="'+u.image_url+'" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0">'
-      :'<div class="m-em">'+(u.em||"🍽️")+"</div>";
-    html+='<div class="m-k'+(adet>0?" ak":"")+'" data-id="'+u.id+'" data-ad="'+u.ad.replace(/"/g,"")+'" data-em="'+(u.em||"")+'" data-fiyat="'+u.fiyat+'" onclick="ekleBtn(this)">';
-    html+=gorsel;
-    html+='<div><div class="m-ad">'+u.ad+'</div><div class="m-fiyat">₺'+u.fiyat+"</div></div>";
-    if(adet>0) html+='<div class="m-badge">'+adet+"</div>";
-    html+="</div>";
-  });
-  document.getElementById("menu-grid").innerHTML=html||'<div style="color:var(--si);padding:20px">Ürün yok</div>';
+function renderMenu() {
+  var items = KAT === "Tumu" ? MENU : MENU.filter(function(u) { return u.kat === KAT; });
+  document.getElementById("menu-list").innerHTML = items.map(function(u) {
+    var adet = SEPET[u.id] ? SEPET[u.id].adet : 0;
+    return '<div class="m-k' + (adet > 0 ? " ak" : "") + '"'
+      + ' data-id="' + u.id + '" data-ad="' + u.ad.replace(/"/g, "") + '" data-em="' + (u.em || "") + '" data-fiyat="' + u.fiyat + '"'
+      + ' onclick="ekleBtn(this)">'
+      + (u.image_url ? '<img src="' + u.image_url + '" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0">' : '<div class="m-em">' + (u.em || "🍽️") + "</div>")
+      + '<div><div class="m-ad">' + u.ad + '</div><div class="m-fiyat">₺' + u.fiyat + "</div></div>"
+      + (adet > 0 ? '<div class="m-badge">' + adet + "</div>" : "")
+      + "</div>";
+  }).join("");
 }
 
-function ekleBtn(btn){
-  var id=btn.getAttribute("data-id");
-  var ad=btn.getAttribute("data-ad");
-  var em=btn.getAttribute("data-em");
-  var fiyat=parseFloat(btn.getAttribute("data-fiyat"));
-  if(!sepet[id]) sepet[id]={id:id,ad:ad,em:em,fiyat:fiyat,adet:0};
-  sepet[id].adet++;
+function ekleBtn(btn) {
+  var id = btn.getAttribute("data-id");
+  var ad = btn.getAttribute("data-ad");
+  var em = btn.getAttribute("data-em");
+  var fiyat = parseFloat(btn.getAttribute("data-fiyat"));
+  if (!SEPET[id]) SEPET[id] = { id: id, ad: ad, em: em, fiyat: fiyat, adet: 0 };
+  SEPET[id].adet++;
   renderMenu();
   renderSepet();
 }
 
-function azaltBtn(btn){
-  var id=btn.getAttribute("data-id");
-  if(!sepet[id]) return;
-  sepet[id].adet--;
-  if(sepet[id].adet<=0) delete sepet[id];
+function azalt(id) {
+  if (!SEPET[id]) return;
+  SEPET[id].adet--;
+  if (SEPET[id].adet <= 0) delete SEPET[id];
   renderMenu();
   renderSepet();
 }
 
-function ekleBtn2(btn){
-  var id=btn.getAttribute("data-id");
-  if(!sepet[id]) return;
-  sepet[id].adet++;
+function ekle2(id) {
+  if (!SEPET[id]) return;
+  SEPET[id].adet++;
   renderSepet();
   renderMenu();
 }
 
-function renderSepet(){
-  var items=Object.values(sepet).filter(function(u){return u.adet>0;});
-  var el=document.getElementById("sepet-ic");
-  var bar=document.getElementById("toplam-bar");
-  if(!items.length){
-    el.innerHTML='<div class="sepet-bos">🛒<br>Menüden ürün seçin</div>';
-    bar.style.display="none";
+function renderSepet() {
+  var items = Object.values(SEPET).filter(function(u) { return u.adet > 0; });
+  var el = document.getElementById("sepet-ic");
+  var bar = document.getElementById("top-bar");
+  if (!items.length) {
+    el.className = "sepet-bos";
+    el.innerHTML = '<span style="font-size:32px">🛒</span><span>Menüden ürün seçin</span>';
+    bar.style.display = "none";
     return;
   }
-  var html="";
-  items.forEach(function(u){
-    html+='<div class="ss">'
-      +'<div class="ss-ad">'+(u.em||"")+" "+u.ad+"</div>"
-      +'<div style="display:flex;align-items:center;gap:6px">'
-      +'<button class="ss-btn" data-id="'+u.id+'" onclick="azaltBtn(this)">−</button>'
-      +'<div class="ss-adet">'+u.adet+"</div>"
-      +'<button class="ss-btn" data-id="'+u.id+'" onclick="ekleBtn2(this)">+</button>'
-      +"</div>"
-      +'<div class="ss-fiyat">₺'+(u.fiyat*u.adet)+"</div>"
-      +"</div>";
-  });
-  el.innerHTML=html;
-  bar.style.display="block";
+  el.className = "ss-list";
+  el.innerHTML = items.map(function(u) {
+    return '<div class="ss">'
+      + '<div class="ss-ad">' + (u.em || "") + " " + u.ad + "</div>"
+      + '<div class="ss-ctrl">'
+      + '<button class="ss-btn" data-id="' + u.id + '" onclick="azalt(this.dataset.id)">−</button>'
+      + '<div class="ss-adet">' + u.adet + "</div>"
+      + '<button class="ss-btn" data-id="' + u.id + '" onclick="ekle2(this.dataset.id)">+</button>'
+      + "</div>"
+      + '<div class="ss-fiyat">₺' + (u.fiyat * u.adet) + "</div>"
+      + "</div>";
+  }).join("");
+  bar.style.display = "block";
   renderToplam();
 }
 
-async function siparisVer(){
-  var ad=document.getElementById("mst-ad").value.trim();
-  var tel=document.getElementById("mst-tel").value.trim();
-  var adres=document.getElementById("mst-adres").value.trim();
-  var not=document.getElementById("mst-not").value.trim();
-  var items=Object.values(sepet).filter(function(u){return u.adet>0;});
-  if(!ad){toast("Müşteri adı girin");return;}
-  if(!tel){toast("Telefon girin");return;}
-  if(aktifTip==="teslimat"&&!adres){toast("Teslimat adresi girin");return;}
-  if(!items.length){toast("Sepet boş");return;}
-  var ara=items.reduce(function(s,u){return s+u.fiyat*u.adet;},0);
-  var tes=aktifTip==="teslimat"?15:0;
-  var notMetin=aktifTip==="teslimat"?"🛵 "+ad+" | "+adres:"🏃 "+ad+" | Gel Al";
-  if(not) notMetin+=" | Not: "+not;
-  var btn=document.querySelector(".sp-btn");
-  btn.disabled=true;btn.textContent="Kaydediliyor...";
-  await SB.post("siparisler",{
-    id:"pk_"+Date.now(),
-    masa_no:0,
-    musteri_tel:tel,
-    urunler:items,
-    not_text:notMetin,
-    toplam:ara+tes,
-    durum:"yeni",
-    garson_id:null,
-    garson_ad:aktifTip==="teslimat"?"🛵 "+ad+" | "+adres:"🏃 "+ad+" | Gel Al",
-    created_at:new Date().toISOString(),
-    updated_at:new Date().toISOString()
+async function siparisVer() {
+  var ad = document.getElementById("p-ad").value.trim();
+  var tel = document.getElementById("p-tel").value.trim();
+  var adres = document.getElementById("p-adres").value.trim();
+  var not = document.getElementById("p-not").value.trim();
+  var items = Object.values(SEPET).filter(function(u) { return u.adet > 0; });
+  if (!ad) { toast("Müşteri adı girin"); return; }
+  if (!tel) { toast("Telefon girin"); return; }
+  if (TIP === "teslimat" && !adres) { toast("Teslimat adresi girin"); return; }
+  if (!items.length) { toast("Sepet boş"); return; }
+  var btn = document.getElementById("onayla-btn");
+  btn.disabled = true; btn.textContent = "Kaydediliyor...";
+  var ara = items.reduce(function(s, u) { return s + u.fiyat * u.adet; }, 0);
+  var toplam = ara + (TIP === "teslimat" ? 15 : 0);
+  var garsonAd = TIP === "teslimat" ? ("🛵 " + ad + " | " + adres) : ("🏃 " + ad + " | Gel Al");
+  var notMetin = garsonAd + (not ? " | Not: " + not : "");
+  var spId = "pk_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
+  var sonuc = await SB.post("siparisler", {
+    id: spId,
+    masa_no: 0,
+    musteri_tel: tel,
+    urunler: items.map(function(u) { return { id: u.id, ad: u.ad, em: u.em, fiyat: u.fiyat, adet: u.adet }; }),
+    not_text: notMetin,
+    toplam: toplam,
+    durum: "yeni",
+    garson_id: null,
+    garson_ad: garsonAd,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
   });
-  toast("Sipariş alındı! "+aktifSure+" dk içinde hazır.");
-  sepet={};
-  renderMenu();
-  renderSepet();
-  document.getElementById("mst-ad").value="";
-  document.getElementById("mst-tel").value="";
-  document.getElementById("mst-adres").value="";
-  document.getElementById("mst-not").value="";
-  btn.disabled=false;
-  btn.textContent="📦 Siparişi Onayla";
+  if (sonuc) {
+    toast("✅ Sipariş alındı! " + SURE + " dk içinde hazır.");
+    SEPET = {};
+    renderMenu(); renderSepet();
+    document.getElementById("p-ad").value = "";
+    document.getElementById("p-tel").value = "";
+    document.getElementById("p-adres").value = "";
+    document.getElementById("p-not").value = "";
+  } else {
+    toast("❌ Hata oluştu, tekrar deneyin.");
+  }
+  btn.disabled = false; btn.textContent = "📦 Siparişi Onayla";
 }
 
 var toastT;
-function toast(msg){
-  var t=document.getElementById("toast");
-  t.textContent=msg;t.style.display="block";
+function toast(msg) {
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.style.display = "block";
   clearTimeout(toastT);
-  toastT=setTimeout(function(){t.style.display="none";},2500);
+  toastT = setTimeout(function() { t.style.display = "none"; }, 3000);
 }
 
-async function baslat(){
-  var d=await SB.get("menu","aktif=eq.true&order=kat.asc,ad.asc");
-  if(d&&d.length) menu=d;
+async function baslat() {
+  var d = await SB.get("menu", "aktif=eq.true&order=kat.asc,ad.asc");
+  if (d && d.length) MENU = d;
   renderKatlar();
   renderMenu();
 }
