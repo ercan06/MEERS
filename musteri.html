@@ -569,6 +569,9 @@ async function siparisVer(){
   document.getElementById('sepet').style.display='none';
   document.getElementById('takip').style.display='flex';
   document.getElementById('takip').style.flexDirection='column';
+  // Cark butonunu goster
+  var carkBtn = document.getElementById('cark-btn-wrap');
+  if(carkBtn) carkBtn.style.display='block';
   // Puan toast
   if(kazPuan>0){
     document.getElementById('puan-toast').style.display='block';
@@ -681,6 +684,13 @@ function azaltBtn(btn){
   var id=btn.getAttribute('data-id');
   azalt(id);
 }
+
+function carkAc(){
+  var tel = musteri ? musteri.tel : '';
+  var url = 'cark.html?masa=' + masaNo + '&tel=' + encodeURIComponent(tel) + '&hak=1';
+  window.open(url, '_blank');
+}
+
 </script>
 </body>
 </html>

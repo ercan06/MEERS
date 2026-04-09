@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Şans Çarkı 🎡</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --al:#D4A017;--aac:#F0C040;--bas:#2D6A2D;--teh:#C0392B;
+  --mt:#1A1A1A;--si:#9A7B65;--kr:#FDF6EE;--bd:#EDD9C0;--yz:#FFF8F2;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+.hdr{width:100%;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.3);border-bottom:1px solid rgba(212,160,23,.2)}
+.hdr-t{font-size:16px;font-weight:800;color:#fff}
+.geri{padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;border:none;font-size:12px;cursor:pointer}
+.main{width:100%;max-width:420px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:14px}
+/* Liderboard */
+.lider{width:100%;background:rgba(0,0,0,.3);border-radius:16px;padding:12px;border:1px solid rgba(212,160,23,.2)}
+.lider-t{font-size:11px;font-weight:700;color:var(--al);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.lider-satir{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.lider-satir:last-child{border-bottom:none}
+.lider-sira{font-size:14px;width:20px;text-align:center}
+.lider-masa{font-size:12px;font-weight:700;color:#fff;flex:1}
+.lider-puan{font-size:13px;font-weight:800;color:var(--al)}
+/* Çark */
+.cark-wrap{position:relative;width:300px;height:300px}
+.cark-oku{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:28px;z-index:10;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+canvas{border-radius:50%;box-shadow:0 0 40px rgba(212,160,23,.4),0 0 80px rgba(212,160,23,.1)}
+/* Dön butonu */
+.don-btn{width:100%;max-width:280px;padding:16px;border-radius:16px;background:linear-gradient(135deg,var(--al),var(--aac));color:#000;border:none;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 4px 20px rgba(212,160,23,.4)}
+.don-btn:disabled{opacity:.4;cursor:not-allowed}
+/* Sonuç */
+.sonuc{width:100%;background:rgba(0,0,0,.4);border-radius:16px;padding:16px;border:1px solid rgba(212,160,23,.3);text-align:center;display:none}
+.sonuc.ak{display:block;animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+.sonuc-em{font-size:48px;margin-bottom:8px}
+.sonuc-t{font-size:18px;font-weight:800;color:#fff;margin-bottom:4px}
+.sonuc-ac{font-size:13px;color:rgba(255,255,255,.6)}
+.sonuc-badge{display:inline-block;padding:6px 14px;border-radius:10px;font-size:12px;font-weight:700;margin-top:8px}
+.sonuc-badge.kazan{background:rgba(45,106,45,.3);color:#6fcf6f;border:1px solid rgba(45,106,45,.4)}
+.sonuc-badge.ceza{background:rgba(192,57,43,.3);color:#ff8a80;border:1px solid rgba(192,57,43,.4)}
+/* Hakkım */
+.haklar{display:flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(255,255,255,.06);border-radius:12px;border:1px solid rgba(255,255,255,.1)}
+.haklar span{font-size:13px;color:rgba(255,255,255,.7)}
+.haklar b{color:var(--al);font-size:16px}
+/* Canlı oyun */
+.canli{width:100%;background:rgba(0,0,0,.3);border-radius:16px;padding:12px;border:1px solid rgba(52,152,219,.2)}
+.canli-t{font-size:11px;font-weight:700;color:#3498db;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.canli-durum{font-size:12px;color:rgba(255,255,255,.5);text-align:center;padding:8px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-t">🎡 Şans Çarkı</div>
+  <button class="geri" onclick="history.back()">← Geri</button>
+</div>
+<div class="main">
+  <!-- Haklar -->
+  <div class="haklar">
+    <span>🎯 Çevirme hakkın:</span>
+    <b id="hak-say">0</b>
+    <span style="margin-left:4px;font-size:11px;color:rgba(255,255,255,.4)">(Sipariş başına 1 hak)</span>
+  </div>
+
+  <!-- Canlı Liderboard -->
+  <div class="lider">
+    <div class="lider-t">🏆 Canlı Liderboard</div>
+    <div id="lider-ic"><div style="color:rgba(255,255,255,.3);font-size:12px;text-align:center;padding:8px">Yükleniyor...</div></div>
+  </div>
+
+  <!-- Çark -->
+  <div class="cark-wrap">
+    <div class="cark-oku">▼</div>
+    <canvas id="cark" width="300" height="300"></canvas>
+  </div>
+
+  <!-- Dön Butonu -->
+  <button class="don-btn" id="don-btn" onclick="don()">🎡 Çevir!</button>
+
+  <!-- Sonuç -->
+  <div class="sonuc" id="sonuc">
+    <div class="sonuc-em" id="sonuc-em">🎉</div>
+    <div class="sonuc-t" id="sonuc-t">Tebrikler!</div>
+    <div class="sonuc-ac" id="sonuc-ac"></div>
+    <div class="sonuc-badge" id="sonuc-badge"></div>
+  </div>
+
+  <!-- Canlı Oyun Bilgi -->
+  <div class="canli">
+    <div class="canli-t">⚡ Canlı Masa Yarışması</div>
+    <div class="canli-durum" id="canli-durum">Masanız henüz liderboardda değil. Çark çevirerek puan kazanın!</div>
+  </div>
+</div>
+
+<script>
+
+const _URL="https://vdrjyngywjzuniwvsjtk.supabase.co",_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg",_H={"apikey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg","Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg","Content-Type":"application/json"};
+const SB={
+  async get(t,q){try{const r=await fetch(_URL+"/rest/v1/"+t+"?"+(q||""),{headers:_H});return r.ok?r.json():[]}catch(e){return[]}},
+  async post(t,d){try{const r=await fetch(_URL+"/rest/v1/"+t,{method:"POST",headers:{..._H,"Prefer":"return=representation"},body:JSON.stringify(d)});return r.json()}catch(e){return null}},
+  async patch(t,q,d){try{const r=await fetch(_URL+"/rest/v1/"+t+"?"+q,{method:"PATCH",headers:{..._H,"Prefer":"return=representation"},body:JSON.stringify(d)});return r.json()}catch(e){return null}},
+  async del(t,q){try{await fetch(_URL+"/rest/v1/"+t+"?"+q,{method:"DELETE",headers:_H})}catch(e){}}
+};
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function urunStr(u){
+  if(!u)return"";
+  if(typeof u==="string"){try{u=JSON.parse(u)}catch(e){return u}}
+  if(!Array.isArray(u))return"";
+  return u.map(function(x){return(x.em||"")+" "+(x.ad||x)+" x"+(x.adet||1)}).join(", ");
+}
+
+// URL'den masa no ve tel al
+var params = new URLSearchParams(window.location.search);
+var MASA_NO = parseInt(params.get('masa')) || 0;
+var TEL = params.get('tel') || '';
+var HAK = parseInt(params.get('hak')) || 0;
+
+document.getElementById('hak-say').textContent = HAK;
+if(HAK <= 0) {
+  document.getElementById('don-btn').disabled = true;
+  document.getElementById('don-btn').textContent = 'Hak yok (sipariş verin)';
+}
+
+// ÇARK DİLİMLERİ
+var DILIMLER = [
+  {em:'🎉', ad:'%20 İndirim!', renk:'#e74c3c', tip:'indirim', deger:20, puan:100},
+  {em:'⭐', ad:'50 Puan', renk:'#3498db', tip:'puan', deger:50, puan:50},
+  {em:'😅', ad:'Arkadaşına ısmarla!', renk:'#9b59b6', tip:'ceza', deger:0, puan:0},
+  {em:'🎊', ad:'%10 İndirim', renk:'#2ecc71', tip:'indirim', deger:10, puan:50},
+  {em:'🍵', ad:'Bedava Çay', renk:'#e67e22', tip:'hediye', deger:0, puan:30},
+  {em:'💫', ad:'100 Puan', renk:'#1abc9c', tip:'puan', deger:100, puan:100},
+  {em:'😂', ad:'Garsonla selfie!', renk:'#e74c3c', tip:'ceza', deger:0, puan:0},
+  {em:'🎁', ad:'%15 Sonraki', renk:'#f39c12', tip:'indirim_sonraki', deger:15, puan:30},
+  {em:'📚', ad:'Öğrenciye 200₺', renk:'#8e44ad', tip:'ogrenci', deger:200, puan:80},
+  {em:'💰', ad:'200 Puan!', renk:'#27ae60', tip:'puan', deger:200, puan:200},
+  {em:'😱', ad:'Masaya tatlı söyle!', renk:'#c0392b', tip:'ceza', deger:0, puan:0},
+  {em:'✨', ad:'%5 İndirim', renk:'#2980b9', tip:'indirim', deger:5, puan:20},
+];
+
+var dilimsayisi = DILIMLER.length;
+var canvasEl = document.getElementById('cark');
+var ctx = canvasEl.getContext('2d');
+var doniyor = false;
+var mevcutAci = 0;
+
+// Çarkı çiz
+function carkCiz(aci) {
+  var cx = 150, cy = 150, r = 145;
+  ctx.clearRect(0,0,300,300);
+  var dilimAci = (Math.PI*2) / dilimsayisi;
+  for(var i=0; i<dilimsayisi; i++) {
+    var bas = aci + i*dilimAci;
+    var bit = bas + dilimAci;
+    // Dilim
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,bas,bit);
+    ctx.closePath();
+    ctx.fillStyle = DILIMLER[i].renk;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.15)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // Emoji
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(bas + dilimAci/2);
+    ctx.textAlign = 'right';
+    ctx.font = '18px serif';
+    ctx.fillText(DILIMLER[i].em, r-8, 5);
+    ctx.font = 'bold 10px -apple-system,sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.shadowColor = 'rgba(0,0,0,.8)';
+    ctx.shadowBlur = 3;
+    var kelimeler = DILIMLER[i].ad.split(' ');
+    if(kelimeler.length<=2) {
+      ctx.fillText(DILIMLER[i].ad, r-32, 5);
+    } else {
+      ctx.fillText(kelimeler.slice(0,2).join(' '), r-32, -1);
+      ctx.fillText(kelimeler.slice(2).join(' '), r-32, 10);
+    }
+    ctx.restore();
+  }
+  // Merkez
+  ctx.beginPath();
+  ctx.arc(cx,cy,20,0,Math.PI*2);
+  ctx.fillStyle = '#1a1a2e';
+  ctx.fill();
+  ctx.strokeStyle = '#D4A017';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  // Merkez ikon
+  ctx.font = '16px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('🎡', cx, cy+6);
+}
+
+carkCiz(0);
+
+// Çevir
+function don() {
+  if(doniyor || HAK <= 0) return;
+  doniyor = true;
+  document.getElementById('don-btn').disabled = true;
+  document.getElementById('sonuc').classList.remove('ak');
+  var ekstraAci = Math.PI*2*5 + Math.random()*Math.PI*2;
+  var toplamAci = mevcutAci + ekstraAci;
+  var baslangic = performance.now();
+  var sure = 4000;
+  function animasyon(t) {
+    var gecen = t - baslangic;
+    var ilerleme = Math.min(gecen/sure, 1);
+    var ease = 1 - Math.pow(1-ilerleme, 3);
+    mevcutAci = mevcutAci + (toplamAci - mevcutAci) * (ilerleme < 1 ? ease*0.05 : 1);
+    if(ilerleme >= 1) mevcutAci = toplamAci;
+    carkCiz(mevcutAci);
+    if(ilerleme < 1) {
+      requestAnimationFrame(animasyon);
+    } else {
+      mevcutAci = toplamAci % (Math.PI*2);
+      carkCiz(mevcutAci);
+      sonucGoster();
+      doniyor = false;
+    }
+  }
+  requestAnimationFrame(animasyon);
+}
+
+function sonucGoster() {
+  // Hangi dilim işaret altında?
+  var dilimAci = (Math.PI*2) / dilimsayisi;
+  // Ok yukarıda (3*PI/2), çark döndü mevcutAci kadar
+  var okAci = (Math.PI*1.5 - mevcutAci) % (Math.PI*2);
+  if(okAci < 0) okAci += Math.PI*2;
+  var dilimIndex = Math.floor(okAci / dilimAci) % dilimsayisi;
+  var kazanan = DILIMLER[dilimIndex];
+
+  HAK--;
+  document.getElementById('hak-say').textContent = HAK;
+  if(HAK <= 0) {
+    document.getElementById('don-btn').disabled = true;
+    document.getElementById('don-btn').textContent = 'Hak kalmadı';
+  } else {
+    document.getElementById('don-btn').disabled = false;
+  }
+
+  // Sonucu göster
+  var el = document.getElementById('sonuc');
+  document.getElementById('sonuc-em').textContent = kazanan.em;
+  document.getElementById('sonuc-t').textContent = kazanan.ad;
+  var badge = document.getElementById('sonuc-badge');
+  var ac = '';
+  var isCeza = kazanan.tip === 'ceza';
+
+  if(kazanan.tip === 'indirim') {
+    ac = 'Bu siparişe %' + kazanan.deger + ' indirim uygulandı!';
+    badge.textContent = '✅ İndirim kazandın!';
+    badge.className = 'sonuc-badge kazan';
+  } else if(kazanan.tip === 'puan') {
+    ac = kazanan.deger + ' puan hesabına eklendi!';
+    badge.textContent = '⭐ Puan kazandın!';
+    badge.className = 'sonuc-badge kazan';
+  } else if(kazanan.tip === 'hediye') {
+    ac = 'Garsonunuz çayınızı ücretsiz getiriyor!';
+    badge.textContent = '🎁 Hediye kazandın!';
+    badge.className = 'sonuc-badge kazan';
+  } else if(kazanan.tip === 'indirim_sonraki') {
+    ac = 'Bir sonraki siparişinde %' + kazanan.deger + ' indirim!';
+    badge.textContent = '🎊 Gelecek sipariş indirimi!';
+    badge.className = 'sonuc-badge kazan';
+  } else if(kazanan.tip === 'ogrenci') {
+    ac = 'Öğrenci olarak 200₺ değerinde kupon kazandın! Hesabına eklendi.';
+    badge.textContent = '📚 Öğrenci kuponu!';
+    badge.className = 'sonuc-badge kazan';
+  } else {
+    ac = 'Ceza geldi! ' + kazanan.ad;
+    badge.textContent = '😅 Ceza!';
+    badge.className = 'sonuc-badge ceza';
+  }
+
+  document.getElementById('sonuc-ac').textContent = ac;
+  el.classList.add('ak');
+
+  // DB'ye kaydet
+  if(TEL && kazanan.puan > 0) {
+    SB.patch('musteriler','tel=eq.'+TEL, {
+      puan: kazanan.puan
+    }).catch(function(){});
+  }
+
+  // Liderboard güncelle
+  liderboardGuncelle(kazanan.puan);
+}
+
+// Liderboard
+var liderData = {};
+
+async function liderboardYukle() {
+  var d = await SB.get('ayarlar', 'key=eq.cark_lider');
+  if(d && d.length && d[0].value) {
+    liderData = d[0].value;
+  }
+  liderRender();
+}
+
+async function liderboardGuncelle(puan) {
+  if(!MASA_NO) return;
+  var key = 'masa_' + MASA_NO;
+  liderData[key] = (liderData[key] || 0) + puan;
+  await SB.patch('ayarlar','key=eq.cark_lider',{value: liderData}).catch(async function(){
+    await SB.post('ayarlar',{key:'cark_lider',value:liderData});
+  });
+  liderRender();
+}
+
+function liderRender() {
+  var sirali = Object.entries(liderData)
+    .map(function(e){ return {masa:e[0].replace('masa_','Masa '), puan:e[1]}; })
+    .sort(function(a,b){ return b.puan-a.puan; })
+    .slice(0,5);
+
+  if(!sirali.length) {
+    document.getElementById('lider-ic').innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:12px;text-align:center;padding:8px">Henüz kimse oynamadı</div>';
+    return;
+  }
+
+  var emojiler = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+  document.getElementById('lider-ic').innerHTML = sirali.map(function(s,i){
+    var benimMi = s.masa === 'Masa '+MASA_NO;
+    return '<div class="lider-satir" style="'+(benimMi?'background:rgba(212,160,23,.08);border-radius:8px;padding:5px 6px':'')+'">'
+      +'<div class="lider-sira">'+emojiler[i]+'</div>'
+      +'<div class="lider-masa">'+(benimMi?'<b style="color:var(--al)">'+s.masa+' (Sen)</b>':s.masa)+'</div>'
+      +'<div class="lider-puan">'+s.puan+' puan</div>'
+      +'</div>';
+  }).join('');
+
+  // Canlı durum
+  var benimSira = sirali.findIndex(function(s){ return s.masa==='Masa '+MASA_NO; });
+  var canliMsg = '';
+  if(benimSira === 0) canliMsg = '🏆 Tebrikler! Şu an 1. sıradasınız!';
+  else if(benimSira > 0) canliMsg = (benimSira+1)+'. sıradasınız. Çark çevirerek yükselin!';
+  else canliMsg = 'Çark çevirerek liderboarda girin!';
+  document.getElementById('canli-durum').textContent = canliMsg;
+}
+
+// Başlat
+liderboardYukle();
+setInterval(liderboardYukle, 5000);
+</script>
+</body>
+</html>
