@@ -50,6 +50,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .mi-bilgi{flex:1;min-width:0}
 .mi-ad{font-size:14px;font-weight:700;color:var(--mt)}
 .mi-fiyat{font-size:16px;font-weight:800;color:var(--al);margin-top:3px}
+  ${u.kalori ? `<div class="mi-kalori">🔥${u.kalori}kcal</div>` : ''}
 .mi-stok-uyari{font-size:10px;color:var(--teh);margin-top:2px;font-weight:600}
 .mi-kontrol{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .mi-btn{width:30px;height:30px;border-radius:50%;border:none;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
