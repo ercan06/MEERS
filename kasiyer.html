@@ -329,54 +329,52 @@ async function odemeAl(yontem){
 
 // Bölünmüş ödeme
 function bolumAc(){
+var bolumKalan=0,bolumGecmis=[];
+function bolumAc(){
+  var masa=dbMasalar.find(function(m){return parseInt(m.no)===parseInt(aktifMasaNo);});
+  bolumKalan=masa?parseFloat(masa.toplam||0):0;
+  bolumGecmis=[];
   document.getElementById("bolum-form").style.display="block";
-  var masa=dbMasalar.find(function(m){return parseInt(m.no)===parseInt(aktifMasaNo);});
-  var toplam=masa?parseFloat(masa.toplam||0):0;
-  document.getElementById("nakit-inp").value=Math.floor(toplam/2);
-  kalanHesapla();
+  document.getElementById("bolum-miktar").value="";
+  bolumRender();
 }
-function bolumKapat(){document.getElementById("bolum-form").style.display="none";}
-function kalanHesapla(){
-  var masa=dbMasalar.find(function(m){return parseInt(m.no)===parseInt(aktifMasaNo);});
-  var toplam=masa?parseFloat(masa.toplam||0):0;
-  var nakit=parseFloat(document.getElementById("nakit-inp").value)||0;
-  document.getElementById("kalan-goster").textContent="Kart: ₺"+Math.max(0,toplam-nakit).toLocaleString("tr-TR");
+function bolumKapat(){document.getElementById("bolum-form").style.display="none";bolumKalan=0;bolumGecmis=[];}
+function bolumRender(){
+  document.getElementById("bolum-kalan-tutar").textContent="₺"+bolumKalan.toLocaleString("tr-TR");
+  var gec=document.getElementById("bolum-gecmis");
+  if(bolumGecmis.length){
+    gec.innerHTML="<div style='font-weight:700;margin-bottom:4px'>Alınan ödemeler:</div>"+bolumGecmis.map(function(g){return "<div style='display:flex;justify-content:space-between'><span>"+(g.yontem==="nakit"?"💵 Nakit":"💳 Kart")+"</span><span>₺"+g.miktar+"</span></div>";}).join("");
+  }else{gec.innerHTML="";}
 }
-async function bolumOde(){
+async function bolumOdeYontem(yontem){
+  var miktar=parseFloat(document.getElementById("bolum-miktar").value)||0;
+  if(miktar<=0){toast("Miktar girin!");return;}
+  if(miktar>bolumKalan)miktar=bolumKalan;
   var masa=dbMasalar.find(function(m){return parseInt(m.no)===parseInt(aktifMasaNo);});
-  var toplam=masa?parseFloat(masa.toplam||0):0;
-  var nakit=parseFloat(document.getElementById("nakit-inp").value)||0;
-  var kart=Math.max(0,toplam-nakit);
-  if(nakit>0) await SB.post("odemeler",{id:"od_"+Date.now()+"_n",masa_no:aktifMasaNo,yontem:"nakit",toplam:nakit,garson_id:masa?masa.garson_id:null,garson_ad:masa?masa.garson_ad||"-":"-",created_at:new Date().toISOString()});
-  if(kart>0) await SB.post("odemeler",{id:"od_"+(Date.now()+1)+"_k",masa_no:aktifMasaNo,yontem:"kart",toplam:kart,garson_id:masa?masa.garson_id:null,garson_ad:masa?masa.garson_ad||"-":"-",created_at:new Date().toISOString()});
-  await siparisleriTamamla();
-  await masaSifirla();
-  modalKapat();
-  toast("Ödeme alındı! Nakit: ₺"+nakit+" Kart: ₺"+kart);
-  window.open("fis.html?masa="+aktifMasaNo+"&toplam="+toplam+"&yontem=nakit+kart","_blank");
-  await yukle();
+  await SB.post("odemeler",{id:"od_"+Date.now()+"_"+Math.random().toString(36).slice(2,5),masa_no:aktifMasaNo,yontem:yontem,toplam:miktar,garson_id:masa?masa.garson_id:null,garson_ad:masa?masa.garson_ad||"-":"-",created_at:new Date().toISOString()});
+  bolumGecmis.push({yontem:yontem,miktar:miktar});
+  bolumKalan=Math.max(0,bolumKalan-miktar);
+  document.getElementById("bolum-miktar").value="";
+  if(bolumKalan<=0){
+    await siparisleriTamamla();await masaSifirla();
+    var top=bolumGecmis.reduce(function(s,g){return s+g.miktar;},0);
+    bolumKapat();modalKapat();
+    toast("Ödeme tamamlandı! ₺"+top);
+    window.open("fis.html?masa="+aktifMasaNo+"&toplam="+top+"&yontem=bolum","_blank");
+    await yukle();
+  }else{bolumRender();toast((yontem==="nakit"?"Nakit":"Kart")+" ₺"+miktar+" alındı. Kalan: ₺"+bolumKalan);}
 }
-
 async function siparisleriTamamla(){
   var sps=dbSiparisler.filter(function(s){return parseInt(s.masa_no)===parseInt(aktifMasaNo);});
-  for(var i=0;i<sps.length;i++){
-    await SB.patch("siparisler","id=eq."+sps[i].id,{durum:"tamamlandi",updated_at:new Date().toISOString()});
-  }
+  for(var i=0;i<sps.length;i++){await SB.patch("siparisler","id=eq."+sps[i].id,{durum:"tamamlandi",updated_at:new Date().toISOString()});}
 }
 async function masaSifirla(){
-  if(aktifMasaNo===0) return;
+  if(aktifMasaNo===0)return;
   await SB.patch("masalar","no=eq."+aktifMasaNo,{durum:"bos",garson_id:null,garson_ad:"-",toplam:0,sure:0,updated_at:new Date().toISOString()});
 }
-
 function modalKapat(){document.getElementById("modal-detay").classList.remove("ak");aktifMasaNo=null;}
-
 var toastT;
-function toast(msg){
-  var t=document.getElementById("toast");
-  t.textContent=msg;t.style.display="block";
-  clearTimeout(toastT);
-  toastT=setTimeout(function(){t.style.display="none";},3000);
-}
+function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.style.display="block";clearTimeout(toastT);toastT=setTimeout(function(){t.style.display="none";},3000);}
 </script>
 </body>
 </html>
