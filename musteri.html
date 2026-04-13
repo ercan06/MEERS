@@ -101,6 +101,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .puan-toast{background:linear-gradient(135deg,var(--al),var(--aac));border-radius:14px;padding:14px;text-align:center;margin-bottom:14px}
 .pt-sayi{font-size:28px;font-weight:800;color:var(--s)}
 .pt-t{font-size:12px;color:rgba(0,0,0,.6);margin-top:3px}
+
+.akordeon{margin-bottom:4px}
+.akordeon-h{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--sm,#2C2C2C);color:var(--al,#D4A017);font-size:13px;font-weight:700;border-radius:12px;cursor:pointer;border:1px solid rgba(212,160,23,.2)}
+.akordeon-ok{font-size:11px;transition:transform .2s}
+.akordeon-ic{display:none;padding-top:4px}
+.akordeon-ic.ak{display:block}
 </style>
 </head>
 <body>
@@ -174,6 +180,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="puan-toast" id="puan-toast" style="display:none">
     <div class="pt-sayi" id="pt-sayi">+0 ⭐</div>
     <div class="pt-t">Puan kazandınız!</div>
+  </div>
+  <div id="cark-btn-wrap" style="display:none;padding:12px 16px;background:linear-gradient(135deg,#1a1a2e,#0f3460);border-top:2px solid rgba(212,160,23,.3);text-align:center">
+    <div style="font-size:12px;font-weight:700;color:#D4A017;margin-bottom:8px">🎡 Şans Çarkı Hakkın Var!</div>
+    <button onclick="carkAc()" style="width:100%;padding:12px;border-radius:14px;background:linear-gradient(135deg,#D4A017,#F0C040);color:#000;border:none;font-size:14px;font-weight:800;cursor:pointer">🎡 Çarkı Çevir → İndirim Kazan!</button>
   </div>
   <div class="takip-kart">
     <div class="takip-t">Siparişiniz Alındı!</div>
@@ -441,11 +451,12 @@ function girisYap(){
 function renderKatlar(){
   const katlar=['Tumu','Izgara','Pide','Corbalar','Tatlilar','Icecekler'];
   const emler={'Tumu':'🍽️','Izgara':'🥩','Pide':'🫓','Corbalar':'🍲','Tatlilar':'🍮','Icecekler':'🥤'};
-  document.getElementById('kat-scroll').innerHTML=katlar.map(k=>
-    `<div class="kat-btn${k==='Tumu'?' ak':''}" onclick="katSec('${k}',this)">${emler[k]} ${k==='Tumu'?'Tümü':k}</div>`
-  ).join('');
+  document.getElementById('kat-scroll').innerHTML=katlar.map(function(k){
+    return '<div class="kat-btn'+(k==='Tumu'?' ak':'')+'" data-kat="'+k+'" onclick="katSecBtn(this)">'+emler[k]+' '+(k==='Tumu'?'Tümü':k)+'</div>';
+  }).join('');
 }
 
+function katSecBtn(el){ katSec(el.getAttribute("data-kat"), el); }
 function katSec(kat,el){
   aktifKat=kat;
   document.querySelectorAll('.kat-btn').forEach(b=>b.classList.remove('ak'));
@@ -455,24 +466,52 @@ function katSec(kat,el){
 
 // ── MENÜ ──
 function renderMenu(kat){
-  const items=ST.menuGetir(kat);
-  document.getElementById('menu-list').innerHTML=items.map(u=>{
-    // Stok durumunu kontrol et — stokBitenler listesinden
-    const stokBitti = stokBitenler.indexOf(u.id) >= 0;
-    const adet=sepet[u.id]?sepet[u.id].adet:0;
-    return '<div class="menu-item'+(stokBitti?' stok-yok':'')+'">'
-      +(u.image_url?'<img src="'+u.image_url+'" style="width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0">':'<div class="mi-em">'+u.em+'</div>')
-      +'<div class="mi-bilgi">'
-      +'<div class="mi-ad">'+u.ad+'</div>'
-      +'<div class="mi-fiyat">₺'+u.fiyat+'</div>'
-      +(stokBitti?'<div class="mi-stok-uyari">Tükendi</div>':'')
-      +'</div>'
-      +'<div class="mi-kontrol">'
-      +(adet>0?'<button class="mi-btn azalt" data-id="'+u.id+'" onclick="azaltBtn(this)">−</button><div class="mi-adet">'+adet+'</div>':'')
-      +(stokBitti?'':'<button class="mi-btn ekle" data-id="'+u.id+'" data-ad="'+u.ad+'" data-em="'+u.em+'" data-fiyat="'+u.fiyat+'" onclick="ekleBtn(this)">+</button>')
-      +'</div></div>';
-  }).join('');
+  var items = ST.menuGetir(kat);
+  if(kat !== 'Tumu'){
+    // Tek kategori — düz liste
+    document.getElementById('menu-list').innerHTML = items.map(function(u){
+      return menuItemHTML(u);
+    }).join('');
+    sepetGuncelle();
+    return;
+  }
+  // Tumu — akordeon gruplar
+  var katlar = [];
+  var katMap = {};
+  items.forEach(function(u){
+    if(katlar.indexOf(u.kat)<0){ katlar.push(u.kat); katMap[u.kat]=[]; }
+    katMap[u.kat].push(u);
+  });
+  var emler={'Izgara':'🥩','Pide':'🫓','Corbalar':'🍲','Tatlilar':'🍮','Icecekler':'🥤'};
+  var html = '';
+  katlar.forEach(function(k){
+    html += '<div class="akordeon">';
+    html += '<div class="akordeon-h" onclick="akordeonToggle(this)">'+(emler[k]||'🍽️')+' '+k+'<span class="akordeon-ok">▼</span></div>';
+    html += '<div class="akordeon-ic ak">';
+    katMap[k].forEach(function(u){ html += menuItemHTML(u); });
+    html += '</div></div>';
+  });
+  document.getElementById('menu-list').innerHTML = html;
   sepetGuncelle();
+}
+
+function akordeonToggle(hdr){
+  var ic = hdr.nextElementSibling;
+  var ok = hdr.querySelector('.akordeon-ok');
+  ic.classList.toggle('ak');
+  if(ok) ok.textContent = ic.classList.contains('ak') ? '▲' : '▼';
+}
+
+function menuItemHTML(u){
+  var stokBitti = stokBitenler.indexOf(u.id) >= 0;
+  var adet = sepet[u.id] ? sepet[u.id].adet : 0;
+  return '<div class="menu-item'+(stokBitti?' stok-yok':'')+'">'
+    +(u.image_url?'<img src="'+u.image_url+'" style="width:52px;height:52px;border-radius:10px;object-fit:cover;flex-shrink:0">':'<div class="mi-em">'+u.em+'</div>')
+    +'<div class="mi-bilgi"><div class="mi-ad">'+u.ad+'</div><div class="mi-fiyat">₺'+u.fiyat+'</div>'+(stokBitti?'<div class="mi-stok-uyari">Tükendi</div>':'')+'</div>'
+    +'<div class="mi-kontrol">'
+    +(adet>0?'<button class="mi-btn azalt" data-id="'+u.id+'" onclick="azaltBtn(this)">−</button><div class="mi-adet">'+adet+'</div>':'')
+    +(stokBitti?'':'<button class="mi-btn ekle" data-id="'+u.id+'" data-ad="'+u.ad.replace(/"/g,'')+'" data-em="'+(u.em||'')+'" data-fiyat="'+u.fiyat+'" onclick="ekleBtn(this)">+</button>')
+    +'</div></div>';
 }
 
 function ekle(id,ad,em,fiyat){
@@ -544,7 +583,6 @@ function sepettenCikar(id){
 function puanSlider(inp){
   kullanilacakPuan=parseInt(inp.value)||0;
   renderSepet();
-  return {id: dbId};
 }
 
 // ── SİPARİŞ ──
@@ -569,6 +607,11 @@ async function siparisVer(){
   document.getElementById('sepet').style.display='none';
   document.getElementById('takip').style.display='flex';
   document.getElementById('takip').style.flexDirection='column';
+  // Cark butonunu goster
+  setTimeout(function(){
+    var cb=document.getElementById('cark-btn-wrap');
+    if(cb) cb.style.display='block';
+  },300);
   // Cark butonunu goster
   var carkBtn = document.getElementById('cark-btn-wrap');
   if(carkBtn) carkBtn.style.display='block';

@@ -124,8 +124,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
       <span id="det-toplam">₺0</span>
     </div>
     <div class="btn-row">
-      <button class="btn nakit" onclick="odemeAl('nakit')">💵 Nakit</button>
-      <button class="btn kart" onclick="odemeAl('kart')">💳 Kart</button>
+      <button class="btn nakit" onclick="odemeSecenekGoster()">💵💳 Ödeme Al</button>
+      <button class="btn kapat" onclick="modalKapat()">Kapat</button>
     </div>
     <button class="btn kapat" style="width:100%;margin-top:8px" onclick="modalKapat()">Kapat</button>
   </div>
@@ -133,7 +133,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 
 <div class="toast" id="toast"></div>
 
-<script>
+<sc
 
 const SUPA_URL = "https://vdrjyngywjzuniwvsjtk.supabase.co";
 const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg";
@@ -410,6 +410,107 @@ function toast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function() { t.classList.remove("ak"); }, 3000);
 }
+
+function odemeSecenekGoster(){
+  var masa = dbMasalar.find(function(m){ return parseInt(m.no)===parseInt(aktifMasaNo); });
+  if(!masa) return;
+  var toplam = parseFloat(masa.toplam||0);
+  document.getElementById('bolum-toplam-bilgi').textContent = 'Toplam: ₺'+toplam.toLocaleString('tr-TR');
+  document.getElementById('nakit-miktar').value = '';
+  document.getElementById('kalan-goster').textContent = 'Kart: ₺0';
+  document.getElementById('bolum-form').style.display = 'none';
+  document.getElementById('bolum-secenekler').style.display = 'flex';
+  document.getElementById('modal-detay').classList.remove('ak');
+  document.getElementById('modal-bolum').classList.add('ak');
+}
+
+function bolumOdemeAc(){
+  document.getElementById('bolum-secenekler').style.display = 'none';
+  document.getElementById('bolum-form').style.display = 'block';
+  var masa = dbMasalar.find(function(m){ return parseInt(m.no)===parseInt(aktifMasaNo); });
+  if(masa) document.getElementById('nakit-miktar').value = Math.floor(parseFloat(masa.toplam||0)/2);
+  kalanHesapla();
+}
+
+function kalanHesapla(){
+  var masa = dbMasalar.find(function(m){ return parseInt(m.no)===parseInt(aktifMasaNo); });
+  if(!masa) return;
+  var toplam = parseFloat(masa.toplam||0);
+  var nakit = parseFloat(document.getElementById('nakit-miktar').value)||0;
+  var kalan = Math.max(0, toplam - nakit);
+  document.getElementById('kalan-goster').textContent = 'Kart: ₺'+kalan;
+}
+
+function bolumFormKapat(){
+  document.getElementById('bolum-form').style.display = 'none';
+  document.getElementById('bolum-secenekler').style.display = 'flex';
+}
+
+async function bolumOdemeAl(){
+  var masa = dbMasalar.find(function(m){ return parseInt(m.no)===parseInt(aktifMasaNo); });
+  if(!masa) return;
+  var toplam = parseFloat(masa.toplam||0);
+  var nakit = parseFloat(document.getElementById('nakit-miktar').value)||0;
+  var kart = Math.max(0, toplam - nakit);
+  if(nakit <= 0 && kart <= 0){ toast('Miktar girin'); return; }
+  document.getElementById('modal-bolum').classList.remove('ak');
+  // İki ayrı ödeme kaydet
+  if(nakit > 0) await kaydetOdeme('nakit', nakit);
+  if(kart > 0) await kaydetOdeme('kart', kart);
+  await temizleMasa();
+  toast('Ödeme alındı! Nakit: ₺'+nakit+' Kart: ₺'+kart);
+  window.open('fis.html?masa='+aktifMasaNo+'&toplam='+toplam+'&yontem=nakit+kart','_blank');
+  await yukle();
+}
+
+async function kaydetOdeme(yontem, miktar){
+  var masa = dbMasalar.find(function(m){ return parseInt(m.no)===parseInt(aktifMasaNo); });
+  await SB.post('odemeler',{
+    id:'od_'+Date.now()+'_'+yontem,
+    masa_no:aktifMasaNo,
+    yontem:yontem,
+    toplam:miktar,
+    garson_id:masa?masa.garson_id:null,
+    garson_ad:masa?masa.garson_ad:'-',
+    created_at:new Date().toISOString()
+  });
+}
+
+async function temizleMasa(){
+  var sps = dbSiparisler.filter(function(s){ return parseInt(s.masa_no)===parseInt(aktifMasaNo); });
+  for(var i=0;i<sps.length;i++){
+    await SB.patch('siparisler','id=eq.'+sps[i].id,{durum:'tamamlandi',updated_at:new Date().toISOString()});
+  }
+  await SB.patch('masalar','no=eq.'+aktifMasaNo,{durum:'bos',garson_id:null,garson_ad:'-',toplam:0,sure:0,updated_at:new Date().toISOString()});
+}
+);
+}
 </script>
+
+<!-- BÖLÜNMÜŞ ÖDEME MODAL -->
+<div class="modal-bg" id="modal-bolum">
+  <div class="modal">
+    <div style="font-size:16px;font-weight:800;color:var(--mt);margin-bottom:4px">💳 Ödeme Seçeneği</div>
+    <div style="font-size:12px;color:var(--si);margin-bottom:14px" id="bolum-toplam-bilgi">Toplam: ₺0</div>
+    <div style="display:flex;flex-direction:column;gap:8px" id="bolum-secenekler">
+      <button class="btn nakit" onclick="odemeAl('nakit')">💵 Tamamı Nakit</button>
+      <button class="btn kart" onclick="odemeAl('kart')">💳 Tamamı Kart</button>
+      <button class="btn" style="background:linear-gradient(135deg,#8e44ad,#6c3483);color:#fff" onclick="bolumOdemeAc()">✂️ Bölünmüş Ödeme</button>
+    </div>
+    <div id="bolum-form" style="display:none;margin-top:12px">
+      <div style="font-size:12px;font-weight:700;color:var(--si);margin-bottom:8px">Nakit miktar girin:</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input type="number" id="nakit-miktar" placeholder="₺0" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--bd);font-size:14px;outline:none" oninput="kalanHesapla()">
+        <div style="display:flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:10px;background:var(--ik);font-size:13px;font-weight:700;color:var(--si);min-width:80px" id="kalan-goster">Kart: ₺0</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button class="btn nakit" onclick="bolumOdemeAl()">✅ Öde</button>
+        <button class="btn kapat" onclick="bolumFormKapat()">İptal</button>
+      </div>
+    </div>
+    <button class="btn kapat" style="width:100%;margin-top:8px" onclick="document.getElementById('modal-bolum').classList.remove('ak')">Kapat</button>
+  </div>
+</div>
+
 </body>
 </html>
