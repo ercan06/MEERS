@@ -173,6 +173,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="tab-btn" onclick="window.open('masa-plan.html','_blank')">🗺️ Masa Planı</button>
     <button class="tab-btn" onclick="window.open('gecmis.html','_blank')">📋 Geçmiş</button>
     <button class="tab-btn" onclick="window.open('paket.html','_blank')">🛵 Paket</button>
+    <button class="tab-btn" onclick="tabGec('kampanya',this)">🔥 Kampanya</button>
     <button class="tab-btn" onclick="tabGec('ciro',this)">📊 Ciro</button>
     <button class="tab-btn" onclick="tabGec('karsilastirma',this)">📈 Karşılaştırma</button>
     <button class="tab-btn" onclick="tabGec('gelir-gider',this)">💰 Gelir/Gider</button>
@@ -364,13 +365,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
       <button class="btn yes" onclick="menuKaydet()">✅ Kaydet</button>
-      <button class="btn ik" onclick="document.getElementById('menu-modal').classList.remove('ak')">İptal</button>
-    </div>
-  </div>
-</div>
-
-
-<script>
+      <button class="btn ik" onclick="document.getElementById('menu-mo
 
 const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg';
@@ -1323,6 +1318,99 @@ async function topluUygula(){
   }
   document.getElementById('modal-toplu').classList.remove('ak');
   await menuYonetimYukle();
+  alert('%'+oran+' '+(tip==='indirim'?'indirim':'zam')+' uygulandi!');
+}
+
+// ── KAMPANYA ──
+function kamp_sure(dk){
+  document.getElementById('kamp-sure').value = dk;
+}
+
+async function kampanyaBaslat(){
+  var mesaj = document.getElementById('kamp-mesaj').value.trim();
+  var kat = document.getElementById('kamp-kat').value;
+  var oran = parseInt(document.getElementById('kamp-oran').value)||0;
+  var sure = parseInt(document.getElementById('kamp-sure').value)||0;
+  if(!mesaj){alert('Mesaj girin');return;}
+  if(!oran||oran<1||oran>99){alert('İndirim oranı girin (1-99)');return;}
+  if(!sure||sure<1){alert('Süre girin');return;}
+  var bitis = new Date(Date.now() + sure*60*1000).toISOString();
+  var kampanya = {aktif:true, mesaj:mesaj, kat:kat, oran:oran, bitis:bitis};
+  await SB.patch('ayarlar','key=eq.kampanya',{value:kampanya}).catch(async function(){
+    await SB.post('ayarlar',{key:'kampanya',value:kampanya});
+  });
+  document.getElementById('kamp-durum').textContent = '✅ Kampanya başlatıldı! '+sure+' dakika sürecek.';
+  document.getElementById('kamp-durum').style.color = 'var(--bas)';
+}
+
+async function kampanyaDurdur(){
+  await SB.patch('ayarlar','key=eq.kampanya',{value:{aktif:false}}).catch(function(){});
+  document.getElementById('kamp-durum').textContent = '⏹ Kampanya durduruldu.';
+  document.getElementById('kamp-durum').style.color = 'var(--teh)';
+}
+
+// ── KOMBİNE MENÜ ──
+var comboSeciliUrunler = [];
+
+async function kampanyaTabYukle(){
+  // Menü ürünlerini listele
+  var data = await SB.get('menu','aktif=eq.true&order=kat.asc,ad.asc');
+  if(!data) return;
+  var el = document.getElementById('combo-urun-list');
+  if(!el) return;
+  el.innerHTML = data.map(function(u){
+    return '<label style="display:flex;align-items:center;gap:6px;padding:4px;cursor:pointer">'
+      +'<input type="checkbox" value="'+u.id+'" onchange="comboUrunToggle(this)">'
+      +'<span style="font-size:12px">'+(u.em||'')+'  '+u.ad+' <span style="color:var(--al)">₺'+u.fiyat+'</span></span>'
+      +'</label>';
+  }).join('');
+  // Mevcut combolar
+  var cd = await SB.get('ayarlar','key=eq.combo_menu');
+  var combolar = (cd&&cd.length&&cd[0].value) ? cd[0].value.combolar||[] : [];
+  var mevEl = document.getElementById('mevcut-combolar');
+  if(!combolar.length){mevEl.innerHTML='<div style="font-size:12px;color:var(--si)">Henüz combo yok</div>';return;}
+  mevEl.innerHTML = combolar.map(function(c,i){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--ik);border-radius:8px;margin-bottom:6px">'
+      +'<div><div style="font-size:12px;font-weight:700">'+c.ad+'</div><div style="font-size:11px;color:var(--si)">'+c.aciklama+'</div></div>'
+      +'<div style="display:flex;align-items:center;gap:6px">'
+      +'<span style="font-size:13px;font-weight:700;color:var(--bas)">₺'+c.indirimFiyat+'</span>'
+      +'<button onclick="comboSil('+i+')" style="padding:3px 7px;border-radius:6px;background:var(--tac);color:var(--teh);border:none;cursor:pointer;font-size:11px">Sil</button>'
+      +'</div></div>';
+  }).join('');
+}
+
+function comboUrunToggle(cb){
+  var id = cb.value;
+  var idx = comboSeciliUrunler.indexOf(id);
+  if(cb.checked && idx<0) comboSeciliUrunler.push(id);
+  else if(!cb.checked && idx>=0) comboSeciliUrunler.splice(idx,1);
+}
+
+async function comboKaydet(){
+  var ad = document.getElementById('combo-ad').value.trim();
+  var acik = document.getElementById('combo-acik').value.trim();
+  var normal = parseFloat(document.getElementById('combo-normal').value)||0;
+  var indirim = parseFloat(document.getElementById('combo-indirim').value)||0;
+  if(!ad||!comboSeciliUrunler.length){alert('Ad ve en az 1 ürün seçin');return;}
+  var cd = await SB.get('ayarlar','key=eq.combo_menu');
+  var combolar = (cd&&cd.length&&cd[0].value) ? cd[0].value.combolar||[] : [];
+  combolar.push({ad:ad,aciklama:acik,normalFiyat:normal,indirimFiyat:indirim,urunler:comboSeciliUrunler.slice()});
+  await SB.patch('ayarlar','key=eq.combo_menu',{value:{combolar:combolar}}).catch(async function(){
+    await SB.post('ayarlar',{key:'combo_menu',value:{combolar:combolar}});
+  });
+  alert('Combo kaydedildi!');
+  comboSeciliUrunler=[];
+  kampanyaTabYukle();
+}
+
+async function comboSil(idx){
+  var cd = await SB.get('ayarlar','key=eq.combo_menu');
+  var combolar = (cd&&cd.length&&cd[0].value) ? cd[0].value.combolar||[] : [];
+  combolar.splice(idx,1);
+  await SB.patch('ayarlar','key=eq.combo_menu',{value:{combolar:combolar}});
+  kampanyaTabYukle();
+}
+Yukle();
   alert('%'+oran+' '+(tip==='indirim'?'indirim':'zam')+' uygulandi!');
 }
 </script>
