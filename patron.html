@@ -294,6 +294,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="kart-h">
           <div class="kart-ht">🍽️ Menü Ürünleri</div>
           <button class="btn yes" style="font-size:11px;padding:5px 10px" onclick="menuEkleModal()">+ Yeni Ürün</button>
+        <button class="btn" style="font-size:11px;padding:5px 10px;background:rgba(212,160,23,.15);color:var(--al);border:1px solid rgba(212,160,23,.3)" onclick="topluIslemAc()">📊 Toplu İndirim/Zam</button>
         </div>
         <div class="kart-body" id="menu-yonetim-liste"></div>
       </div>
@@ -346,6 +347,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div style="font-size:15px;font-weight:800;color:var(--mt);margin-bottom:14px" id="menu-modal-t">Yeni Ürün Ekle</div>
     <div style="margin-bottom:8px"><div class="lb-l">Ürün Adı</div><input class="inp lb-inp" id="mu-ad" placeholder="Adana Kebap" style="margin-bottom:0"></div>
     <div style="margin-bottom:8px"><div class="lb-l">Emoji</div><input class="inp lb-inp" id="mu-em" placeholder="🥩" style="margin-bottom:0;width:80px"></div>
+    <div style="margin-bottom:8px"><div class="lb-l">Kalori (kcal)</div><input class="inp lb-inp" id="mu-kalori" type="number" placeholder="Örn: 450" style="margin-bottom:0;width:120px"></div>
     <div style="margin-bottom:8px"><div class="lb-l">Resim URL (isteğe bağlı)</div><input class="inp lb-inp" id="mu-resim" placeholder="https://..." style="margin-bottom:0"></div>
     <div style="margin-bottom:8px"><div class="lb-l">Kategori</div>
       <select class="inp lb-inp" id="mu-kat" style="margin-bottom:0">
@@ -1026,6 +1028,7 @@ function menuDuzenle(id){
   document.getElementById('mu-fiyat').value = u.fiyat;
   document.getElementById('mu-maliyet').value = u.maliyet||0;
   if(document.getElementById('mu-resim')) document.getElementById('mu-resim').value = u.image_url||'';
+  if(document.getElementById('mu-kalori')) document.getElementById('mu-kalori').value = u.kalori||'';
   var resimInp = document.getElementById('mu-resim');
   if(resimInp) resimInp.value = u.image_url||'';
   document.getElementById('menu-modal').classList.add('ak');
@@ -1271,7 +1274,121 @@ async function restoranKaydet(){
   }
 }
 
+
+function topluIslemAc(){
+  document.getElementById('modal-toplu').classList.add('ak');
+}
+
+async function topluUygula(){
+  var kat = document.getElementById('toplu-kat').value;
+  var tip = document.getElementById('toplu-tip').value;
+  var oran = parseFloat(document.getElementById('toplu-oran').value)||0;
+  if(!oran||oran<=0||oran>=100){alert('Geçerli bir oran girin (1-99)');return;}
+  var liste = kat==='hepsi' ? menuListesi : menuListesi.filter(function(u){return u.kat===kat;});
+  if(!liste.length){alert('Ürün bulunamadı');return;}
+  if(!confirm(liste.length+' ürüne '+oran+'% '+(tip==='indirim'?'indirim':'zam')+' uygulanacak. Emin misiniz?'))return;
+  var btn=document.querySelector('[onclick="topluUygula()"]');
+  btn.disabled=true;btn.textContent='Uygulanıyor...';
+  for(var i=0;i<liste.length;i++){
+    var u=liste[i];
+    var yeniFiyat=tip==='indirim'
+      ? Math.round(u.fiyat*(1-oran/100))
+      : Math.round(u.fiyat*(1+oran/100));
+    await SB.patch('menu','id=eq.'+u.id,{fiyat:yeniFiyat});
+  }
+  btn.disabled=false;btn.textContent='✅ Uygula';
+  document.getElementById('modal-toplu').classList.remove('ak');
+  await menuYonetimYukle();
+  alert(oran+'% '+(tip==='indirim'?'indirim':'zam')+' uygulandı!');
+}
+
+function topluIslemAc(){
+  document.getElementById('modal-toplu').classList.add('ak');
+}
+async function topluUygula(){
+  var kat=document.getElementById('toplu-kat').value;
+  var tip=document.getElementById('toplu-tip').value;
+  var oran=parseFloat(document.getElementById('toplu-oran').value)||0;
+  if(!oran||oran<=0||oran>=100){alert('Gecerli oran girin (1-99)');return;}
+  var liste=kat==='hepsi'?menuListesi:menuListesi.filter(function(u){return u.kat===kat;});
+  if(!liste.length){alert('Urun bulunamadi');return;}
+  if(!confirm(liste.length+' urune %'+oran+' '+(tip==='indirim'?'indirim':'zam')+' uygulanacak. Emin misiniz?'))return;
+  for(var i=0;i<liste.length;i++){
+    var u=liste[i];
+    var yeni=tip==='indirim'?Math.round(u.fiyat*(1-oran/100)):Math.round(u.fiyat*(1+oran/100));
+    if(yeni<1)yeni=1;
+    await SB.patch('menu','id=eq.'+u.id,{fiyat:yeni});
+  }
+  document.getElementById('modal-toplu').classList.remove('ak');
+  await menuYonetimYukle();
+  alert('%'+oran+' '+(tip==='indirim'?'indirim':'zam')+' uygulandi!');
+}
 </script>
 
+
+<!-- TOPLU İNDİRİM/ZAM MODAL -->
+<div class="modal-bg" id="modal-toplu">
+  <div class="modal">
+    <div class="modal-t">📊 Toplu İndirim / Zam</div>
+    <div style="margin-bottom:12px;font-size:12px;color:var(--si)">Tüm menüye veya seçili kategoriye uygula</div>
+    <div class="ing">
+      <div class="ing-l">Kategori</div>
+      <select class="inp" id="toplu-kat" style="flex:1">
+        <option value="hepsi">Tüm Menü</option>
+        <option value="Izgara">Izgara</option>
+        <option value="Pide">Pide</option>
+        <option value="Corbalar">Çorbalar</option>
+        <option value="Tatlilar">Tatlılar</option>
+        <option value="Icecekler">İçecekler</option>
+      </select>
+    </div>
+    <div class="ing" style="margin-top:8px">
+      <div class="ing-l">İşlem</div>
+      <select class="inp" id="toplu-tip" style="flex:1">
+        <option value="indirim">İndirim (azalt)</option>
+        <option value="zam">Zam (artır)</option>
+      </select>
+    </div>
+    <div class="ing" style="margin-top:8px">
+      <div class="ing-l">Oran (%)</div>
+      <input type="number" class="inp" id="toplu-oran" placeholder="10" min="1" max="99" style="width:100px">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+      <button class="btn yes" onclick="topluUygula()">✅ Uygula</button>
+      <button class="btn" onclick="document.getElementById('modal-toplu').classList.remove('ak')">İptal</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-bg" id="modal-toplu">
+  <div class="modal">
+    <div class="modal-t">📊 Toplu İndirim / Zam</div>
+    <div style="margin-bottom:12px;font-size:12px;color:var(--si)">Tüm menüye veya kategoriye uygula</div>
+    <div class="ing"><div class="ing-l">Kategori</div>
+      <select class="inp lb-inp" id="toplu-kat" style="flex:1">
+        <option value="hepsi">Tüm Menü</option>
+        <option value="Izgara">Izgara</option>
+        <option value="Pide">Pide</option>
+        <option value="Corbalar">Çorbalar</option>
+        <option value="Tatlilar">Tatlılar</option>
+        <option value="Icecekler">İçecekler</option>
+      </select>
+    </div>
+    <div class="ing" style="margin-top:8px"><div class="ing-l">İşlem</div>
+      <select class="inp lb-inp" id="toplu-tip" style="flex:1">
+        <option value="indirim">İndirim (azalt)</option>
+        <option value="zam">Zam (artır)</option>
+      </select>
+    </div>
+    <div class="ing" style="margin-top:8px"><div class="ing-l">Oran (%)</div>
+      <input type="number" class="inp lb-inp" id="toplu-oran" placeholder="10" min="1" max="99" style="width:100px">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+      <button class="btn yes" onclick="topluUygula()">✅ Uygula</button>
+      <button class="btn" onclick="document.getElementById('modal-toplu').classList.remove('ak')">İptal</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

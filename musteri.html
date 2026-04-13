@@ -564,6 +564,10 @@ function renderSepet(){
   const brutTop=items.reduce((s,u)=>s+u.fiyat*u.adet,0);
   const indirim=kullanilacakPuan;
   document.getElementById('sp-toplam').textContent='₺'+(brutTop-indirim);
+  // Toplam kalori
+  var topKalori=items.reduce(function(s,u){return s+(u.kalori||0)*u.adet;},0);
+  var kalEl=document.getElementById('sp-kalori');
+  if(kalEl){kalEl.style.display=topKalori>0?'block':'none';kalEl.textContent='🔥 Toplam '+topKalori+' kcal';}
   // Puan kutusu
   if(musteri&&musteri.puan>0){
     document.getElementById('puan-box').style.display='block';
