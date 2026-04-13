@@ -129,12 +129,12 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
     <div class="bolum-form" id="bolum-form">
       <div style="font-size:12px;font-weight:700;color:var(--si);margin-bottom:8px">Nakit miktar:</div>
       <div class="bolum-row">
-        <input type="number" class="bolum-inp" id="nakit-inp" placeholder="₺0" oninput="kalanHesapla()">
+        <input type="number" class="bolum-inp" id="bolum-miktar" placeholder="₺0" oninput="kalanHesapla()">
         <div class="bolum-kalan" id="kalan-goster">Kart: ₺0</div>
       </div>
       <div class="btn-row">
-        <button class="btn nakit" onclick="bolumOde()">✅ Öde</button>
-        <button class="btn kapat" onclick="bolumKapat()">İptal</button>
+        <button class="bolumOdeYontem('nakit')" onclick="bolumOde()">✅ Öde</button>
+        <button class="bolumOdeYontem('kart')" onclick="bolumKapat()">İptal</button>
       </div>
     </div>
     <button class="btn kapat" style="margin-top:8px" onclick="modalKapat()">Kapat</button>
