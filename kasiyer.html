@@ -6,13 +6,8 @@
 <title>Kasiyer</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --al:#D4A017;--aac:#F0C040;--bas:#2D6A2D;--bac:#E8F5E8;
-  --teh:#C0392B;--tac:#FDECEA;--uya:#E8952A;--uac:#FEF0E0;
-  --mt:#1A1A1A;--si:#9A7B65;--kr:#FDF6EE;--bd:#EDD9C0;--yz:#FFF8F2;--ik:#F5E6D3;
-}
+:root{--al:#D4A017;--aac:#F0C040;--bas:#2D6A2D;--bac:#E8F5E8;--teh:#C0392B;--tac:#FDECEA;--uya:#E8952A;--uac:#FEF0E0;--mt:#1A1A1A;--si:#9A7B65;--kr:#FDF6EE;--bd:#EDD9C0;--yz:#FFF8F2;--ik:#F5E6D3}
 body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
-/* GİRİŞ */
 #giris{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1A1A1A,#2C2C2C);padding:24px}
 .lb{background:var(--yz);border-radius:24px;padding:32px 28px;width:100%;max-width:360px;border:1px solid var(--bd)}
 .lb-logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#1A1A1A,#2C2C2C);border:2px solid var(--al);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 12px}
@@ -23,7 +18,6 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
 .inp:focus{border-color:var(--al)}
 .lb-btn{width:100%;padding:13px;border-radius:13px;background:linear-gradient(135deg,#1A1A1A,#2C2C2C);color:#fff;border:1.5px solid var(--al);font-size:14px;font-weight:700;cursor:pointer}
 .hata{color:var(--teh);font-size:12px;text-align:center;margin-top:8px;display:none}
-/* PANEL */
 #panel{display:none;flex-direction:column;min-height:100vh}
 .topbar{background:linear-gradient(135deg,#1A1A1A,#2C2C2C);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--al)}
 .tb-t{font-size:15px;font-weight:800;color:#fff}
@@ -45,18 +39,15 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
 .mk-g{font-size:9px;margin-top:2px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mk-t{font-size:10px;font-weight:700;margin-top:2px}
 .mk-paket{grid-column:span 2;background:rgba(212,160,23,.1);border-color:var(--al);color:var(--al)}
-/* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:flex-end;justify-content:center}
 .modal-bg.ak{display:flex}
 .modal{background:var(--yz);border-radius:24px 24px 0 0;padding:20px 18px 32px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
 .modal-t{font-size:18px;font-weight:800;color:var(--mt);margin-bottom:4px}
 .modal-a{font-size:12px;color:var(--si);margin-bottom:14px}
 .sp-k{background:var(--ik);border-radius:10px;padding:10px;margin-bottom:8px}
-.sp-k-h{display:flex;justify-content:space-between;margin-bottom:6px}
-.sp-id{font-size:11px;color:var(--si)}
 .badge{padding:3px 8px;border-radius:7px;font-size:10px;font-weight:700}
 .badge.yeni{background:rgba(212,160,23,.15);color:var(--al)}
-.badge.hazirlaniyor{background:var(--uac);color:var(--uya)}
+.badge.hazirlaniyor,.badge.islem{background:var(--uac);color:var(--uya)}
 .badge.hazir{background:var(--bac);color:var(--bas)}
 .urun-s{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--bd);color:var(--mt)}
 .urun-s:last-child{border-bottom:none}
@@ -67,10 +58,9 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
 .btn.kart{background:linear-gradient(135deg,var(--al),var(--aac));color:#000}
 .btn.bolum{background:linear-gradient(135deg,#8e44ad,#6c3483);color:#fff}
 .btn.kapat{background:var(--ik);color:var(--si)}
-.bolum-form{margin-top:12px;padding-top:12px;border-top:1px solid var(--bd);display:none}
-.bolum-row{display:flex;gap:8px;margin-bottom:10px;align-items:center}
-.bolum-inp{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--bd);font-size:14px;outline:none;color:var(--mt)}
-.bolum-kalan{padding:10px 14px;border-radius:10px;background:var(--ik);font-size:13px;font-weight:700;color:var(--si);white-space:nowrap}
+.kalan-box{background:var(--tac);border-radius:10px;padding:10px;text-align:center;margin-bottom:10px}
+.kalan-box-s{font-size:24px;font-weight:800;color:var(--teh)}
+.kalan-box-e{font-size:11px;color:var(--si);margin-top:2px}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A1A;color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;border:1px solid var(--al);display:none;z-index:200;white-space:nowrap}
 </style>
 </head>
@@ -93,7 +83,7 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
   <div class="topbar">
     <div>
       <div class="tb-t">💳 Kasiyer Paneli</div>
-      <div style="font-size:10px;color:rgba(255,255,255,.4)" id="tb-kul">—</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.4)" id="tb-kul"></div>
     </div>
     <div class="tb-sag">
       <div class="tb-saat" id="tb-saat">00:00</div>
@@ -109,7 +99,6 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
   <div class="grid" id="masa-grid"></div>
 </div>
 
-<!-- MASA DETAY MODAL -->
 <div class="modal-bg" id="modal-detay">
   <div class="modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
@@ -119,25 +108,33 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
     <div class="modal-a" id="det-durum"></div>
     <div id="det-siparisler"></div>
     <div class="top-bar"><span>Toplam</span><span id="det-toplam">₺0</span></div>
-    <!-- Ödeme seçenekleri -->
-    <div class="btn-row">
-      <button class="btn nakit" onclick="odemeAl('nakit')">💵 Nakit</button>
-      <button class="btn kart" onclick="odemeAl('kart')">💳 Kart</button>
-    </div>
-    <button class="btn bolum" style="margin-top:8px" onclick="bolumAc()">✂️ Bölünmüş Ödeme</button>
-    <!-- Bölünmüş ödeme formu -->
-    <div class="bolum-form" id="bolum-form">
-      <div style="font-size:12px;font-weight:700;color:var(--si);margin-bottom:8px">Nakit miktar:</div>
-      <div class="bolum-row">
-        <input type="number" class="bolum-inp" id="bolum-miktar" placeholder="₺0" oninput="kalanHesapla()">
-        <div class="bolum-kalan" id="kalan-goster">Kart: ₺0</div>
-      </div>
+
+    <!-- Normal ödeme -->
+    <div id="normal-odeme">
       <div class="btn-row">
-        <button class="bolumOdeYontem('nakit')" onclick="bolumOde()">✅ Öde</button>
-        <button class="bolumOdeYontem('kart')" onclick="bolumKapat()">İptal</button>
+        <button class="btn nakit" onclick="odemeAl('nakit')">💵 Nakit</button>
+        <button class="btn kart" onclick="odemeAl('kart')">💳 Kart</button>
       </div>
+      <button class="btn bolum" style="margin-top:8px" onclick="bolumBaslat()">✂️ Bölünmüş Ödeme</button>
     </div>
-    <button class="btn kapat" style="margin-top:8px" onclick="modalKapat()">Kapat</button>
+
+    <!-- Bölünmüş ödeme -->
+    <div id="bolum-panel" style="display:none;margin-top:12px">
+      <div class="kalan-box">
+        <div class="kalan-box-e">Kalan Ödeme</div>
+        <div class="kalan-box-s" id="bolum-kalan-goster">₺0</div>
+      </div>
+      <div id="bolum-gecmis-list" style="margin-bottom:10px;font-size:12px;color:var(--si)"></div>
+      <div class="lbl" style="margin-bottom:6px">Bu seferki miktar:</div>
+      <input type="number" class="inp" id="bolum-inp" placeholder="₺ miktar girin..." style="margin-bottom:8px">
+      <div class="btn-row">
+        <button class="btn nakit" onclick="bolumOde('nakit')">💵 Nakit</button>
+        <button class="btn kart" onclick="bolumOde('kart')">💳 Kart</button>
+      </div>
+      <button class="btn kapat" style="margin-top:8px" onclick="bolumIptal()">İptal</button>
+    </div>
+
+    <button class="btn kapat" style="margin-top:10px" onclick="modalKapat()">Kapat</button>
   </div>
 </div>
 
@@ -160,21 +157,12 @@ function urunStr(u){
   return u.map(function(x){return(x.em||"")+" "+(x.ad||x)+" x"+(x.adet||1)}).join(", ");
 }
 
-var aktifMasaNo = null;
-var dbMasalar = [];
-var dbSiparisler = [];
-var gunlukCiro = 0;
-var pollingInt = null;
+var aktifMasaNo=null,dbMasalar=[],dbSiparisler=[],gunlukCiro=0,pollingInt=null;
+var bolumKalan=0,bolumGecmis=[];
 
-// Saat
-setInterval(function(){
-  var n=new Date();
-  var el=document.getElementById("tb-saat");
-  if(el) el.textContent=pad(n.getHours())+":"+pad(n.getMinutes());
-},1000);
+setInterval(function(){var n=new Date();var el=document.getElementById("tb-saat");if(el)el.textContent=pad(n.getHours())+":"+pad(n.getMinutes());},1000);
 function pad(n){return String(n).padStart(2,"0")}
 
-// Giriş
 async function girisYap(){
   var ad=document.getElementById("k-ad").value.trim();
   var sifre=document.getElementById("k-sifre").value.trim();
@@ -185,16 +173,14 @@ async function girisYap(){
     var ay=await SB.get("ayarlar","key=eq.kasiyer_giris");
     var dAd="kasiyer1",dS="1234";
     if(ay&&ay.length){dAd=ay[0].value.kullanici||"kasiyer1";dS=ay[0].value.sifre||"1234";}
-    if(ad===dAd&&sifre===dS) ok=true;
+    if(ad===dAd&&sifre===dS)ok=true;
     if(!ok){
       var pat=await SB.get("ayarlar","key=eq.patron_giris");
       var pAd="patron",pS="1234";
       if(pat&&pat.length){pAd=pat[0].value.kullanici||"patron";pS=pat[0].value.sifre||"1234";}
-      if(ad===pAd&&sifre===pS) ok=true;
+      if(ad===pAd&&sifre===pS)ok=true;
     }
-  }catch(e){
-    if((ad==="kasiyer1"&&sifre==="1234")||(ad==="patron"&&sifre==="1234")) ok=true;
-  }
+  }catch(e){if((ad==="kasiyer1"&&sifre==="1234")||(ad==="patron"&&sifre==="1234"))ok=true;}
   if(!ok){hata.style.display="block";document.getElementById("k-sifre").value="";return;}
   document.getElementById("giris").style.display="none";
   document.getElementById("panel").style.display="flex";
@@ -210,31 +196,26 @@ function cikis(){
   document.getElementById("panel").style.display="none";
 }
 
-// Veri yükle
 async function yukle(){
   var r=await Promise.all([
     SB.get("masalar","order=no.asc"),
     SB.get("siparisler","durum=in.(yeni,hazirlaniyor,islem,hazir)&order=created_at.asc"),
     SB.get("odemeler","order=created_at.desc&limit=100")
   ]);
-  if(r[0]&&r[0].length) dbMasalar=r[0];
-  if(r[1]) dbSiparisler=r[1];
+  if(r[0]&&r[0].length)dbMasalar=r[0];
+  if(r[1])dbSiparisler=r[1];
   if(r[2]){
     var bugun=new Date().toISOString().slice(0,10);
-    gunlukCiro=r[2].filter(function(o){return o.created_at&&o.created_at.slice(0,10)===bugun;})
-      .reduce(function(s,o){return s+parseFloat(o.toplam||0);},0);
+    gunlukCiro=r[2].filter(function(o){return o.created_at&&o.created_at.slice(0,10)===bugun;}).reduce(function(s,o){return s+parseFloat(o.toplam||0);},0);
   }
   render();
 }
 
 function render(){
-  // Özet
   var dolu=dbMasalar.filter(function(m){return m.durum&&m.durum!=="bos";}).length;
-  var bekleyen=dbMasalar.filter(function(m){return m.durum==="bekliyor";}).length;
   document.getElementById("oz-dolu").textContent=dolu;
   document.getElementById("oz-ciro").textContent="₺"+Math.round(gunlukCiro).toLocaleString("tr-TR");
-  document.getElementById("oz-bekleyen").textContent=bekleyen;
-  // Grid
+  document.getElementById("oz-bekleyen").textContent=dbMasalar.filter(function(m){return m.durum==="bekliyor";}).length;
   var html="";
   dbMasalar.forEach(function(m){
     var d=m.durum||"bos";
@@ -247,13 +228,11 @@ function render(){
       +(d==="bos"?'<div class="mk-g">Boş</div>':'')
       +'</div>';
   });
-  // Paket siparişleri
   var paketler=dbSiparisler.filter(function(s){return parseInt(s.masa_no)===0;});
   if(paketler.length){
     html+='<div class="mk mk-paket" onclick="masaDetay(0)">'
       +'<div class="mk-no" style="font-size:14px">📦 Paket</div>'
-      +'<div class="mk-g">'+paketler.length+' sipariş</div>'
-      +'</div>';
+      +'<div class="mk-g">'+paketler.length+' sipariş</div></div>';
   }
   document.getElementById("masa-grid").innerHTML=html;
 }
@@ -262,119 +241,131 @@ function masaDetay(no){
   aktifMasaNo=no;
   var masa=dbMasalar.find(function(m){return parseInt(m.no)===parseInt(no);});
   var sps=dbSiparisler.filter(function(s){return parseInt(s.masa_no)===parseInt(no);});
-  if(no===0){
-    document.getElementById("det-baslik").textContent="📦 Paket Siparişler";
-    document.getElementById("det-garson").textContent="";
-    document.getElementById("det-durum").textContent=sps.length+" sipariş";
-  } else {
-    document.getElementById("det-baslik").textContent="Masa "+no;
-    document.getElementById("det-garson").textContent="Garson: "+(masa?masa.garson_ad||"-":"-");
-    document.getElementById("det-durum").textContent="Durum: "+(masa?durumYazi(masa.durum)||"-":"-");
-  }
-  // Siparişler
+  document.getElementById("det-baslik").textContent=no===0?"📦 Paket":"Masa "+no;
+  document.getElementById("det-garson").textContent=masa?"Garson: "+(masa.garson_ad||"-"):"";
+  document.getElementById("det-durum").textContent=masa?durumYazi(masa.durum):"";
   var html="";
   if(!sps.length){
     html='<div style="text-align:center;color:var(--si);padding:16px;font-size:13px">Aktif sipariş yok</div>';
-  } else {
+  }else{
     sps.forEach(function(sp){
-      var arr=[];
-      var u=sp.urunler;
+      var arr=[];var u=sp.urunler;
       if(u){if(typeof u==="string"){try{u=JSON.parse(u)}catch(e){u=[]}}if(Array.isArray(u))arr=u;}
-      html+='<div class="sp-k">';
-      html+='<div class="sp-k-h"><div class="sp-id">'+sp.id.slice(-8)+'</div><span class="badge '+sp.durum+'">'+durumYazi(sp.durum)+'</span></div>';
-      if(arr.length){
-        arr.forEach(function(u){
-          html+='<div class="urun-s"><span>'+(u.em||"")+" "+(u.ad||u)+'</span><span style="font-weight:700">x'+(u.adet||1)+(u.fiyat?' · ₺'+(u.fiyat*(u.adet||1)):'')+'</span></div>';
-        });
-      }
-      if(sp.not_text) html+='<div style="font-size:11px;color:var(--uya);margin-top:4px">'+sp.not_text+'</div>';
+      html+='<div class="sp-k"><div style="display:flex;justify-content:space-between;margin-bottom:6px">'
+        +'<span style="font-size:11px;color:var(--si)">'+sp.id.slice(-8)+'</span>'
+        +'<span class="badge '+sp.durum+'">'+durumYazi(sp.durum)+'</span></div>';
+      arr.forEach(function(u){
+        html+='<div class="urun-s"><span>'+(u.em||"")+" "+(u.ad||u)+'</span><span style="font-weight:700">x'+(u.adet||1)+(u.fiyat?' · ₺'+(u.fiyat*(u.adet||1)):'')+'</span></div>';
+      });
+      if(sp.not_text)html+='<div style="font-size:11px;color:var(--uya);margin-top:4px">'+sp.not_text+'</div>';
       html+='</div>';
     });
   }
   document.getElementById("det-siparisler").innerHTML=html;
   var toplam=masa?parseFloat(masa.toplam||0):sps.reduce(function(s,sp){return s+parseFloat(sp.toplam||0);},0);
   document.getElementById("det-toplam").textContent="₺"+toplam.toLocaleString("tr-TR");
-  document.getElementById("bolum-form").style.display="none";
+  document.getElementById("normal-odeme").style.display="block";
+  document.getElementById("bolum-panel").style.display="none";
   document.getElementById("modal-detay").classList.add("ak");
 }
 
 function durumYazi(d){
-  var m={"yeni":"Yeni","hazirlaniyor":"Hazırlanıyor","islem":"Hazırlanıyor","hazir":"HAZIR","tamamlandi":"Tamam","bos":"Boş","dolu":"Dolu","bekliyor":"Hesap"};
-  return m[d]||d||"-";
+  return{"yeni":"Yeni","hazirlaniyor":"Hazırlanıyor","islem":"Hazırlanıyor","hazir":"HAZIR","tamamlandi":"Tamam","bos":"Boş","dolu":"Dolu","bekliyor":"Hesap"}[d]||d||"-";
 }
 
-// Ödeme
 async function odemeAl(yontem){
   var masa=dbMasalar.find(function(m){return parseInt(m.no)===parseInt(aktifMasaNo);});
-  var toplam=masa?parseFloat(masa.toplam||0):0;
-  if(aktifMasaNo===0){
-    var sps=dbSiparisler.filter(function(s){return parseInt(s.masa_no)===0;});
-    toplam=sps.reduce(function(s,sp){return s+parseFloat(sp.toplam||0);},0);
-  }
+  var toplam=masa?parseFloat(masa.toplam||0):dbSiparisler.filter(function(s){return parseInt(s.masa_no)===0;}).reduce(function(s,sp){return s+parseFloat(sp.toplam||0);},0);
   if(toplam<=0){toast("Ödeme alınacak tutar yok!");return;}
   await SB.post("odemeler",{
     id:"od_"+Date.now()+"_"+Math.random().toString(36).slice(2,5),
     masa_no:aktifMasaNo,yontem:yontem,toplam:toplam,
-    garson_id:masa?masa.garson_id:null,
-    garson_ad:masa?masa.garson_ad||"-":"-",
+    garson_id:masa?masa.garson_id:null,garson_ad:masa?masa.garson_ad||"-":"-",
     created_at:new Date().toISOString()
   });
   await siparisleriTamamla();
   await masaSifirla();
   modalKapat();
-  toast("Ödeme alındı! ₺"+toplam.toLocaleString("tr-TR")+" — "+(yontem==="nakit"?"Nakit":"Kart"));
+  toast("Ödeme alındı! ₺"+toplam.toLocaleString("tr-TR")+" "+(yontem==="nakit"?"Nakit":"Kart"));
   window.open("fis.html?masa="+aktifMasaNo+"&toplam="+toplam+"&yontem="+yontem,"_blank");
   await yukle();
 }
 
-// Bölünmüş ödeme
-function bolumAc(){
-var bolumKalan=0,bolumGecmis=[];
-function bolumAc(){
+function bolumBaslat(){
   var masa=dbMasalar.find(function(m){return parseInt(m.no)===parseInt(aktifMasaNo);});
   bolumKalan=masa?parseFloat(masa.toplam||0):0;
   bolumGecmis=[];
-  document.getElementById("bolum-form").style.display="block";
-  document.getElementById("bolum-miktar").value="";
-  bolumRender();
+  document.getElementById("normal-odeme").style.display="none";
+  document.getElementById("bolum-panel").style.display="block";
+  document.getElementById("bolum-inp").value="";
+  bolumGuncelle();
 }
-function bolumKapat(){document.getElementById("bolum-form").style.display="none";bolumKalan=0;bolumGecmis=[];}
-function bolumRender(){
-  document.getElementById("bolum-kalan-tutar").textContent="₺"+bolumKalan.toLocaleString("tr-TR");
-  var gec=document.getElementById("bolum-gecmis");
+
+function bolumIptal(){
+  document.getElementById("normal-odeme").style.display="block";
+  document.getElementById("bolum-panel").style.display="none";
+  bolumKalan=0;bolumGecmis=[];
+}
+
+function bolumGuncelle(){
+  document.getElementById("bolum-kalan-goster").textContent="₺"+bolumKalan.toLocaleString("tr-TR");
+  var gec=document.getElementById("bolum-gecmis-list");
   if(bolumGecmis.length){
-    gec.innerHTML="<div style='font-weight:700;margin-bottom:4px'>Alınan ödemeler:</div>"+bolumGecmis.map(function(g){return "<div style='display:flex;justify-content:space-between'><span>"+(g.yontem==="nakit"?"💵 Nakit":"💳 Kart")+"</span><span>₺"+g.miktar+"</span></div>";}).join("");
+    gec.innerHTML="<b>Alınan ödemeler:</b><br>"+bolumGecmis.map(function(g){
+      return (g.yontem==="nakit"?"💵":"💳")+" ₺"+g.miktar.toLocaleString("tr-TR");
+    }).join(" + ");
   }else{gec.innerHTML="";}
 }
-async function bolumOdeYontem(yontem){
-  var miktar=parseFloat(document.getElementById("bolum-miktar").value)||0;
+
+async function bolumOde(yontem){
+  var miktar=parseFloat(document.getElementById("bolum-inp").value)||0;
   if(miktar<=0){toast("Miktar girin!");return;}
   if(miktar>bolumKalan)miktar=bolumKalan;
   var masa=dbMasalar.find(function(m){return parseInt(m.no)===parseInt(aktifMasaNo);});
-  await SB.post("odemeler",{id:"od_"+Date.now()+"_"+Math.random().toString(36).slice(2,5),masa_no:aktifMasaNo,yontem:yontem,toplam:miktar,garson_id:masa?masa.garson_id:null,garson_ad:masa?masa.garson_ad||"-":"-",created_at:new Date().toISOString()});
+  await SB.post("odemeler",{
+    id:"od_"+Date.now()+"_"+Math.random().toString(36).slice(2,5),
+    masa_no:aktifMasaNo,yontem:yontem,toplam:miktar,
+    garson_id:masa?masa.garson_id:null,garson_ad:masa?masa.garson_ad||"-":"-",
+    created_at:new Date().toISOString()
+  });
   bolumGecmis.push({yontem:yontem,miktar:miktar});
-  bolumKalan=Math.max(0,bolumKalan-miktar);
-  document.getElementById("bolum-miktar").value="";
+  bolumKalan=Math.round((bolumKalan-miktar)*100)/100;
+  document.getElementById("bolum-inp").value="";
   if(bolumKalan<=0){
-    await siparisleriTamamla();await masaSifirla();
+    await siparisleriTamamla();
+    await masaSifirla();
     var top=bolumGecmis.reduce(function(s,g){return s+g.miktar;},0);
-    bolumKapat();modalKapat();
-    toast("Ödeme tamamlandı! ₺"+top);
+    bolumIptal();modalKapat();
+    toast("Ödeme tamamlandı! ₺"+top.toLocaleString("tr-TR"));
     window.open("fis.html?masa="+aktifMasaNo+"&toplam="+top+"&yontem=bolum","_blank");
     await yukle();
-  }else{bolumRender();toast((yontem==="nakit"?"Nakit":"Kart")+" ₺"+miktar+" alındı. Kalan: ₺"+bolumKalan);}
+  }else{
+    bolumGuncelle();
+    toast((yontem==="nakit"?"Nakit":"Kart")+" ₺"+miktar+" alındı. Kalan: ₺"+bolumKalan);
+  }
 }
+
 async function siparisleriTamamla(){
   var sps=dbSiparisler.filter(function(s){return parseInt(s.masa_no)===parseInt(aktifMasaNo);});
-  for(var i=0;i<sps.length;i++){await SB.patch("siparisler","id=eq."+sps[i].id,{durum:"tamamlandi",updated_at:new Date().toISOString()});}
+  for(var i=0;i<sps.length;i++){
+    await SB.patch("siparisler","id=eq."+sps[i].id,{durum:"tamamlandi",updated_at:new Date().toISOString()});
+  }
 }
+
 async function masaSifirla(){
   if(aktifMasaNo===0)return;
   await SB.patch("masalar","no=eq."+aktifMasaNo,{durum:"bos",garson_id:null,garson_ad:"-",toplam:0,sure:0,updated_at:new Date().toISOString()});
 }
+
 function modalKapat(){document.getElementById("modal-detay").classList.remove("ak");aktifMasaNo=null;}
+
 var toastT;
-function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.style.display="block";clearTimeout(toastT);toastT=setTimeout(function(){t.style.display="none";},3000);}
+function toast(msg){
+  var t=document.getElementById("toast");
+  t.textContent=msg;t.style.display="block";
+  clearTimeout(toastT);
+  toastT=setTimeout(function(){t.style.display="none";},3000);
+}
 </script>
 </body>
 </html>
