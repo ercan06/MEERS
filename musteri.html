@@ -199,7 +199,7 @@ var stokBitenler = []; // Stoku biten menu id'leri
 // Stok durumunu DB'den kontrol et
 async function stokDurumunuYukle(){
   try{
-    var stokData = await SB.get('stok','miktar=lte.sinir');
+    var stokData = await SB.get('stok','select=ad,miktar,sinir,id');
     var menuData = await SB.get('menu','aktif=eq.true');
     stokBitenler = [];
     if(!stokData || !menuData) return;
