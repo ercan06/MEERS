@@ -1043,11 +1043,13 @@ async function menuKaydet(){
   var resim = '';
   var resimEl = document.getElementById('mu-resim');
   if(resimEl) resim = resimEl.value.trim();
+  var kalori = parseInt((document.getElementById('mu-kalori')||{}).value)||null;
   if(!ad||!fiyat){ alert('Urun adi ve fiyat zorunlu!'); return; }
   console.log('Kaydediliyor:', {ad,em,kat,fiyat,maliyet,resim,duzenleMenuId});
   if(duzenleMenuId){
-    var sonuc = await SB.patch('menu','id=eq.'+duzenleMenuId,{
-      ad:ad, em:em, kat:kat, fiyat:fiyat, maliyet:maliyet, image_url:resim||null
+    var kalori=parseInt((document.getElementById('mu-kalori')||{}).value)||null;
+    await SB.patch('menu','id=eq.'+duzenleMenuId,{
+      ad:ad, em:em, kat:kat, fiyat:fiyat, maliyet:maliyet, image_url:resim||null, kalori:kalori
     });
     console.log('Patch sonuc:', sonuc);
   } else {
