@@ -1051,7 +1051,7 @@ async function menuKaydet(){
     await SB.patch('menu','id=eq.'+duzenleMenuId,{
       ad:ad, em:em, kat:kat, fiyat:fiyat, maliyet:maliyet, image_url:resim||null, kalori:kalori
     });
-    console.log('Patch sonuc:', sonuc);
+    console.log('Patch yapildi.');
   } else {
     var yeniId = 'm_'+Date.now();
     var sonuc2 = await SB.post('menu',{
