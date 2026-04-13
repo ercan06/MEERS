@@ -301,7 +301,61 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
     </div>
 
-    <div class="tp" id="tp-ayarlar">
+    <div class="tp" id="tp-kampanya" style="display:none;padding:12px">
+  <div class="kart" style="margin-bottom:12px">
+    <div class="kart-h"><div class="kart-ht">🔥 Anlık Kampanya</div></div>
+    <div class="kart-body">
+      <div class="ing"><div class="ing-l">Mesaj</div><input class="inp lb-inp" id="kamp-mesaj" placeholder="Tüm tatlılar indirimde!" style="flex:1"></div>
+      <div class="ing" style="margin-top:8px"><div class="ing-l">Kategori</div>
+        <select class="inp lb-inp" id="kamp-kat" style="flex:1">
+          <option value="hepsi">Tüm Menü</option>
+          <option value="Izgara">Izgara</option>
+          <option value="Pide">Pide</option>
+          <option value="Corbalar">Çorbalar</option>
+          <option value="Tatlilar">Tatlılar</option>
+          <option value="Icecekler">İçecekler</option>
+        </select>
+      </div>
+      <div class="ing" style="margin-top:8px"><div class="ing-l">İndirim %</div><input class="inp lb-inp" id="kamp-oran" type="number" min="1" max="99" placeholder="20" style="width:100px"></div>
+      <div style="margin-top:8px">
+        <div class="ing-l" style="margin-bottom:6px">Süre</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <button class="btn" style="padding:5px 10px;font-size:11px" onclick="kampSure(10)">10 dk</button>
+          <button class="btn" style="padding:5px 10px;font-size:11px" onclick="kampSure(20)">20 dk</button>
+          <button class="btn" style="padding:5px 10px;font-size:11px" onclick="kampSure(30)">30 dk</button>
+          <button class="btn" style="padding:5px 10px;font-size:11px" onclick="kampSure(60)">1 saat</button>
+          <input class="inp lb-inp" id="kamp-sure" type="number" placeholder="dk" style="width:70px">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+        <button class="btn yes" onclick="kampanyaBaslat()">🚀 Başlat</button>
+        <button class="btn" style="background:var(--teh);color:#fff" onclick="kampanyaDurdur()">⏹ Durdur</button>
+      </div>
+      <div id="kamp-durum" style="margin-top:10px;font-size:12px;color:var(--si);text-align:center"></div>
+    </div>
+  </div>
+  <div class="kart">
+    <div class="kart-h"><div class="kart-ht">🎁 Kombine Menü</div></div>
+    <div class="kart-body">
+      <div class="ing"><div class="ing-l">Combo Adı</div><input class="inp lb-inp" id="combo-ad" placeholder="Kebap Menüsü" style="flex:1"></div>
+      <div class="ing" style="margin-top:8px"><div class="ing-l">Açıklama</div><input class="inp lb-inp" id="combo-acik" placeholder="Adana + Çorba + İçecek" style="flex:1"></div>
+      <div class="ing" style="margin-top:8px">
+        <div class="ing-l">Fiyat</div>
+        <div style="display:flex;gap:8px">
+          <input class="inp lb-inp" id="combo-normal" type="number" placeholder="Normal ₺" style="width:100px">
+          <input class="inp lb-inp" id="combo-indirim" type="number" placeholder="İndirimli ₺" style="width:100px">
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <div style="font-size:11px;color:var(--si);margin-bottom:6px">Combo ürünleri (seç):</div>
+        <div id="combo-urun-list" style="max-height:180px;overflow-y:auto;border:1px solid var(--bd);border-radius:10px;padding:6px"></div>
+      </div>
+      <button class="btn yes" style="margin-top:10px" onclick="comboKaydet()">💾 Kaydet</button>
+      <div id="mevcut-combolar" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>
+<div class="tp" id="tp-ayarlar">
       <div class="kart" style="margin-bottom:12px">
         <div class="kart-h"><div class="kart-ht">🔐 Patron Girişi</div></div>
         <div class="kart-body">
@@ -316,56 +370,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="ing"><div class="ing-l">Aylık ciro hedefi (₺)</div><input class="inp" id="h-ay" type="number" value="280000" style="width:110px"></div>
         <button class="btn yes" style="margin-top:6px" onclick="hedefKaydet()">✅ Kaydet</button>
       </div></div>
-      <div class="kart"><div class="kart-h"><div class="kart-ht">🏪 Restoran Bilgileri</div></div><div class="kart-body">
-        <div class="ing"><div class="ing-l">Restoran Adı</div><input class="inp" id="r-ad" value="MEER'S" style="flex:1"></div>
-        <div class="ing"><div class="ing-l">Masa Sayısı</div><input class="inp" id="r-masa" type="number" value="20" style="width:70px"></div>
-        <button class="btn bir" style="margin-top:6px" id="restoran-kaydet-btn">Kaydet</button>
-      </div></div>
-    </div>
-
-  </div>
-</div>
-
-
-
-<!-- GARSON MODAL -->
-<div class="modal-bg" id="garson-modal">
-  <div class="modal" style="border-radius:18px;padding:22px;max-height:90vh;overflow-y:auto">
-    <div style="font-size:15px;font-weight:800;color:var(--mt);margin-bottom:14px" id="garson-modal-t">Yeni Garson Ekle</div>
-    <div style="margin-bottom:8px"><div class="lb-l">Ad Soyad</div><input class="inp lb-inp" id="gy-ad" placeholder="Zeynep K." style="margin-bottom:0"></div>
-    <div style="margin-bottom:8px"><div class="lb-l">Kısa Harf (Avatar)</div><input class="inp lb-inp" id="gy-harf" placeholder="Z" maxlength="2" style="margin-bottom:0;width:80px"></div>
-    <div style="margin-bottom:8px"><div class="lb-l">Şifre</div><input class="inp lb-inp" id="gy-sifre" placeholder="1234" style="margin-bottom:0"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
-      <button class="btn yes" onclick="garsonKaydet()">✅ Kaydet</button>
-      <button class="btn ik" onclick="document.getElementById('garson-modal').classList.remove('ak')">İptal</button>
-    </div>
-  </div>
-</div>
-
-<!-- MENÜ MODAL -->
-<div class="modal-bg" id="menu-modal">
-  <div class="modal" style="border-radius:18px;padding:22px;max-height:90vh;overflow-y:auto">
-    <div style="font-size:15px;font-weight:800;color:var(--mt);margin-bottom:14px" id="menu-modal-t">Yeni Ürün Ekle</div>
-    <div style="margin-bottom:8px"><div class="lb-l">Ürün Adı</div><input class="inp lb-inp" id="mu-ad" placeholder="Adana Kebap" style="margin-bottom:0"></div>
-    <div style="margin-bottom:8px"><div class="lb-l">Emoji</div><input class="inp lb-inp" id="mu-em" placeholder="🥩" style="margin-bottom:0;width:80px"></div>
-    <div style="margin-bottom:8px"><div class="lb-l">Kalori (kcal)</div><input class="inp lb-inp" id="mu-kalori" type="number" placeholder="Örn: 450" style="margin-bottom:0;width:120px"></div>
-    <div style="margin-bottom:8px"><div class="lb-l">Resim URL (isteğe bağlı)</div><input class="inp lb-inp" id="mu-resim" placeholder="https://..." style="margin-bottom:0"></div>
-    <div style="margin-bottom:8px"><div class="lb-l">Kategori</div>
-      <select class="inp lb-inp" id="mu-kat" style="margin-bottom:0">
-        <option value="Izgara">🥩 Izgara</option>
-        <option value="Pide">🫓 Pide</option>
-        <option value="Corbalar">🍲 Çorbalar</option>
-        <option value="Tatlilar">🍮 Tatlılar</option>
-        <option value="Icecekler">🥤 İçecekler</option>
-      </select>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <div><div class="lb-l">Satış Fiyatı (₺)</div><input class="inp" id="mu-fiyat" type="number" placeholder="0" style="width:100%"></div>
-      <div><div class="lb-l">Maliyet (₺)</div><input class="inp" id="mu-maliyet" type="number" placeholder="0" style="width:100%"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
-      <button class="btn yes" onclick="menuKaydet()">✅ Kaydet</button>
-      <button class="btn ik" onclick="document.getElementById('menu-mo
+      <div class="kart"><div class="kart-h"><div class="kart-ht">🏪 Restoran Bilgileri</div></div><div 
 
 const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg';
@@ -549,6 +554,7 @@ function cikis(){
 
 // ── TAB ──
 function tabGec(tab,el){
+  if(id==='kampanya') setTimeout(kampanyaTabYukle,100);
   document.querySelectorAll('.tp').forEach(function(t){t.classList.remove('ak');});
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('ak');});
   document.getElementById('tp-'+tab).classList.add('ak');
@@ -1046,7 +1052,7 @@ async function menuKaydet(){
     await SB.patch('menu','id=eq.'+duzenleMenuId,{
       ad:ad, em:em, kat:kat, fiyat:fiyat, maliyet:maliyet, image_url:resim||null, kalori:kalori
     });
-    console.log('Patch yapildi.');
+    console.log('Patch sonuc:', sonuc);
   } else {
     var yeniId = 'm_'+Date.now();
     var sonuc2 = await SB.post('menu',{
@@ -1321,96 +1327,176 @@ async function topluUygula(){
   alert('%'+oran+' '+(tip==='indirim'?'indirim':'zam')+' uygulandi!');
 }
 
-// ── KAMPANYA ──
-function kamp_sure(dk){
-  document.getElementById('kamp-sure').value = dk;
-}
+function kampSure(dk){ var el=document.getElementById('kamp-sure'); if(el) el.value=dk; }
 
 async function kampanyaBaslat(){
-  var mesaj = document.getElementById('kamp-mesaj').value.trim();
-  var kat = document.getElementById('kamp-kat').value;
-  var oran = parseInt(document.getElementById('kamp-oran').value)||0;
-  var sure = parseInt(document.getElementById('kamp-sure').value)||0;
+  var mesaj=(document.getElementById('kamp-mesaj').value||'').trim();
+  var kat=document.getElementById('kamp-kat').value;
+  var oran=parseInt(document.getElementById('kamp-oran').value)||0;
+  var sure=parseInt(document.getElementById('kamp-sure').value)||0;
   if(!mesaj){alert('Mesaj girin');return;}
-  if(!oran||oran<1||oran>99){alert('İndirim oranı girin (1-99)');return;}
-  if(!sure||sure<1){alert('Süre girin');return;}
-  var bitis = new Date(Date.now() + sure*60*1000).toISOString();
-  var kampanya = {aktif:true, mesaj:mesaj, kat:kat, oran:oran, bitis:bitis};
-  await SB.patch('ayarlar','key=eq.kampanya',{value:kampanya}).catch(async function(){
-    await SB.post('ayarlar',{key:'kampanya',value:kampanya});
+  if(!oran){alert('Indirim orani girin');return;}
+  if(!sure){alert('Sure girin');return;}
+  var bitis=new Date(Date.now()+sure*60*1000).toISOString();
+  var k={aktif:true,mesaj:mesaj,kat:kat,oran:oran,bitis:bitis};
+  await SB.patch('ayarlar','key=eq.kampanya',{value:k}).catch(async function(){
+    await SB.post('ayarlar',{key:'kampanya',value:k});
   });
-  document.getElementById('kamp-durum').textContent = '✅ Kampanya başlatıldı! '+sure+' dakika sürecek.';
-  document.getElementById('kamp-durum').style.color = 'var(--bas)';
+  document.getElementById('kamp-durum').textContent='Kampanya basladi! '+sure+' dakika.';
+  document.getElementById('kamp-durum').style.color='green';
 }
 
 async function kampanyaDurdur(){
   await SB.patch('ayarlar','key=eq.kampanya',{value:{aktif:false}}).catch(function(){});
-  document.getElementById('kamp-durum').textContent = '⏹ Kampanya durduruldu.';
-  document.getElementById('kamp-durum').style.color = 'var(--teh)';
+  document.getElementById('kamp-durum').textContent='Kampanya durduruldu.';
+  document.getElementById('kamp-durum').style.color='red';
 }
 
-// ── KOMBİNE MENÜ ──
-var comboSeciliUrunler = [];
-
+var comboSecili=[];
 async function kampanyaTabYukle(){
-  // Menü ürünlerini listele
-  var data = await SB.get('menu','aktif=eq.true&order=kat.asc,ad.asc');
+  var data=await SB.get('menu','aktif=eq.true&order=kat.asc,ad.asc');
   if(!data) return;
-  var el = document.getElementById('combo-urun-list');
-  if(!el) return;
-  el.innerHTML = data.map(function(u){
+  var el=document.getElementById('combo-urun-list');
+  if(el) el.innerHTML=data.map(function(u){
     return '<label style="display:flex;align-items:center;gap:6px;padding:4px;cursor:pointer">'
-      +'<input type="checkbox" value="'+u.id+'" onchange="comboUrunToggle(this)">'
-      +'<span style="font-size:12px">'+(u.em||'')+'  '+u.ad+' <span style="color:var(--al)">₺'+u.fiyat+'</span></span>'
+      +'<input type="checkbox" value="'+u.id+'" onchange="comboToggle(this)">'
+      +'<span style="font-size:12px">'+(u.em||'')+' '+u.ad+' ('+u.kat+') <span style="color:var(--al)">₺'+u.fiyat+'</span></span>'
       +'</label>';
   }).join('');
-  // Mevcut combolar
-  var cd = await SB.get('ayarlar','key=eq.combo_menu');
-  var combolar = (cd&&cd.length&&cd[0].value) ? cd[0].value.combolar||[] : [];
-  var mevEl = document.getElementById('mevcut-combolar');
-  if(!combolar.length){mevEl.innerHTML='<div style="font-size:12px;color:var(--si)">Henüz combo yok</div>';return;}
-  mevEl.innerHTML = combolar.map(function(c,i){
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--ik);border-radius:8px;margin-bottom:6px">'
-      +'<div><div style="font-size:12px;font-weight:700">'+c.ad+'</div><div style="font-size:11px;color:var(--si)">'+c.aciklama+'</div></div>'
-      +'<div style="display:flex;align-items:center;gap:6px">'
-      +'<span style="font-size:13px;font-weight:700;color:var(--bas)">₺'+c.indirimFiyat+'</span>'
-      +'<button onclick="comboSil('+i+')" style="padding:3px 7px;border-radius:6px;background:var(--tac);color:var(--teh);border:none;cursor:pointer;font-size:11px">Sil</button>'
-      +'</div></div>';
-  }).join('');
+  var cd=await SB.get('ayarlar','key=eq.combo_menu');
+  var combolar=(cd&&cd.length&&cd[0].value)?cd[0].value.combolar||[]:[];
+  var mel=document.getElementById('mevcut-combolar');
+  if(!mel) return;
+  if(!combolar.length){mel.innerHTML='<div style="font-size:12px;color:var(--si)">Henuz combo yok</div>';return;}
+  mel.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--si);margin-bottom:6px">Mevcut Combolar:</div>'
+    +combolar.map(function(c,i){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--ik);border-radius:8px;margin-bottom:6px">'
+        +'<div><div style="font-size:12px;font-weight:700">'+c.ad+'</div><div style="font-size:11px;color:var(--si)">'+c.aciklama+'</div></div>'
+        +'<div style="display:flex;align-items:center;gap:6px">'
+        +'<span style="font-size:13px;font-weight:700;color:var(--bas)">₺'+c.indirimFiyat+'</span>'
+        +'<button onclick="comboSil('+i+')" style="padding:3px 7px;border-radius:6px;background:var(--tac);color:var(--teh);border:none;cursor:pointer;font-size:11px">Sil</button>'
+        +'</div></div>';
+    }).join('');
 }
 
-function comboUrunToggle(cb){
-  var id = cb.value;
-  var idx = comboSeciliUrunler.indexOf(id);
-  if(cb.checked && idx<0) comboSeciliUrunler.push(id);
-  else if(!cb.checked && idx>=0) comboSeciliUrunler.splice(idx,1);
+function comboToggle(cb){
+  var id=cb.value;
+  var idx=comboSecili.indexOf(id);
+  if(cb.checked&&idx<0) comboSecili.push(id);
+  else if(!cb.checked&&idx>=0) comboSecili.splice(idx,1);
 }
 
 async function comboKaydet(){
-  var ad = document.getElementById('combo-ad').value.trim();
-  var acik = document.getElementById('combo-acik').value.trim();
-  var normal = parseFloat(document.getElementById('combo-normal').value)||0;
-  var indirim = parseFloat(document.getElementById('combo-indirim').value)||0;
-  if(!ad||!comboSeciliUrunler.length){alert('Ad ve en az 1 ürün seçin');return;}
-  var cd = await SB.get('ayarlar','key=eq.combo_menu');
-  var combolar = (cd&&cd.length&&cd[0].value) ? cd[0].value.combolar||[] : [];
-  combolar.push({ad:ad,aciklama:acik,normalFiyat:normal,indirimFiyat:indirim,urunler:comboSeciliUrunler.slice()});
+  var ad=(document.getElementById('combo-ad').value||'').trim();
+  var acik=(document.getElementById('combo-acik').value||'').trim();
+  var normal=parseFloat(document.getElementById('combo-normal').value)||0;
+  var indirim=parseFloat(document.getElementById('combo-indirim').value)||0;
+  if(!ad||!comboSecili.length){alert('Ad ve en az 1 urun secin');return;}
+  var cd=await SB.get('ayarlar','key=eq.combo_menu');
+  var combolar=(cd&&cd.length&&cd[0].value)?cd[0].value.combolar||[]:[];
+  combolar.push({ad:ad,aciklama:acik,normalFiyat:normal,indirimFiyat:indirim,urunler:comboSecili.slice()});
   await SB.patch('ayarlar','key=eq.combo_menu',{value:{combolar:combolar}}).catch(async function(){
     await SB.post('ayarlar',{key:'combo_menu',value:{combolar:combolar}});
   });
   alert('Combo kaydedildi!');
-  comboSeciliUrunler=[];
+  comboSecili=[];
   kampanyaTabYukle();
 }
 
 async function comboSil(idx){
-  var cd = await SB.get('ayarlar','key=eq.combo_menu');
-  var combolar = (cd&&cd.length&&cd[0].value) ? cd[0].value.combolar||[] : [];
+  var cd=await SB.get('ayarlar','key=eq.combo_menu');
+  var combolar=(cd&&cd.length&&cd[0].value)?cd[0].value.combolar||[]:[];
   combolar.splice(idx,1);
   await SB.patch('ayarlar','key=eq.combo_menu',{value:{combolar:combolar}});
   kampanyaTabYukle();
 }
-Yukle();
+ }
+  await SB.patch('ayarlar','key=eq.restoran_bilgi',{value:{ad:ad,masa:masa}}).catch(async function(){
+    await SB.post('ayarlar',{key:'restoran_bilgi',value:{ad:ad,masa:masa}});
+  });
+  // Sayfa basligini guncelle
+  var baslik = document.querySelector('.tb-t');
+  if(baslik) baslik.textContent = '🏪 ' + ad + ' — Patron';
+  alert('Restoran bilgileri kaydedildi!');
+}
+
+// Restoran kaydet — event listener ile
+document.addEventListener('DOMContentLoaded', function(){
+  var btn = document.getElementById('restoran-kaydet-btn');
+  if(btn){
+    btn.addEventListener('click', function(){
+      restoranKaydet();
+    });
+  }
+});
+
+// restoranKaydet — DB'ye yaz
+async function restoranKaydet(){
+  var adEl = document.getElementById('r-ad');
+  var masaEl = document.getElementById('r-masa');
+  if(!adEl){ alert('Input bulunamadi'); return; }
+  var ad = adEl.value.trim();
+  var masa = masaEl ? parseInt(masaEl.value)||20 : 20;
+  if(!ad){ alert('Restoran adi bos olamaz!'); return; }
+  try{
+    var r = await SB.patch('ayarlar','key=eq.restoran_bilgi',{value:{ad:ad,masa:masa}});
+    if(!r || !r.length){
+      await SB.post('ayarlar',{key:'restoran_bilgi',value:{ad:ad,masa:masa}});
+    }
+    alert('Restoran bilgileri kaydedildi!');
+  } catch(ex){
+    console.error('Restoran kaydet hata:', ex);
+    alert('Hata: ' + ex.message);
+  }
+}
+
+
+function topluIslemAc(){
+  document.getElementById('modal-toplu').classList.add('ak');
+}
+
+async function topluUygula(){
+  var kat = document.getElementById('toplu-kat').value;
+  var tip = document.getElementById('toplu-tip').value;
+  var oran = parseFloat(document.getElementById('toplu-oran').value)||0;
+  if(!oran||oran<=0||oran>=100){alert('Geçerli bir oran girin (1-99)');return;}
+  var liste = kat==='hepsi' ? menuListesi : menuListesi.filter(function(u){return u.kat===kat;});
+  if(!liste.length){alert('Ürün bulunamadı');return;}
+  if(!confirm(liste.length+' ürüne '+oran+'% '+(tip==='indirim'?'indirim':'zam')+' uygulanacak. Emin misiniz?'))return;
+  var btn=document.querySelector('[onclick="topluUygula()"]');
+  btn.disabled=true;btn.textContent='Uygulanıyor...';
+  for(var i=0;i<liste.length;i++){
+    var u=liste[i];
+    var yeniFiyat=tip==='indirim'
+      ? Math.round(u.fiyat*(1-oran/100))
+      : Math.round(u.fiyat*(1+oran/100));
+    await SB.patch('menu','id=eq.'+u.id,{fiyat:yeniFiyat});
+  }
+  btn.disabled=false;btn.textContent='✅ Uygula';
+  document.getElementById('modal-toplu').classList.remove('ak');
+  await menuYonetimYukle();
+  alert(oran+'% '+(tip==='indirim'?'indirim':'zam')+' uygulandı!');
+}
+
+function topluIslemAc(){
+  document.getElementById('modal-toplu').classList.add('ak');
+}
+async function topluUygula(){
+  var kat=document.getElementById('toplu-kat').value;
+  var tip=document.getElementById('toplu-tip').value;
+  var oran=parseFloat(document.getElementById('toplu-oran').value)||0;
+  if(!oran||oran<=0||oran>=100){alert('Gecerli oran girin (1-99)');return;}
+  var liste=kat==='hepsi'?menuListesi:menuListesi.filter(function(u){return u.kat===kat;});
+  if(!liste.length){alert('Urun bulunamadi');return;}
+  if(!confirm(liste.length+' urune %'+oran+' '+(tip==='indirim'?'indirim':'zam')+' uygulanacak. Emin misiniz?'))return;
+  for(var i=0;i<liste.length;i++){
+    var u=liste[i];
+    var yeni=tip==='indirim'?Math.round(u.fiyat*(1-oran/100)):Math.round(u.fiyat*(1+oran/100));
+    if(yeni<1)yeni=1;
+    await SB.patch('menu','id=eq.'+u.id,{fiyat:yeni});
+  }
+  document.getElementById('modal-toplu').classList.remove('ak');
+  await menuYonetimYukle();
   alert('%'+oran+' '+(tip==='indirim'?'indirim':'zam')+' uygulandi!');
 }
 </script>
