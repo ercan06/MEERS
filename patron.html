@@ -302,44 +302,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
     </div>
 
-    <div class="tp" id="tp-analitik" style="display:none;padding:12px">
-  <div class="kart" style="margin-bottom:12px">
-    <div class="kart-h"><div class="kart-ht">🏆 En Çok Satan Ürünler</div></div>
-    <div class="kart-body" id="en-cok-satan"><div style="color:var(--si);font-size:12px">Yükleniyor...</div></div>
-  </div>
-  <div class="kart" style="margin-bottom:12px">
-    <div class="kart-h"><div class="kart-ht">🕐 Saatlik Yoğunluk</div></div>
-    <div class="kart-body" id="saatlik-yogunluk"></div>
-  </div>
-  <div class="kart">
-    <div class="kart-h"><div class="kart-ht">👨‍🍳 Garson Performansı</div></div>
-    <div class="kart-body" id="garson-performans"></div>
-  </div>
-</div>
-<div class="tp" id="tp-kampanya" style="display:none;padding:12px">
-  <div class="kart" style="margin-bottom:12px">
-    <div class="kart-h"><div class="kart-ht">🔥 Anlık Kampanya</div></div>
-    <div class="kart-body">
-      <div class="ing"><div class="ing-l">Mesaj</div><input class="inp lb-inp" id="kamp-mesaj" placeholder="Tum menu indirimde!" style="flex:1"></div>
-      <div class="ing"><div class="ing-l">Kategori</div><select class="inp lb-inp" id="kamp-kat" style="flex:1"><option value="hepsi">Tum Menu</option><option value="Izgara">Izgara</option><option value="Pide">Pide</option><option value="Corbalar">Corbalar</option><option value="Tatlilar">Tatlilar</option><option value="Icecekler">Icecekler</option></select></div>
-      <div class="ing"><div class="ing-l">Indirim %</div><input class="inp lb-inp" id="kamp-oran" type="number" min="1" max="99" placeholder="20" style="width:100px"></div>
-      <div style="margin-top:8px"><div class="ing-l" style="margin-bottom:6px">Sure</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(10)">10dk</button>
-          <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(20)">20dk</button>
-          <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(30)">30dk</button>
-          <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(60)">1sa</button>
-          <input class="inp lb-inp" id="kamp-sure" type="number" placeholder="dk" style="width:60px">
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-        <button class="btn yes" onclick="kampanyaBaslat()">Baslat</button>
-        <button class="btn" style="background:var(--teh);color:#fff" onclick="kampanyaDurdur()">Durdur</button>
-      </div>
-      <div id="kamp-durum" style="margin-top:8px;font-size:12px;color:var(--si);text-align:center"></div>
-    </div>
-  </div>
-</div>
+    <div class="tp" id="tp-analitik" style="display:none;padding:12px"><div class="kart" style="margin-bottom:12px"><div class="kart-h"><div class="kart-ht">🏆 En Çok Satan</div></div><div class="kart-body" id="en-cok-satan"></div></div><div class="kart" style="margin-bottom:12px"><div class="kart-h"><div class="kart-ht">🕐 Saatlik Yoğunluk</div></div><div class="kart-body" id="saatlik-yogunluk"></div></div><div class="kart"><div class="kart-h"><div class="kart-ht">👨‍🍳 Garson Performansı</div></div><div class="kart-body" id="garson-performans"></div></div></div>
+<div class="tp" id="tp-kampanya" style="display:none;padding:12px"><div class="kart"><div class="kart-h"><div class="kart-ht">🔥 Anlık Kampanya</div></div><div class="kart-body"><div class="ing"><div class="ing-l">Mesaj</div><input class="inp lb-inp" id="kamp-mesaj" placeholder="Indirim basladi!" style="flex:1"></div><div class="ing"><div class="ing-l">Kategori</div><select class="inp lb-inp" id="kamp-kat" style="flex:1"><option value="hepsi">Tum Menu</option><option value="Izgara">Izgara</option><option value="Pide">Pide</option><option value="Corbalar">Corbalar</option><option value="Tatlilar">Tatlilar</option><option value="Icecekler">Icecekler</option></select></div><div class="ing"><div class="ing-l">Indirim %</div><input class="inp lb-inp" id="kamp-oran" type="number" min="1" max="99" placeholder="20" style="width:100px"></div><div style="margin-top:8px"><div class="ing-l" style="margin-bottom:6px">Sure</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(10)">10dk</button><button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(20)">20dk</button><button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(30)">30dk</button><button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(60)">1sa</button><input class="inp lb-inp" id="kamp-sure" type="number" placeholder="dk" style="width:60px"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><button class="btn yes" onclick="kampanyaBaslat()">Baslat</button><button class="btn" style="background:var(--teh);color:#fff" onclick="kampanyaDurdur()">Durdur</button></div><div id="kamp-durum" style="margin-top:8px;font-size:12px;color:var(--si);text-align:center"></div></div></div></div>
 <div class="tp" id="tp-ayarlar">
       <div class="kart" style="margin-bottom:12px">
         <div class="kart-h"><div class="kart-ht">🔐 Patron Girişi</div></div>
@@ -371,6 +335,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="modal-bg" id="garson-modal">
   <div class="modal" style="border-radius:18px;padding:22px;max-height:90vh;overflow-y:auto">
     <div style="font-size:15px;font-weight:800;color:var(--mt);margin-bottom:14px" id="garson-modal-t">Yeni Garson Ekle</div>
+    <div style="margin-bottom:8px"><div class="lb-l">Ad Soyad</div><input class="inp lb-inp" id="gy-ad" placeholder="Zeynep K." style="margin-bottom:0"></div>
+    <div style="margin-bottom:8px"><div class="lb-l">Kısa Harf (Avatar)</div><input class="inp lb-inp" id="gy-harf" placeholder="Z" maxlength="2" style="margin
 
 const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg';
@@ -1329,93 +1295,32 @@ async function topluUygula(){
 }
 
 function kampSure(dk){var el=document.getElementById('kamp-sure');if(el)el.value=dk;}
-async function kampanyaBaslat(){
-  var mesaj=(document.getElementById('kamp-mesaj').value||'').trim();
-  var kat=document.getElementById('kamp-kat').value;
-  var oran=parseInt(document.getElementById('kamp-oran').value)||0;
-  var sure=parseInt(document.getElementById('kamp-sure').value)||0;
-  if(!mesaj||!oran||!sure){alert('Tum alanlari doldurun');return;}
-  var bitis=new Date(Date.now()+sure*60*1000).toISOString();
-  var k={aktif:true,mesaj:mesaj,kat:kat,oran:oran,bitis:bitis};
-  await SB.patch('ayarlar','key=eq.kampanya',{value:k}).catch(async function(){await SB.post('ayarlar',{key:'kampanya',value:k});});
-  document.getElementById('kamp-durum').textContent='Kampanya basladi! '+sure+' dk.';
-  document.getElementById('kamp-durum').style.color='green';
-}
-async function kampanyaDurdur(){
-  await SB.patch('ayarlar','key=eq.kampanya',{value:{aktif:false}}).catch(function(){});
-  document.getElementById('kamp-durum').textContent='Kampanya durduruldu.';
-  document.getElementById('kamp-durum').style.color='red';
-}
+async function kampanyaBaslat(){var mesaj=(document.getElementById('kamp-mesaj').value||'').trim();var kat=document.getElementById('kamp-kat').value;var oran=parseInt(document.getElementById('kamp-oran').value)||0;var sure=parseInt(document.getElementById('kamp-sure').value)||0;if(!mesaj||!oran||!sure){alert('Doldurun');return;}var bitis=new Date(Date.now()+sure*60*1000).toISOString();var k={aktif:true,mesaj:mesaj,kat:kat,oran:oran,bitis:bitis};await SB.patch('ayarlar','key=eq.kampanya',{value:k}).catch(async function(){await SB.post('ayarlar',{key:'kampanya',value:k});});document.getElementById('kamp-durum').textContent='Basladi! '+sure+' dk.';document.getElementById('kamp-durum').style.color='green';}
+async function kampanyaDurdur(){await SB.patch('ayarlar','key=eq.kampanya',{value:{aktif:false}}).catch(function(){});document.getElementById('kamp-durum').textContent='Durduruldu.';document.getElementById('kamp-durum').style.color='red';}
 async function kampanyaTabYukle(){}
-
 async function analitikYukle(){
-  var odemeler=await SB.get('odemeler','order=created_at.desc&limit=500');
-  var siparisler=await SB.get('siparisler','order=created_at.desc&limit=500');
-  if(!odemeler||!siparisler)return;
-  // En cok satan
-  var urunSayac={};
-  siparisler.forEach(function(sp){
-    var u=sp.urunler;
-    if(!u)return;
-    if(typeof u==='string'){try{u=JSON.parse(u)}catch(e){return;}}
-    if(!Array.isArray(u))return;
-    u.forEach(function(x){
-      var ad=x.ad||x;
-      if(!urunSayac[ad])urunSayac[ad]={adet:0,ciro:0};
-      urunSayac[ad].adet+=(x.adet||1);
-      urunSayac[ad].ciro+=(x.fiyat||0)*(x.adet||1);
-    });
-  });
-  var enCok=Object.entries(urunSayac).sort(function(a,b){return b[1].adet-a[1].adet;}).slice(0,10);
-  var maxAdet=enCok[0]?enCok[0][1].adet:1;
-  var renkler=['#D4A017','#E8952A','#2D6A2D','#3498db','#8e44ad','#e74c3c','#1abc9c','#f39c12','#2980b9','#27ae60'];
-  document.getElementById('en-cok-satan').innerHTML=enCok.map(function(e,i){
-    var yuzde=Math.round(e[1].adet/maxAdet*100);
-    return '<div style="margin-bottom:10px">'
-      +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
-      +'<span style="font-size:12px;font-weight:700;color:var(--s)">'+(i+1)+'. '+e[0]+'</span>'
-      +'<span style="font-size:11px;color:var(--si)">'+e[1].adet+' adet</span>'
-      +'</div>'
-      +'<div style="background:var(--bd);border-radius:6px;height:10px">'
-      +'<div style="width:'+yuzde+'%;height:100%;background:'+renkler[i%10]+';border-radius:6px"></div>'
-      +'</div></div>';
-  }).join('')||'<div style="color:var(--si);font-size:12px">Veri yok</div>';
-  // Saatlik yogunluk
-  var saatler=new Array(24).fill(0);
-  odemeler.forEach(function(o){if(!o.created_at)return;saatler[new Date(o.created_at).getHours()]+=parseFloat(o.toplam||0);});
-  var maxC=Math.max.apply(null,saatler)||1;
-  var sh='<div style="display:flex;align-items:flex-end;gap:2px;height:100px">';
-  for(var i=0;i<24;i++){
-    var y=Math.round(saatler[i]/maxC*80);
-    sh+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">'
-      +'<div style="width:100%;background:'+(i>=10&&i<=22?'var(--al)':'var(--bd)')+';border-radius:2px 2px 0 0;height:'+y+'px;min-height:'+(saatler[i]>0?'2px':'0')+'"></div>'
-      +'<div style="font-size:7px;color:var(--si);margin-top:2px">'+(i%2===0?i:'')+'</div>'
-      +'</div>';
-  }
-  sh+='</div><div style="font-size:11px;color:var(--si);text-align:center;margin-top:6px">En yogun: '+saatler.indexOf(Math.max.apply(null,saatler))+':00</div>';
-  document.getElementById('saatlik-yogunluk').innerHTML=sh;
-  // Garson performansi
+  var od=await SB.get('odemeler','order=created_at.desc&limit=500');
+  var sp=await SB.get('siparisler','order=created_at.desc&limit=500');
+  if(!od||!sp)return;
+  var uc={};
+  sp.forEach(function(s){var u=s.urunler;if(!u)return;if(typeof u==='string'){try{u=JSON.parse(u)}catch(e){return;}}if(!Array.isArray(u))return;u.forEach(function(x){var a=x.ad||x;if(!uc[a])uc[a]={adet:0};uc[a].adet+=(x.adet||1);});});
+  var ec=Object.entries(uc).sort(function(a,b){return b[1].adet-a[1].adet;}).slice(0,10);
+  var mx=ec[0]?ec[0][1].adet:1;
+  var rk=['#D4A017','#E8952A','#2D6A2D','#3498db','#8e44ad','#e74c3c','#1abc9c','#f39c12','#2980b9','#27ae60'];
+  document.getElementById('en-cok-satan').innerHTML=ec.map(function(e,i){var y=Math.round(e[1].adet/mx*100);return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:700;color:var(--s)">'+(i+1)+'. '+e[0]+'</span><span style="font-size:11px;color:var(--si)">'+e[1].adet+' adet</span></div><div style="background:var(--bd);border-radius:6px;height:10px"><div style="width:'+y+'%;height:100%;background:'+rk[i%10]+';border-radius:6px"></div></div></div>';}).join('')||'<div style="color:var(--si);font-size:12px">Veri yok</div>';
+  var sh=new Array(24).fill(0);
+  od.forEach(function(o){if(!o.created_at)return;sh[new Date(o.created_at).getHours()]+=parseFloat(o.toplam||0);});
+  var mc=Math.max.apply(null,sh)||1;
+  var html='<div style="display:flex;align-items:flex-end;gap:2px;height:100px">';
+  for(var i=0;i<24;i++){var y=Math.round(sh[i]/mc*80);html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end"><div style="width:100%;background:'+(i>=10&&i<=22?'var(--al)':'var(--bd)')+';border-radius:2px 2px 0 0;height:'+y+'px"></div><div style="font-size:7px;color:var(--si);margin-top:2px">'+(i%2===0?i:'')+'</div></div>';}
+  html+='</div><div style="font-size:11px;color:var(--si);text-align:center;margin-top:6px">En yogun: '+sh.indexOf(Math.max.apply(null,sh))+':00</div>';
+  document.getElementById('saatlik-yogunluk').innerHTML=html;
   var gd={};
-  odemeler.forEach(function(o){var g=o.garson_ad||'-';if(!gd[g])gd[g]={siparis:0,ciro:0};gd[g].siparis++;gd[g].ciro+=parseFloat(o.toplam||0);});
-  var gl=Object.entries(gd).sort(function(a,b){return b[1].ciro-a[1].ciro;});
-  document.getElementById('garson-performans').innerHTML=gl.map(function(g,i){
-    var rozet=['🥇','🥈','🥉'][i]||'⭐';
-    return '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--ik);border-radius:10px;margin-bottom:6px">'
-      +'<div style="font-size:20px">'+rozet+'</div>'
-      +'<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--s)">'+g[0]+'</div>'
-      +'<div style="font-size:11px;color:var(--si)">'+g[1].siparis+' odeme</div></div>'
-      +'<div style="text-align:right"><div style="font-size:15px;font-weight:800;color:var(--al)">'+Math.round(g[1].ciro).toLocaleString('tr-TR')+' TL</div></div>'
-      +'</div>';
-  }).join('')||'<div style="color:var(--si);font-size:12px">Veri yok</div>';
+  od.forEach(function(o){var g=o.garson_ad||'-';if(!gd[g])gd[g]={n:0,c:0};gd[g].n++;gd[g].c+=parseFloat(o.toplam||0);});
+  var gl=Object.entries(gd).sort(function(a,b){return b[1].c-a[1].c;});
+  document.getElementById('garson-performans').innerHTML=gl.map(function(g,i){var r=['🥇','🥈','🥉'][i]||'⭐';return '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--ik);border-radius:10px;margin-bottom:6px"><div style="font-size:20px">'+r+'</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--s)">'+g[0]+'</div><div style="font-size:11px;color:var(--si)">'+g[1].n+' odeme</div></div><div style="font-size:15px;font-weight:800;color:var(--al)">'+Math.round(g[1].c).toLocaleString('tr-TR')+' TL</div></div>';}).join('')||'<div style="color:var(--si);font-size:12px">Veri yok</div>';
 }
-mentById('r-ad');
-  var masaEl = document.getElementById('r-masa');
-  if(!adEl){ alert('Input bulunamadi'); return; }
-  var ad = adEl.value.trim();
-  var masa = masaEl ? parseInt(masaEl.value)||20 : 20;
-  if(!ad){ alert('Restoran adi bos olamaz!'); return; }
-  try{
-    var r = await SB.patch('ayarlar','key=eq.restoran_bilgi',{value:{ad:ad,masa:masa}});
+_bilgi',{value:{ad:ad,masa:masa}});
     if(!r || !r.length){
       await SB.post('ayarlar',{key:'restoran_bilgi',value:{ad:ad,masa:masa}});
     }
