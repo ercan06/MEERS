@@ -558,8 +558,8 @@ function cikis(){
 
 // ── TAB ──
 function tabGec(tab,el){
-  if(id==='kampanya') setTimeout(kampanyaTabYukle,100);
-  if(id==='analitik') setTimeout(analitikYukle,100);
+  if(tab==='kampanya') setTimeout(kampanyaTabYukle,100);
+  if(tab==='analitik') setTimeout(analitikYukle,100);
   document.querySelectorAll('.tp').forEach(function(t){t.classList.remove('ak');});
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('ak');});
   document.getElementById('tp-'+tab).classList.add('ak');
