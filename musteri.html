@@ -601,16 +601,18 @@ var kampanyaTimer = null;
 
 async function kampanyaYukle(){
   var d = await sbGet('ayarlar','key=eq.kampanya');
-  if(!d||!d.length||!d[0].value) return;
+  if(!d||!d.length||!d[0].value){ AKTIF_KAMPANYA=null; return; }
   var k = d[0].value;
-  if(!k.aktif) return;
+  if(!k.aktif){ AKTIF_KAMPANYA=null; return; }
   var bitis = new Date(k.bitis);
-  if(bitis < new Date()) return;
-  kampanyaData = k;
+  if(bitis < new Date()){ AKTIF_KAMPANYA=null; return; }
+  AKTIF_KAMPANYA = k;
   var bar = document.getElementById('kampanya-bar');
-  bar.style.display = 'block';
-  document.getElementById('kampanya-txt').textContent = '🔥 ' + k.mesaj;
-  kampanyaSayac(bitis);
+  if(bar){
+    bar.style.display = 'block';
+    document.getElementById('kampanya-txt').textContent = '🔥 '+k.mesaj+' — %'+k.oran+' indirim!';
+    kampanyaSayac(bitis);
+  }
   renderMenu();
 }
 
@@ -755,15 +757,16 @@ function comboOnGoster(){
 
 function comboDetayGoster(idx){
   var c = (window._combolar||[])[idx];
-  if(!c) return;
+  if(!c){toast('Combo bulunamadi');return;}
   var urunler = (c.urunler||[]).map(function(id){
     return MENU.find(function(m){return m.id===id;});
   }).filter(Boolean);
-  var msg = c.ad + '\n' + c.aciklama + '\n\nİçerik:\n'
-    + urunler.map(function(u){return '• '+(u.em||'')+ ' '+u.ad+' (₺'+u.fiyat+')'}).join('\n')
-    + '\n\nToplam: ₺'+c.indirimFiyat;
-  if(confirm(msg+'\n\nSepete ekle?')){
+  if(!urunler.length){toast('Combo icindeki urunler menude yok');return;}
+  var icerik = urunler.map(function(u){return (u.em||'')+'  '+u.ad}).join(', ');
+  if(confirm(c.ad+'\n'+c.aciklama+'\n\n'+icerik+'\n\n₺'+c.indirimFiyat+' — Sepete ekle?')){
     urunler.forEach(function(u){ ekle(u.id); });
+    renderMenu();
+    guncelFab();
     toast('🎁 '+c.ad+' sepete eklendi!');
   }
 }
