@@ -117,6 +117,8 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);max-width:480px;m
 .dogum-kutu{padding:12px 14px;background:linear-gradient(135deg,rgba(212,160,23,.15),rgba(240,192,64,.1));border-top:2px solid var(--al);margin-bottom:0;display:none;text-align:center}
 .ai-fab{position:fixed;bottom:80px;left:16px;background:linear-gradient(135deg,#8e44ad,#6c3483);color:#fff;border:none;border-radius:14px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(142,68,173,.4);z-index:40;display:none}
 .ai-fab.ak{display:block}
+.combo-on-k{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--yz);border-radius:12px;border:1.5px solid rgba(45,106,45,.25);margin-bottom:6px;cursor:pointer}
+.combo-on-k:active{background:var(--bac)}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1A1A1A;color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;border:1px solid var(--al);max-width:85vw;text-align:center;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
 </style>
 </head>
@@ -152,6 +154,7 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);max-width:480px;m
     <span id="kampanya-txt">🔥 Özel fırsat!</span>
     <span id="kampanya-sayac" style="margin-left:8px;font-weight:800;font-size:13px"></span>
   </div>
+  <div id="combo-on-kutu" style="display:none;padding:10px 12px;background:linear-gradient(135deg,rgba(45,106,45,.08),rgba(45,106,45,.03));border-bottom:1px solid rgba(45,106,45,.15)"></div>
   <div class="menu-ic" id="menu-ic"></div>
   <button class="fab" id="fab" onclick="sepetAc()">🛒 <span id="fab-say">0</span> ürün · ₺<span id="fab-top">0</span></button>
 </div>
@@ -219,7 +222,8 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);max-width:480px;m
 </div>
 <button class="ai-fab" id="ai-fab" onclick="aiAc()">🤖 AI Öneri</button>
 
-<script>
+<script>var AKTIF_KAMPANYA = null;
+
 var SURL = "https://vdrjyngywjzuniwvsjtk.supabase.co";
 var SKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg";
 var SH = {"apikey": SKEY, "Authorization": "Bearer " + SKEY, "Content-Type": "application/json"};
@@ -333,6 +337,20 @@ function urunHTML(u) {
     ? '<img class="urun-img" src="' + u.image_url + '">'
     : '<div class="urun-em">' + (u.em || "🍽️") + "</div>";
   var kaloriHTML = u.kalori ? '<div class="urun-kal">🔥' + u.kalori + 'kcal</div>' : "";
+  // Kampanya fiyatı
+  var kampFiyat = u.fiyat;
+  var kampHTML = '';
+  if(AKTIF_KAMPANYA && AKTIF_KAMPANYA.aktif){
+    var kat = AKTIF_KAMPANYA.kat || 'hepsi';
+    if(kat === 'hepsi' || u.kat === kat){
+      kampFiyat = Math.round(u.fiyat * (1 - AKTIF_KAMPANYA.oran/100));
+      kampHTML = '<div style="display:flex;align-items:center;gap:5px">'
+        + '<div style="font-size:11px;color:var(--si);text-decoration:line-through">₺'+u.fiyat+'</div>'
+        + '<div class="urun-fiyat" style="color:var(--teh)">₺'+kampFiyat+'</div>'
+        + '<div style="font-size:10px;background:var(--teh);color:#fff;padding:1px 5px;border-radius:5px;font-weight:700">-%'+AKTIF_KAMPANYA.oran+'</div>'
+        + '</div>';
+    }
+  }
   var tukendiHTML = tukendi ? '<div class="urun-tukendi-lbl">✕ Tükendi</div>' : "";
   var ctrlHTML = tukendi ? "" :
     (adet > 0
@@ -716,6 +734,39 @@ async function dogumGunuKontrol(){
   }
 }
 
+
+function comboOnGoster(){
+  var kutu = document.getElementById('combo-on-kutu');
+  if(!kutu) return;
+  var combolar = window._combolar || [];
+  if(!combolar.length){ kutu.style.display='none'; return; }
+  kutu.style.display = 'block';
+  kutu.innerHTML = '<div style="font-size:12px;font-weight:700;color:var(--bas);margin-bottom:8px">🎁 Kombine Menü Fırsatları</div>'
+    + combolar.map(function(c,i){
+      return '<div class="combo-on-k" onclick="comboDetayGoster('+i+')">'
+        +'<div><div style="font-size:13px;font-weight:700;color:var(--s)">'+c.ad+'</div>'
+        +'<div style="font-size:11px;color:var(--si);margin-top:2px">'+c.aciklama+'</div></div>'
+        +'<div style="text-align:right;flex-shrink:0">'
+        +(c.normalFiyat?'<div style="font-size:11px;color:var(--si);text-decoration:line-through">₺'+c.normalFiyat+'</div>':'')
+        +'<div style="font-size:15px;font-weight:800;color:var(--bas)">₺'+c.indirimFiyat+'</div></div>'
+        +'</div>';
+    }).join('');
+}
+
+function comboDetayGoster(idx){
+  var c = (window._combolar||[])[idx];
+  if(!c) return;
+  var urunler = (c.urunler||[]).map(function(id){
+    return MENU.find(function(m){return m.id===id;});
+  }).filter(Boolean);
+  var msg = c.ad + '\n' + c.aciklama + '\n\nİçerik:\n'
+    + urunler.map(function(u){return '• '+(u.em||'')+ ' '+u.ad+' (₺'+u.fiyat+')'}).join('\n')
+    + '\n\nToplam: ₺'+c.indirimFiyat;
+  if(confirm(msg+'\n\nSepete ekle?')){
+    urunler.forEach(function(u){ ekle(u.id); });
+    toast('🎁 '+c.ad+' sepete eklendi!');
+  }
+}
 </script>
 </body>
 </html>
