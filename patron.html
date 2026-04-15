@@ -301,7 +301,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
     </div>
 
-    <div class="tp" id="tp-kampanya" style="display:none;padding:12px"><div class="kart"><div class="kart-h"><div class="kart-ht">🔥 Anlık Kampanya</div></div><div class="kart-body"><div class="ing"><div class="ing-l">Mesaj</div><input class="inp lb-inp" id="kamp-mesaj" placeholder="Tum menu indirimde!" style="flex:1"></div><div class="ing"><div class="ing-l">Kategori</div><select class="inp lb-inp" id="kamp-kat" style="flex:1"><option value="hepsi">Tum Menu</option><option value="Izgara">Izgara</option><option value="Pide">Pide</option><option value="Corbalar">Corbalar</option><option value="Tatlilar">Tatlilar</option><option value="Icecekler">Icecekler</option></select></div><div class="ing"><div class="ing-l">Indirim %</div><input class="inp lb-inp" id="kamp-oran" type="number" min="1" max="99" placeholder="20" style="width:100px"></div><div style="margin-top:8px"><div class="ing-l" style="margin-bottom:6px">Sure</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(10)">10dk</button><button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(20)">20dk</button><button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(30)">30dk</button><button class="btn" style="padding:4px 8px;font-size:11px" onclick="kampSure(60)">1sa</button><input class="inp lb-inp" id="kamp-sure" type="number" placeholder="dk" style="width:60px"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><button class="btn yes" onclick="kampanyaBaslat()">Baslat</button><button class="btn" style="background:var(--teh);color:#fff" onclick="kampanyaDurdur()">Durdur</button></div><div id="kamp-durum" style="margin-top:8px;font-size:12px;color:var(--si);text-align:center"></div></div></div></div>
+    <div class="tp" id="tp-kampanya" style="display:none;padding:12px"><div class="kart"><div class="kart-h"><div class="kart-ht">🔥 Anlık Kampanya</div></div><div class="kart-body"><div class="ing"><div class="ing-l">Mesaj</div><input class="inp lb-inp" id="kamp-mesaj" placeholder="Tum menu indirimde!" style="flex:1"></div><div class="ing" style="margin-top:8px"><div class="ing-l">Kategori</div><select class="inp lb-inp" id="kamp-kat" style="flex:1"><option value="hepsi">Tum Menu</option><option value="Izgara">Izgara</option><option value="Pide">Pide</option><option value="Corbalar">Corbalar</option><option value="Tatlilar">Tatlilar</option><option value="Icecekler">Icecekler</option></select></div><div class="ing" style="margin-top:8px"><div class="ing-l">Indirim %</div><input class="inp lb-inp" id="kamp-oran" type="number" min="1" max="99" placeholder="20" style="width:100px"></div><div style="margin-top:8px"><div class="ing-l" style="margin-bottom:6px">Sure</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" style="padding:5px 10px;font-size:11px" onclick="kampSure(10)">10 dk</button><button class="btn" style="padding:5px 10px;font-size:11px" onclick="kampSure(20)">20 dk</button><button class="btn" style="padding:5px 10px;font-size:11px" onclick="kampSure(30)">30 dk</button><button class="btn" style="padding:5px 10px;font-size:11px" onclick="kampSure(60)">1 saat</button><input class="inp lb-inp" id="kamp-sure" type="number" placeholder="dk" style="width:70px"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px"><button class="btn yes" onclick="kampanyaBaslat()">Baslat</button><button class="btn" style="background:var(--teh);color:#fff" onclick="kampanyaDurdur()">Durdur</button></div><div id="kamp-durum" style="margin-top:10px;font-size:12px;color:var(--si);text-align:center"></div></div></div></div>
 <div class="tp" id="tp-ayarlar">
       <div class="kart" style="margin-bottom:12px">
         <div class="kart-h"><div class="kart-ht">🔐 Patron Girişi</div></div>
@@ -345,8 +345,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- MENÜ MODAL -->
 <div class="modal-bg" id="menu-modal">
-  <div class="modal" style="border-radius:18px;padding:22px;max-height:90vh;overflow-y:auto">
-   
+  <div class="modal" style="border-radi
 
 const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg';
@@ -1311,8 +1310,9 @@ async function kampanyaBaslat(){
   var sure=parseInt(document.getElementById('kamp-sure').value)||0;
   if(!mesaj||!oran||!sure){alert('Tum alanlari doldurun');return;}
   var bitis=new Date(Date.now()+sure*60*1000).toISOString();
-  var k={aktif:true,mesaj:mesaj,kat:kat,oran:oran,bitis:bitis};
-  await SB.patch('ayarlar','key=eq.kampanya',{value:k}).catch(async function(){await SB.post('ayarlar',{key:'kampanya',value:k});});
+  await SB.patch('ayarlar','key=eq.kampanya',{value:{aktif:true,mesaj:mesaj,kat:kat,oran:oran,bitis:bitis}}).catch(async function(){
+    await SB.post('ayarlar',{key:'kampanya',value:{aktif:true,mesaj:mesaj,kat:kat,oran:oran,bitis:bitis}});
+  });
   document.getElementById('kamp-durum').textContent='Kampanya basladi! '+sure+' dk.';
   document.getElementById('kamp-durum').style.color='green';
 }
@@ -1322,7 +1322,8 @@ async function kampanyaDurdur(){
   document.getElementById('kamp-durum').style.color='red';
 }
 async function kampanyaTabYukle(){}
-çerli bir oran girin (1-99)');return;}
+ran').value)||0;
+  if(!oran||oran<=0||oran>=100){alert('Geçerli bir oran girin (1-99)');return;}
   var liste = kat==='hepsi' ? menuListesi : menuListesi.filter(function(u){return u.kat===kat;});
   if(!liste.length){alert('Ürün bulunamadı');return;}
   if(!confirm(liste.length+' ürüne '+oran+'% '+(tip==='indirim'?'indirim':'zam')+' uygulanacak. Emin misiniz?'))return;
