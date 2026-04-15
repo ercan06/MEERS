@@ -976,8 +976,7 @@ function renderMenuYonetim(){
       satir.className='menu-satir';
       satir.innerHTML=
         '<div class="menu-em">'+(u.em||'🍽️')+'</div>'+
-        (u.image_url?'<img src="'+u.image_url+'" style="width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0" >':'<div class="menu-em">'+u.em+'</div>')+
-        '<div class="menu-bilgi"><div class="menu-ad">'+u.ad+'</div>'+
+        (u.image_url?'<img src="'+u.image_url+'" width="44" height="44" style="border-radius:8px">':'<div class="menu-em">'+(u.em||'')+'</div>')+
         '<div class="menu-alt">Maliyet: ₺'+u.maliyet+' · Kar: %'+karYuzde+'</div></div>'+
         '<div class="menu-fiyat">₺'+u.fiyat+'</div>';
       // Toggle butonu
