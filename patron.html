@@ -945,7 +945,7 @@ function renderMenuYonetim(){
       satir.className='menu-satir';
       satir.innerHTML=
         '<div class="menu-em">'+(u.em||'🍽️')+'</div>'+
-        (u.image_url?'<img src="'+u.image_url+'" width="44" height="44" style="border-radius:8px;object-fit:cover">':'<div class="menu-em">'+(u.em||'🍽️')+'</div>')+
+        (u.image_url?'<img src="'+u.image_url+'" style="width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0"none\'">':'<div class="menu-em">'+u.em+'</div>')+
         '<div class="menu-bilgi"><div class="menu-ad">'+u.ad+'</div>'+
         '<div class="menu-alt">Maliyet: ₺'+u.maliyet+' · Kar: %'+karYuzde+'</div></div>'+
         '<div class="menu-fiyat">₺'+u.fiyat+'</div>';
@@ -1295,7 +1295,7 @@ async function topluUygula(){
 }
 
 function kampSure(dk){var el=document.getElementById('kamp-sure');if(el)el.value=dk;}
-async function kampanyaBaslat(){var mesaj=(document.getElementById('kamp-mesaj').value||'').trim();var kat=document.getElementById('kamp-kat').value;var oran=parseInt(document.getElementById('kamp-oran').value)||0;var sure=parseInt(document.getElementById('kamp-sure').value)||0;if(!mesaj||!oran||!sure){alert('Doldurun');return;}var bitis=new Date(Date.now()+sure*60*1000).toISOString();var k={aktif:true,mesaj:mesaj,kat:kat,oran:oran,bitis:bitis};await SB.patch('ayarlar','key=eq.kampanya',{value:k}).catch(async function(){await SB.post('ayarlar',{key:'kampanya',value:k});});document.getElementById('kamp-durum').textContent='Basladi! '+sure+' dk.';document.getElementById('kamp-durum').style.color='green';}
+async function kampanyaBaslat(){var m=(document.getElementById('kamp-mesaj').value||'').trim();var k=document.getElementById('kamp-kat').value;var o=parseInt(document.getElementById('kamp-oran').value)||0;var s=parseInt(document.getElementById('kamp-sure').value)||0;if(!m||!o||!s){alert('Doldurun');return;}var b=new Date(Date.now()+s*60*1000).toISOString();var kamp={aktif:true,mesaj:m,kat:k,oran:o,bitis:b};await SB.patch('ayarlar','key=eq.kampanya',{value:kamp}).catch(async function(){await SB.post('ayarlar',{key:'kampanya',value:kamp});});document.getElementById('kamp-durum').textContent='Basladi! '+s+' dk.';document.getElementById('kamp-durum').style.color='green';}
 async function kampanyaDurdur(){await SB.patch('ayarlar','key=eq.kampanya',{value:{aktif:false}}).catch(function(){});document.getElementById('kamp-durum').textContent='Durduruldu.';document.getElementById('kamp-durum').style.color='red';}
 async function kampanyaTabYukle(){}
 async function analitikYukle(){
@@ -1303,22 +1303,25 @@ async function analitikYukle(){
   var sp=await SB.get('siparisler','order=created_at.desc&limit=500');
   if(!od||!sp)return;
   var uc={};
-  sp.forEach(function(s){var u=s.urunler;if(!u)return;if(typeof u==='string'){try{u=JSON.parse(u)}catch(e){return;}}if(!Array.isArray(u))return;u.forEach(function(x){var a=x.ad||x;if(!uc[a])uc[a]={adet:0};uc[a].adet+=(x.adet||1);});});
-  var ec=Object.entries(uc).sort(function(a,b){return b[1].adet-a[1].adet;}).slice(0,10);
-  var mx=ec[0]?ec[0][1].adet:1;
+  sp.forEach(function(s){var u=s.urunler;if(!u)return;if(typeof u==='string'){try{u=JSON.parse(u)}catch(e){return;}}if(!Array.isArray(u))return;u.forEach(function(x){var a=x.ad||x;if(!uc[a])uc[a]=0;uc[a]+=(x.adet||1);});});
+  var ec=Object.entries(uc).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+  var mx=ec[0]?ec[0][1]:1;
   var rk=['#D4A017','#E8952A','#2D6A2D','#3498db','#8e44ad','#e74c3c','#1abc9c','#f39c12','#2980b9','#27ae60'];
-  document.getElementById('en-cok-satan').innerHTML=ec.map(function(e,i){var y=Math.round(e[1].adet/mx*100);return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:700;color:var(--s)">'+(i+1)+'. '+e[0]+'</span><span style="font-size:11px;color:var(--si)">'+e[1].adet+' adet</span></div><div style="background:var(--bd);border-radius:6px;height:10px"><div style="width:'+y+'%;height:100%;background:'+rk[i%10]+';border-radius:6px"></div></div></div>';}).join('')||'<div style="color:var(--si);font-size:12px">Veri yok</div>';
+  var ecEl=document.getElementById('en-cok-satan');
+  if(ecEl)ecEl.innerHTML=ec.map(function(e,i){var y=Math.round(e[1]/mx*100);return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:700;color:var(--s)">'+(i+1)+'. '+e[0]+'</span><span style="font-size:11px;color:var(--si)">'+e[1]+' adet</span></div><div style="background:var(--bd);border-radius:6px;height:10px"><div style="width:'+y+'%;height:100%;background:'+rk[i%10]+';border-radius:6px"></div></div></div>';}).join('')||'<div style="color:var(--si);font-size:12px">Veri yok</div>';
   var sh=new Array(24).fill(0);
   od.forEach(function(o){if(!o.created_at)return;sh[new Date(o.created_at).getHours()]+=parseFloat(o.toplam||0);});
   var mc=Math.max.apply(null,sh)||1;
   var html='<div style="display:flex;align-items:flex-end;gap:2px;height:100px">';
   for(var i=0;i<24;i++){var y=Math.round(sh[i]/mc*80);html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end"><div style="width:100%;background:'+(i>=10&&i<=22?'var(--al)':'var(--bd)')+';border-radius:2px 2px 0 0;height:'+y+'px"></div><div style="font-size:7px;color:var(--si);margin-top:2px">'+(i%2===0?i:'')+'</div></div>';}
   html+='</div><div style="font-size:11px;color:var(--si);text-align:center;margin-top:6px">En yogun: '+sh.indexOf(Math.max.apply(null,sh))+':00</div>';
-  document.getElementById('saatlik-yogunluk').innerHTML=html;
+  var syEl=document.getElementById('saatlik-yogunluk');
+  if(syEl)syEl.innerHTML=html;
   var gd={};
   od.forEach(function(o){var g=o.garson_ad||'-';if(!gd[g])gd[g]={n:0,c:0};gd[g].n++;gd[g].c+=parseFloat(o.toplam||0);});
   var gl=Object.entries(gd).sort(function(a,b){return b[1].c-a[1].c;});
-  document.getElementById('garson-performans').innerHTML=gl.map(function(g,i){var r=['🥇','🥈','🥉'][i]||'⭐';return '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--ik);border-radius:10px;margin-bottom:6px"><div style="font-size:20px">'+r+'</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--s)">'+g[0]+'</div><div style="font-size:11px;color:var(--si)">'+g[1].n+' odeme</div></div><div style="font-size:15px;font-weight:800;color:var(--al)">'+Math.round(g[1].c).toLocaleString('tr-TR')+' TL</div></div>';}).join('')||'<div style="color:var(--si);font-size:12px">Veri yok</div>';
+  var gpEl=document.getElementById('garson-performans');
+  if(gpEl)gpEl.innerHTML=gl.map(function(g,i){var r=['🥇','🥈','🥉'][i]||'⭐';return '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--ik);border-radius:10px;margin-bottom:6px"><div style="font-size:20px">'+r+'</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--s)">'+g[0]+'</div><div style="font-size:11px;color:var(--si)">'+g[1].n+' odeme</div></div><div style="font-size:15px;font-weight:800;color:var(--al)">'+Math.round(g[1].c).toLocaleString('tr-TR')+' TL</div></div>';}).join('')||'<div style="color:var(--si);font-size:12px">Veri yok</div>';
 }
 _bilgi',{value:{ad:ad,masa:masa}});
     if(!r || !r.length){
