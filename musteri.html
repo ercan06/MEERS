@@ -120,6 +120,7 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);max-width:480px;m
   <div class="kat-bar" id="kat-bar"></div>
   <div class="combo-kutu" id="combo-kutu"></div>
   <div class="menu-ic" id="menu-ic"></div>
+  <div id="sepet-hatirlatici" style="display:none;position:fixed;bottom:72px;right:16px;padding:8px 12px;border-radius:12px;color:#fff;font-size:12px;font-weight:700;z-index:39;max-width:220px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.2)"></div>
   <button class="fab" id="fab" onclick="sepetAc()">🛒 <span id="fab-say">0</span> ürün · ₺<span id="fab-top">0</span></button>
 </div>
 <div id="sepet">
@@ -146,7 +147,6 @@ body{font-family:-apple-system,sans-serif;background:var(--kr);max-width:480px;m
 </div>
 <div class="toast" id="toast"></div>
 <script>
-
 var SURL="https://vdrjyngywjzuniwvsjtk.supabase.co",SKEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg";
 var SH={"apikey":SKEY,"Authorization":"Bearer "+SKEY,"Content-Type":"application/json"};
 async function sbGet(t,q){try{var r=await fetch(SURL+"/rest/v1/"+t+"?"+(q||""),{headers:SH});return r.ok?r.json():[]}catch(e){return[]}}
@@ -194,8 +194,7 @@ async function kampanyaYukle(){
     var timer=setInterval(function(){
       var kalan=Math.max(0,Math.floor((bitis-new Date())/1000));
       if(kalan<=0){clearInterval(timer);bar.style.display="none";KAMPANYA=null;renderMenu();return;}
-      var dk=Math.floor(kalan/60),sn=kalan%60;
-      document.getElementById("kamp-bar-sayac").textContent=dk+":"+String(sn).padStart(2,"0");
+      document.getElementById("kamp-bar-sayac").textContent=Math.floor(kalan/60)+":"+String(kalan%60).padStart(2,"0");
     },1000);
   }
 }
@@ -244,16 +243,9 @@ function urunHTML(u){
   var adet=SEPET[u.id]?SEPET[u.id].adet:0;
   var gorsel=u.image_url?'<img class="urun-img" src="'+u.image_url+'">':"<div class='urun-em'>"+(u.em||"🍽️")+"</div>";
   var kampF=kampFiyatHesapla(u);
-  var fiyatHTML;
-  if(kampF!==null){
-    fiyatHTML='<div style="display:flex;align-items:center;gap:5px">'
-      +'<div style="font-size:11px;color:#9A7B65;text-decoration:line-through">₺'+u.fiyat+'</div>'
-      +'<div class="urun-fiyat" style="color:#C0392B">₺'+kampF+'</div>'
-      +'<div style="font-size:10px;background:#C0392B;color:#fff;padding:1px 6px;border-radius:5px;font-weight:700">-%'+KAMPANYA.oran+'</div>'
-      +'</div>';
-  }else{
-    fiyatHTML='<div class="urun-fiyat">₺'+u.fiyat+'</div>';
-  }
+  var fiyatHTML=kampF!==null
+    ?'<div style="display:flex;align-items:center;gap:5px"><div style="font-size:11px;color:#9A7B65;text-decoration:line-through">₺'+u.fiyat+'</div><div class="urun-fiyat" style="color:#C0392B">₺'+kampF+'</div><div style="font-size:10px;background:#C0392B;color:#fff;padding:1px 6px;border-radius:5px;font-weight:700">-%'+KAMPANYA.oran+'</div></div>'
+    :'<div class="urun-fiyat">₺'+u.fiyat+'</div>';
   var kaloriHTML=u.kalori?'<div class="urun-kal">🔥'+u.kalori+'kcal</div>':"";
   var tukendiHTML=tukendi?'<div class="urun-tukendi-lbl">✕ Tükendi</div>':"";
   var ctrlHTML=tukendi?"":
@@ -261,13 +253,10 @@ function urunHTML(u){
     +'<button class="ctrl-btn plus" data-id="'+u.id+'" onclick="ekle(this.dataset.id)">+</button>';
   return '<div class="urun'+(tukendi?" tukendi":"")+'">'
     +gorsel
-    +'<div class="urun-bilgi">'
-    +'<div class="urun-ad">'+u.ad+"</div>"
+    +'<div class="urun-bilgi"><div class="urun-ad">'+u.ad+"</div>"
     +'<div class="urun-alt">'+fiyatHTML+kaloriHTML+"</div>"
-    +tukendiHTML
-    +"</div>"
-    +'<div class="urun-ctrl">'+ctrlHTML+"</div>"
-    +"</div>";
+    +tukendiHTML+"</div>"
+    +'<div class="urun-ctrl">'+ctrlHTML+"</div></div>";
 }
 
 function renderMenu(){
@@ -278,10 +267,8 @@ function renderMenu(){
   items.forEach(function(u){if(katlar.indexOf(u.kat)<0){katlar.push(u.kat);katMap[u.kat]=[];}katMap[u.kat].push(u);});
   var emler={"Izgara":"🥩","Pide":"🫓","Corbalar":"🍲","Tatlilar":"🍮","Icecekler":"🥤"};
   document.getElementById("menu-ic").innerHTML=katlar.map(function(k){
-    return '<div class="ak-blok">'
-      +'<div class="ak-hdr" onclick="akToggle(this)">'+(emler[k]||"🍽️")+" "+k+' <span class="ak-ok">▼</span></div>'
-      +'<div class="ak-ic ak">'+katMap[k].map(urunHTML).join("")+"</div>"
-      +"</div>";
+    return '<div class="ak-blok"><div class="ak-hdr" onclick="akToggle(this)">'+(emler[k]||"🍽️")+" "+k+' <span class="ak-ok">▼</span></div>'
+      +'<div class="ak-ic ak">'+katMap[k].map(urunHTML).join("")+"</div></div>";
   }).join("");
 }
 
@@ -293,16 +280,13 @@ function renderCombolar(){
   el.innerHTML='<div style="font-size:12px;font-weight:700;color:#2D6A2D;margin-bottom:8px">🎁 Kombine Menü Fırsatları</div>'
     +COMBOLAR.map(function(c,i){
       return '<div class="combo-k" onclick="comboSepete('+i+')">'
-        +'<div>'
-        +'<div style="font-size:13px;font-weight:700;color:#1A1A1A">'+c.ad+'</div>'
-        +'<div style="font-size:11px;color:#9A7B65;margin-top:2px">'+c.aciklama+'</div>'
-        +'</div>'
+        +'<div><div style="font-size:13px;font-weight:700;color:#1A1A1A">'+c.ad+'</div>'
+        +'<div style="font-size:11px;color:#9A7B65;margin-top:2px">'+c.aciklama+'</div></div>'
         +'<div style="text-align:right;flex-shrink:0">'
         +(c.normalFiyat?'<div style="font-size:11px;color:#9A7B65;text-decoration:line-through">₺'+c.normalFiyat+'</div>':"")
         +'<div style="font-size:15px;font-weight:800;color:#2D6A2D">₺'+c.indirimFiyat+'</div>'
         +'<div style="font-size:10px;color:#fff;background:#2D6A2D;padding:2px 6px;border-radius:5px;margin-top:2px">Sepete Ekle +</div>'
-        +"</div>"
-        +"</div>";
+        +"</div></div>";
     }).join("");
 }
 
@@ -312,8 +296,7 @@ function comboSepete(idx){
   var urunler=(c.urunler||[]).map(function(id){return MENU.find(function(m){return m.id===id;});}).filter(Boolean);
   if(!urunler.length){toast("Combo urunleri menude yok");return;}
   urunler.forEach(function(u){ekle(u.id);});
-  renderMenu();
-  guncelFab();
+  renderMenu();guncelFab();
   toast("🎁 "+c.ad+" sepete eklendi!");
 }
 
@@ -326,16 +309,14 @@ function ekle(id){
   var fiyat=kampF!==null?kampF:u.fiyat;
   if(!SEPET[id])SEPET[id]={id:u.id,ad:u.ad,em:u.em||"🍽️",fiyat:fiyat,kalori:u.kalori||0,adet:0};
   SEPET[id].adet++;
-  renderMenu();
-  guncelFab();
+  renderMenu();guncelFab();
 }
 
 function azalt(id){
   if(!SEPET[id])return;
   SEPET[id].adet--;
   if(SEPET[id].adet<=0)delete SEPET[id];
-  renderMenu();
-  guncelFab();
+  renderMenu();guncelFab();
 }
 
 function guncelFab(){
@@ -345,6 +326,24 @@ function guncelFab(){
   document.getElementById("fab-say").textContent=say;
   document.getElementById("fab-top").textContent=top;
   document.getElementById("fab").className="fab"+(say>0?" ak":"");
+  sepetHatirlatici(top);
+}
+
+var MINIMUM_BONUS=200;
+function sepetHatirlatici(top){
+  var el=document.getElementById("sepet-hatirlatici");
+  if(!el)return;
+  if(top<=0){el.style.display="none";return;}
+  if(top>=MINIMUM_BONUS){
+    el.style.display="block";
+    el.style.background="linear-gradient(135deg,#2D6A2D,#1E4D1E)";
+    el.textContent="🎉 Tebrikler! Bedava çay kazandın!";
+    return;
+  }
+  var kalan=MINIMUM_BONUS-top;
+  el.style.display="block";
+  el.style.background="linear-gradient(135deg,#E8952A,#C87010)";
+  el.textContent="🛒 "+kalan+"₺ daha ekle → Bedava çay kazan!";
 }
 
 function sepetAc(){renderSepet();document.getElementById("panel").style.display="none";document.getElementById("sepet").style.display="flex";document.getElementById("sepet").style.flexDirection="column";}
