@@ -629,6 +629,10 @@ async function siparisleriDBden(){
 }
 siparisleriDBden();
 setInterval(function(){ siparisleriDBden().catch(function(){}); }, 3000);
+
+function spBaslaBtn(b){ var id=b.getAttribute('data-id'); spBasla(id); }
+function spHazirBtn(b){ var id=b.getAttribute('data-id'); spHazir(id); }
+function spIptalBtn(b){ var id=b.getAttribute('data-id'); spIptal(id); }
 </script>
 </body>
 </html>
