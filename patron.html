@@ -1335,11 +1335,31 @@ async function topluUygula(){
 function kampSure(dk){var el=document.getElementById('kamp-sure');if(el)el.value=dk;}
 async function kampanyaBaslat(){var m=(document.getElementById('kamp-mesaj').value||'').trim();var kt=document.getElementById('kamp-kat').value;var o=parseInt(document.getElementById('kamp-oran').value)||0;var sr=parseInt(document.getElementById('kamp-sure').value)||0;if(!m||!o||!sr){alert('Doldurun');return;}var b=new Date(Date.now()+sr*60*1000).toISOString();var kp={aktif:true,mesaj:m,kat:kt,oran:o,bitis:b};await SB.patch('ayarlar','key=eq.kampanya',{value:kp}).catch(async function(){await SB.post('ayarlar',{key:'kampanya',value:kp});});document.getElementById('kamp-durum').textContent='Basladi! '+sr+' dk.';document.getElementById('kamp-durum').style.color='green';}
 async function kampanyaDurdur(){await SB.patch('ayarlar','key=eq.kampanya',{value:{aktif:false}}).catch(function(){});document.getElementById('kamp-durum').textContent='Durduruldu.';document.getElementById('kamp-durum').style.color='red';}
-async function kampanyaTabYukle(){}
+async function kampanyaTabYukle(){
+  var d=await SB.get('ayarlar','key=eq.kampanya');
+  var el=document.getElementById('kamp-durum');
+  if(!el)return;
+  if(d&&d.length&&d[0].value&&d[0].value.aktif){
+    var k=d[0].value;
+    var bitis=new Date(k.bitis);
+    var kalan=Math.max(0,Math.floor((bitis-new Date())/60000));
+    el.textContent='Aktif kampanya: '+k.mesaj+' (%'+k.oran+' — '+kalan+' dk kaldi)';
+    el.style.color='green';
+    var mesajEl=document.getElementById('kamp-mesaj');
+    if(mesajEl)mesajEl.value=k.mesaj||'';
+    var oranEl=document.getElementById('kamp-oran');
+    if(oranEl)oranEl.value=k.oran||'';
+    var katEl=document.getElementById('kamp-kat');
+    if(katEl)katEl.value=k.kat||'hepsi';
+  } else {
+    el.textContent='Aktif kampanya yok.';
+    el.style.color='var(--si)';
+  }
+}
 async function analitikYukle(){
   var od=await SB.get('odemeler','order=created_at.desc&limit=500');
   var sp=await SB.get('siparisler','order=created_at.desc&limit=500');
-  if(!od||!sp)return;
+  od=od||[];sp=sp||[];
   var uc={};
   sp.forEach(function(x){var u=x.urunler;if(!u)return;if(typeof u==='string'){try{u=JSON.parse(u)}catch(er){return;}}if(!Array.isArray(u))return;u.forEach(function(r){var a=r.ad||r;if(!uc[a])uc[a]=0;uc[a]+=(r.adet||1);});});
   var ec=Object.entries(uc).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
