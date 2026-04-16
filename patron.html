@@ -2,722 +2,1521 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Patron Paneli</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lezzet Kebap — Patron</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--al:#D4A017;--aac:#F0C040;--bas:#2D6A2D;--bac:#E8F5E8;--teh:#C0392B;--tac:#FDECEA;--uya:#E8952A;--s:#1A1A1A;--sm:#2C2C2C;--si:#9A7B65;--kr:#FDF6EE;--bd:#EDD9C0;--yz:#FFF8F2;--ik:#F5E6D3}
-body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
-#giris{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--s),var(--sm));padding:20px}
-.lb{background:var(--yz);border-radius:20px;padding:28px;width:100%;max-width:360px;border:1px solid var(--bd)}
-.lb-logo{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--s),var(--sm));border:2px solid var(--al);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 10px}
-.lb-t{font-size:20px;font-weight:800;color:var(--s);text-align:center;margin-bottom:4px}
-.lb-a{font-size:12px;color:var(--si);text-align:center;margin-bottom:18px}
-.inp{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--bd);font-size:13px;color:var(--s);background:var(--yz);outline:none;margin-bottom:8px}
+:root{
+  --s:#1A1A1A;--sm:#2C2C2C;--al:#D4A017;--aac:#F0C040;
+  --vurgu:#C8420A;--kr:#FDF6EE;--yz:#FFF8F2;--ik:#F5E6D3;--bd:#EDD9C0;
+  --bas:#2D6A2D;--bac:#E8F5E8;--teh:#C0392B;--tac:#FDECEA;
+  --uya:#E8952A;--uac:#FEF0E0;--bil:#185FA5;--bic:#E6F1FB;
+  --mt:#1A1A1A;--si:#9A7B65;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--kr);min-height:100vh;display:flex;flex-direction:column}
+.lw{flex:1;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1A1A1A,#2C2C2C);min-height:100vh}
+.lb{background:var(--yz);border-radius:24px;padding:36px 32px;width:340px;border:1px solid var(--bd);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.lb-logo{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,var(--s),var(--sm));border:2px solid var(--al);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 12px}
+.lb-t{font-size:20px;font-weight:800;color:var(--mt);text-align:center;margin-bottom:3px}
+.lb-a{font-size:12px;color:var(--si);text-align:center;margin-bottom:20px}
+.lb-l{font-size:10px;font-weight:600;color:var(--si);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.inp{padding:10px 12px;border-radius:9px;border:1.5px solid var(--bd);font-size:13px;background:var(--yz);color:var(--mt);outline:none}
 .inp:focus{border-color:var(--al)}
-.lb-btn{width:100%;padding:13px;border-radius:13px;background:linear-gradient(135deg,var(--s),var(--sm));color:var(--al);border:1.5px solid var(--al);font-size:14px;font-weight:700;cursor:pointer}
-.hata{color:var(--teh);font-size:12px;text-align:center;margin-top:8px;display:none}
-#panel{display:none;flex-direction:column;min-height:100vh}
-.topbar{background:linear-gradient(135deg,var(--s),var(--sm));padding:8px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--al);position:sticky;top:0;z-index:50;overflow-x:auto;gap:8px}
-.tb-t{font-size:13px;font-weight:800;color:#fff;white-space:nowrap;flex-shrink:0}
-.tabs{display:flex;gap:4px;overflow-x:auto;flex-wrap:nowrap}
-.tabs::-webkit-scrollbar{display:none}
-.tab-btn{padding:5px 10px;border-radius:8px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);white-space:nowrap;flex-shrink:0}
-.tab-btn.ak{background:var(--al);color:var(--s)}
-.cikis-btn{padding:5px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:11px;cursor:pointer;background:none;white-space:nowrap;flex-shrink:0}
-.tp{display:none;padding:12px}
-.tp.ak{display:block}
-.kart{background:var(--yz);border-radius:14px;border:1px solid var(--bd);margin-bottom:12px;overflow:hidden}
-.kart-h{padding:10px 14px;background:linear-gradient(135deg,var(--s),var(--sm));border-bottom:1px solid rgba(212,160,23,.2)}
-.kart-ht{font-size:13px;font-weight:700;color:var(--al)}
-.kart-body{padding:12px}
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.stat{background:var(--yz);border-radius:12px;padding:10px;text-align:center;border:1px solid var(--bd)}
-.stat-s{font-size:20px;font-weight:800;color:var(--al)}
-.stat-e{font-size:10px;color:var(--si);text-transform:uppercase;margin-top:2px}
-.masa-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.mk{border-radius:10px;padding:8px 4px;text-align:center;border:2px solid}
-.mk.bos{background:var(--yz);border-color:var(--bd);color:var(--si)}
-.mk.dolu{background:var(--uac);border-color:var(--uya);color:var(--uya)}
-.mk.hazir{background:var(--bac);border-color:var(--bas);color:var(--bas)}
-.mk.bekliyor{background:var(--tac);border-color:var(--teh);color:var(--teh)}
-.mk-no{font-size:15px;font-weight:800}
-.mk-g{font-size:9px;margin-top:1px;opacity:.7}
-.ing{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.ing-l{font-size:11px;color:var(--si);min-width:80px;flex-shrink:0}
-.lb-inp{padding:8px 10px;border-radius:9px;border:1.5px solid var(--bd);font-size:12px;color:var(--s);background:var(--yz);outline:none}
-.lb-inp:focus{border-color:var(--al)}
-.btn{padding:8px 14px;border-radius:10px;border:none;font-size:12px;font-weight:700;cursor:pointer;background:var(--ik);color:var(--si)}
+.lb-inp{width:100%;margin-bottom:10px}
+.btn{padding:8px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:none}
+.btn.bir{background:linear-gradient(135deg,var(--s),var(--sm));color:#fff;border:1px solid var(--al)}
 .btn.yes{background:linear-gradient(135deg,var(--bas),#1E4D1E);color:#fff}
-.btn.al{background:linear-gradient(135deg,var(--al),var(--aac));color:var(--s)}
-.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.menu-satir{display:flex;align-items:center;gap:8px;padding:8px;background:var(--yz);border-radius:10px;border:1px solid var(--bd);margin-bottom:6px}
-.menu-bilgi{flex:1;min-width:0}
-.menu-ad{font-size:13px;font-weight:700;color:var(--s)}
-.menu-alt{font-size:10px;color:var(--si);margin-top:2px}
-.menu-fiyat{font-size:13px;font-weight:700;color:var(--al);min-width:50px;text-align:right}
-.tog{padding:3px 8px;border-radius:6px;border:none;font-size:10px;font-weight:700;cursor:pointer}
-.tog.ak{background:var(--bac);color:var(--bas)}
-.tog.pas{background:var(--tac);color:var(--teh)}
-.edit-btn{padding:3px 8px;border-radius:6px;background:var(--ik);color:var(--si);border:none;font-size:10px;cursor:pointer}
-.del-btn{padding:3px 8px;border-radius:6px;background:var(--tac);color:var(--teh);border:none;font-size:10px;cursor:pointer}
-.garson-satir{display:flex;align-items:center;gap:8px;padding:8px;background:var(--yz);border-radius:10px;border:1px solid var(--bd);margin-bottom:6px}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
+.btn.teh{background:var(--tac);color:var(--teh);border:1px solid var(--teh)}
+.btn.uya{background:var(--uac);color:var(--uya);border:1px solid var(--uya)}
+.btn.ik{background:var(--ik);color:var(--si)}
+.lb-btn{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,var(--s),var(--sm));color:#fff;border:1.5px solid var(--al);font-size:14px;font-weight:700;cursor:pointer}
+.panel{display:none;flex-direction:column;min-height:100vh}
+.panel.ak{display:flex}
+.topbar{background:linear-gradient(135deg,var(--s),var(--sm));padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:2px solid var(--al)}
+.tb-t{font-size:15px;font-weight:800;color:#fff}
+.tb-sub{font-size:10px;color:var(--al);margin-top:1px}
+.tb-sag{display:flex;align-items:center;gap:8px}
+.tb-saat{font-size:13px;font-weight:700;color:var(--al);font-variant-numeric:tabular-nums}
+.tb-cikis{padding:4px 10px;border-radius:8px;border:1px solid rgba(212,160,23,.3);color:var(--al);font-size:11px;font-weight:600;cursor:pointer}
+.tabs{background:var(--sm);display:flex;overflow-x:auto;scrollbar-width:none;flex-shrink:0;border-bottom:1px solid rgba(212,160,23,.2)}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;padding:11px 14px;border:none;background:none;color:#666;font-size:11px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid transparent;white-space:nowrap}
+.tab-btn.ak{color:var(--al);border-bottom-color:var(--al)}
+.ndot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teh);margin-left:4px;vertical-align:middle}
+.content{flex:1;overflow-y:auto;padding:14px;max-width:1100px;width:100%;margin:0 auto}
+.tp{display:none}.tp.ak{display:block}
+.kart{background:var(--yz);border-radius:14px;border:1px solid var(--bd);margin-bottom:12px;overflow:hidden}
+.kart-h{padding:11px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.kart-ht{font-size:12px;font-weight:700;color:var(--mt);display:flex;align-items:center;gap:6px}
+.kart-body{padding:12px 14px}
+.og{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+@media(min-width:500px){.og{grid-template-columns:repeat(4,1fr)}}
+.ok{border-radius:12px;padding:12px 14px}
+.ok.al{background:linear-gradient(135deg,var(--s),var(--sm));border:1px solid var(--al)}
+.ok.ye{background:linear-gradient(135deg,var(--bas),#1E4D1E)}
+.ok.tu{background:linear-gradient(135deg,var(--vurgu),#A83208)}
+.ok.ma{background:linear-gradient(135deg,var(--bil),#0D3D6E)}
+.ok.ki{background:linear-gradient(135deg,var(--teh),#8B1A1A)}
+.ok-em{font-size:20px;margin-bottom:5px;display:block}
+.ok-s{font-size:22px;font-weight:800;color:#fff;line-height:1}
+.ok-e{font-size:10px;color:rgba(255,255,255,.6);margin-top:3px}
+.ok-d{font-size:10px;margin-top:2px;font-weight:600}
+.ok-d.art{color:#81C784}.ok-d.az{color:#E57373}
+.g-satir{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.g-et{font-size:11px;color:var(--si);width:40px;text-align:right;flex-shrink:0}
+.g-bar{flex:1;height:20px;background:var(--ik);border-radius:5px;overflow:hidden}
+.g-ic{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:6px;transition:width .6s}
+.g-ic.al{background:linear-gradient(90deg,var(--al),var(--aac))}
+.g-ic.ye{background:linear-gradient(90deg,var(--bas),#4CAF50)}
+.g-ic.tu{background:linear-gradient(90deg,var(--vurgu),#FF7043)}
+.g-lbl{font-size:10px;font-weight:700;color:var(--s);white-space:nowrap}
+.g-val{font-size:11px;font-weight:700;color:var(--mt);width:70px;text-align:right;flex-shrink:0}
+.tablo{width:100%;border-collapse:collapse}
+.tablo th{font-size:10px;font-weight:700;color:var(--si);text-transform:uppercase;letter-spacing:.04em;padding:7px 10px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap}
+.tablo td{font-size:12px;color:var(--mt);padding:9px 10px;border-bottom:1px solid var(--bd)}
+.tablo tr:last-child td{border-bottom:none}
+.tablo tr:hover td{background:var(--ik)}
+.badge{padding:2px 7px;border-radius:7px;font-size:10px;font-weight:700}
+.badge.y{background:var(--bac);color:var(--bas)}
+.badge.u{background:var(--uac);color:var(--uya)}
+.badge.t{background:var(--tac);color:var(--teh)}
+.badge.m{background:var(--bic);color:var(--bil)}
+.hb{margin-bottom:10px}
+.hb-ust{display:flex;justify-content:space-between;font-size:12px;color:var(--si);margin-bottom:4px}
+.hb-bar{height:10px;background:var(--bd);border-radius:5px;overflow:hidden}
+.hb-ic{height:100%;background:linear-gradient(90deg,var(--al),var(--aac));border-radius:5px;transition:width .8s}
+.hb-ic.asil{background:linear-gradient(90deg,var(--bas),#4CAF50)}
+.ing{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ing-l{font-size:12px;color:var(--si);flex:1}
+.canli-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bas);margin-right:5px}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.2)}}
+.canli-dot{animation:pulse 2s ease-in-out infinite}
+.masa-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:8px;font-size:11px;font-weight:600;margin:2px}
+.masa-chip.dolu{background:var(--uac);color:var(--uya)}
+.masa-chip.bos{background:var(--ik);color:var(--si)}
+.masa-chip.hazir{background:var(--bac);color:var(--bas)}
+.masa-chip.bekliyor{background:var(--tac);color:var(--teh)}
+.onay-k{border-radius:12px;padding:11px 13px;margin-bottom:8px}
+.onay-k.bekliyor{border:1.5px solid var(--uya);background:var(--uac)}
+.onay-k.onaylandi{border:1px solid var(--bas);background:var(--bac)}
+.onay-k.reddedildi{border:1px solid var(--teh);background:var(--tac)}
+.sav-k{border-radius:12px;padding:11px 13px;margin-bottom:8px}
+.sav-k.bekliyor{border:1.5px solid var(--uya);background:var(--uac)}
+.sav-k.kabul{border:1px solid var(--bas);background:var(--bac)}
+.sav-k.ret{border:1px solid var(--teh);background:var(--tac)}
+/* SHIFT GRID */
+.sg-tablo{width:100%;border-collapse:collapse;min-width:560px}
+.sg-tablo th{padding:7px 4px;text-align:center;font-size:10px;color:var(--si);border-bottom:1px solid var(--bd);white-space:nowrap}
+.sg-tablo th:first-child{text-align:left;padding-left:6px;width:90px}
+.sg-tablo td{padding:4px 2px;border-bottom:1px solid var(--bd);vertical-align:top}
+.sg-tablo td:first-child{padding:6px;vertical-align:middle}
+.sg-cell{display:flex;flex-direction:column;gap:2px}
+.sg-inp{width:100%;padding:3px 5px;border-radius:5px;border:1px solid var(--bd);font-size:10px;background:var(--yz);color:var(--mt);outline:none}
+.sg-inp:focus{border-color:var(--al)}
+.sg-sel{width:100%;padding:2px 4px;border-radius:5px;border:1px solid var(--bd);font-size:10px;background:var(--yz);color:var(--si)}
+.sg-net{font-size:14px;font-weight:800;text-align:center;padding:6px}
+.gg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+@media(max-width:500px){.gg-grid{grid-template-columns:1fr}}
+.gg-k{border-radius:12px;padding:13px;text-align:center}
+.gg-k.gelir{background:linear-gradient(135deg,var(--bas),#1E4D1E)}
+.gg-k.gider{background:linear-gradient(135deg,var(--teh),#8B1A1A)}
+.gg-k.kar{background:linear-gradient(135deg,var(--al),var(--aac))}
+.gg-s{font-size:24px;font-weight:800;color:#fff}
+.gg-k.kar .gg-s{color:var(--s)}
+.gg-e{font-size:10px;color:rgba(255,255,255,.6);margin-top:3px}
+.gg-k.kar .gg-e{color:rgba(0,0,0,.5)}
+.gider-satir{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd)}
+.gider-satir:last-child{border-bottom:none}
+.seg-k{border-radius:12px;padding:11px 13px;border:1px solid var(--bd);background:var(--yz);margin-bottom:7px;display:flex;align-items:center;gap:10px}
+.wp-k{border-radius:12px;padding:11px 13px;border:1px solid var(--bd);background:var(--yz);margin-bottom:7px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;align-items:center;justify-content:center}
 .modal-bg.ak{display:flex}
-.modal{background:var(--yz);border-radius:16px;padding:18px;width:100%;max-width:380px;border:1px solid var(--bd);max-height:90vh;overflow-y:auto}
-.modal-t{font-size:15px;font-weight:800;color:var(--s);margin-bottom:14px}
-.qr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.qr-k{background:var(--yz);border-radius:10px;border:1px solid var(--bd);padding:8px;text-align:center;cursor:pointer}
-.qr-k:active{background:var(--ik)}
-.qr-no{font-size:14px;font-weight:800;color:var(--s)}
-.qr-url{font-size:9px;color:var(--si);margin-top:2px;word-break:break-all}
-.bar-wrap{background:var(--bd);border-radius:6px;height:10px;overflow:hidden;margin-top:4px}
-.bar-ic{height:100%;border-radius:6px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--s);color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;border:1px solid var(--al);display:none;z-index:200;max-width:90vw;text-align:center}
+.modal{background:var(--yz);border-radius:18px;padding:22px;width:min(360px,95vw);border:1px solid var(--bd)}
+
+.menu-satir{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.menu-satir:last-child{border-bottom:none}
+.menu-em{font-size:24px;flex-shrink:0}
+.menu-bilgi{flex:1}
+.menu-ad{font-size:13px;font-weight:700;color:var(--mt)}
+.menu-alt{font-size:11px;color:var(--si);margin-top:2px}
+.menu-fiyat{font-size:15px;font-weight:800;color:var(--al);flex-shrink:0}
+.menu-aktif-tog{width:36px;height:20px;border-radius:10px;border:none;cursor:pointer;transition:all .2s;flex-shrink:0}
+.menu-aktif-tog.ak{background:var(--bas)}
+.menu-aktif-tog.pas{background:var(--bd)}
 </style>
 </head>
 <body>
 
-<div id="giris">
+<div class="lw" id="lw">
   <div class="lb">
-    <div class="lb-logo">👑</div>
+    <div class="lb-logo">👔</div>
     <div class="lb-t">Patron Paneli</div>
-    <div class="lb-a">MEER'S Restoran</div>
-    <input class="inp" id="p-kadi" value="patron" placeholder="Kullanıcı adı" onkeydown="if(event.key==='Enter')girisYap()">
-    <input class="inp" id="p-sifre" type="password" value="1234" placeholder="Şifre" onkeydown="if(event.key==='Enter')girisYap()">
-    <button class="lb-btn" onclick="girisYap()">Giriş Yap</button>
-    <div class="hata" id="giris-hata">Hatalı kullanıcı adı veya şifre!</div>
+    <div class="lb-a">Lezzet Kebap Yönetim Sistemi</div>
+    <div class="lb-l">Kullanıcı Adı</div>
+    <input class="inp lb-inp" id="l-k" value="patron" placeholder="patron">
+    <div class="lb-l">Şifre</div>
+    <input class="inp lb-inp" type="password" id="l-s" value="1234" placeholder="••••" onkeydown="if(event.key==='Enter')girisYap()">
+    <button class="lb-btn" onclick="girisYap()">Panele Gir →</button>
   </div>
 </div>
 
-<div id="panel">
+<div class="panel" id="panel">
   <div class="topbar">
-    <div class="tb-t">👑 Patron</div>
-    <div class="tabs">
-      <button class="tab-btn ak" onclick="tabGec('canli',this)">🔴 Canlı</button>
-      <button class="tab-btn" onclick="tabGec('menu',this)">🍽️ Menü</button>
-      <button class="tab-btn" onclick="tabGec('garsonlar',this)">👨‍🍳 Garson</button>
-      <button class="tab-btn" onclick="tabGec('qr',this)">📱 QR</button>
-      <button class="tab-btn" onclick="tabGec('analitik',this)">📊 Analitik</button>
-      <button class="tab-btn" onclick="tabGec('kampanya',this)">🔥 Kampanya</button>
-      <button class="tab-btn" onclick="tabGec('ayarlar',this)">⚙️ Ayarlar</button>
-    </div>
-    <button class="cikis-btn" onclick="cikis()">Çıkış</button>
-  </div>
-
-  <!-- CANLI -->
-  <div class="tp ak" id="tp-canli">
-    <div class="stat-grid">
-      <div class="stat"><div class="stat-s" id="st-dolu">0</div><div class="stat-e">Dolu Masa</div></div>
-      <div class="stat"><div class="stat-s" id="st-ciro">₺0</div><div class="stat-e">Bugün</div></div>
-      <div class="stat"><div class="stat-s" id="st-bekleyen">0</div><div class="stat-e">Bekleyen</div></div>
-    </div>
-    <div class="kart">
-      <div class="kart-h"><div class="kart-ht">Masa Durumu</div></div>
-      <div class="kart-body"><div class="masa-grid" id="masa-grid"></div></div>
+    <div><div class="tb-t">👔 Lezzet Kebap — Patron</div><div class="tb-sub">Yönetim Paneli</div></div>
+    <div class="tb-sag">
+      <div class="tb-saat" id="tb-saat">00:00</div>
+      <div class="tb-cikis" onclick="cikis()">Çıkış</div>
     </div>
   </div>
+  <div class="tabs">
+    <button class="tab-btn ak" onclick="tabGec('canli',this)">🔴 Canlı</button>
+    <button class="tab-btn" onclick="window.open('masa-plan.html','_blank')">🗺️ Masa Planı</button>
+    <button class="tab-btn" onclick="window.open('gecmis.html','_blank')">📋 Geçmiş</button>
+    <button class="tab-btn" onclick="window.open('paket.html','_blank')">🛵 Paket</button>
+    <button class="tab-btn" onclick="tabGec('analitik',this)">📊 Analitik</button>
+    <button class="tab-btn" onclick="tabGec('kampanya',this)">🔥 Kampanya</button>
+    <button class="tab-btn" onclick="tabGec('ciro',this)">📊 Ciro</button>
+    <button class="tab-btn" onclick="tabGec('karsilastirma',this)">📈 Karşılaştırma</button>
+    <button class="tab-btn" onclick="tabGec('gelir-gider',this)">💰 Gelir/Gider</button>
+    <button class="tab-btn" onclick="tabGec('garsonlar',this)">👨‍💼 Garsonlar</button>
+    <button class="tab-btn" onclick="tabGec('menu-kar',this)">🍽️ Menü Kar</button>
+    <button class="tab-btn" onclick="tabGec('musteriler',this)">👥 Müşteriler</button>
+    <button class="tab-btn" onclick="tabGec('stok-onay',this)">📦 Stok<span class="ndot" id="stok-dot" style="display:none"></span></button>
+    <button class="tab-btn" onclick="tabGec('shift',this)">📅 Shift<span class="ndot" id="sav-dot" style="display:none"></span></button>
+    <button class="tab-btn" onclick="tabGec('ayarlar',this)">⚙️ Ayarlar</button>
+    <button class="tab-btn" onclick="tabGec('menu-yonetim',this)">🍽️ Menü Yönetimi</button>
+    <button class="tab-btn" onclick="tabGec('garson-yonetim',this)">👨‍💼 Garsonlar</button>
+    <button class="tab-btn" onclick="tabGec('qr-kodlar',this)">📱 QR Kodlar</button>
+  </div>
+  <div class="content">
 
-  <!-- MENÜ -->
-  <div class="tp" id="tp-menu">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div style="font-size:13px;font-weight:700;color:var(--s)">Menü Ürünleri</div>
-      <div style="display:flex;gap:6px">
-        <button class="btn al" style="font-size:11px;padding:5px 10px" onclick="menuModalAc()">+ Yeni</button>
-        <button class="btn" style="font-size:11px;padding:5px 10px;background:rgba(212,160,23,.15);color:var(--al);border:1px solid rgba(212,160,23,.3)" onclick="topluModalAc()">📊 Toplu</button>
+    <div class="tp ak" id="tp-canli">
+      <div class="og" id="canli-ozet"></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht"><span class="canli-dot"></span>Masa Durumu</div><div style="font-size:11px;color:var(--si)" id="canli-zaman"></div></div><div class="kart-body"><div id="masa-durumu"></div></div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">🍳 Mutfak Yükü</div></div><div class="kart-body" id="mutfak-durumu"></div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">⚠️ Uyarılar</div></div><div class="kart-body" id="uyarilar"></div></div>
+    </div>
+
+    <div class="tp" id="tp-ciro">
+      <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap" id="donem-btns">
+        <button class="btn bir" onclick="donemSec('bugun',this)">Bugün</button>
+        <button class="btn ik" onclick="donemSec('hafta',this)">Bu Hafta</button>
+        <button class="btn ik" onclick="donemSec('ay',this)">Bu Ay</button>
+        <button class="btn ik" onclick="donemSec('yil',this)">Bu Yıl</button>
       </div>
+      <div class="og" id="ciro-ozet"></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">📈 Ciro Dağılımı</div><div style="font-size:11px;color:var(--si)" id="ciro-donem-t">Bugün</div></div><div class="kart-body"><div id="ciro-grafik"></div></div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">🎯 Hedef Takibi</div></div><div class="kart-body" id="hedef-ic"></div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">💳 Ödeme Yöntemleri</div></div><div class="kart-body" id="odeme-ic"></div></div>
     </div>
-    <div id="menu-liste"></div>
-  </div>
 
-  <!-- GARSONLAR -->
-  <div class="tp" id="tp-garsonlar">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div style="font-size:13px;font-weight:700;color:var(--s)">Garsonlar</div>
-      <button class="btn yes" style="font-size:11px;padding:5px 10px" onclick="garsonModalAc()">+ Yeni</button>
+    <div class="tp" id="tp-karsilastirma">
+      <div class="kart"><div class="kart-h"><div class="kart-ht">📊 Haftalık</div></div><div class="kart-body"><div id="kars-hafta"></div></div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">📅 Aylık</div></div><div class="kart-body"><div id="kars-ay"></div></div></div>
     </div>
-    <div id="garson-liste"></div>
-  </div>
 
-  <!-- QR -->
-  <div class="tp" id="tp-qr">
-    <div class="kart">
-      <div class="kart-h"><div class="kart-ht">📱 Masa QR Linkleri</div></div>
-      <div class="kart-body">
-        <div style="font-size:12px;color:var(--si);margin-bottom:10px">Tıkla → linki kopyala</div>
-        <div class="qr-grid" id="qr-grid"></div>
-      </div>
+    <div class="tp" id="tp-gelir-gider">
+      <div class="gg-grid" id="gg-ozet"></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">📉 Giderler</div><button class="btn uya" style="font-size:11px;padding:5px 10px" onclick="giderEkleAc()">+ Ekle</button></div><div class="kart-body" id="gider-liste"></div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">📈 Aylık Net Kar Trendi</div></div><div class="kart-body"><div id="kar-trend"></div></div></div>
     </div>
-  </div>
 
-  <!-- ANALİTİK -->
-  <div class="tp" id="tp-analitik">
-    <div class="kart" style="margin-bottom:12px">
-      <div class="kart-h"><div class="kart-ht">🏆 En Çok Satan Ürünler</div></div>
-      <div class="kart-body" id="en-cok-satan"><div style="color:var(--si);font-size:12px">Yükleniyor...</div></div>
+    <div class="tp" id="tp-garsonlar">
+      <div class="kart"><div class="kart-h"><div class="kart-ht">⚙️ Prim Ayarı</div></div><div class="kart-body">
+        <div class="ing"><div class="ing-l">Ciro bazlı prim (%)</div><input class="inp" id="prim-oran" type="number" value="10" min="1" max="30" style="width:70px"><button class="btn bir" style="font-size:11px" onclick="primGuncelle()">Güncelle</button></div>
+        <div class="ing"><div class="ing-l">Yorum başına bonus (₺)</div><input class="inp" id="yorum-bonus" type="number" value="20" min="0" max="100" style="width:70px"><button class="btn bir" style="font-size:11px" onclick="primGuncelle()">Güncelle</button></div>
+        <div style="font-size:11px;color:var(--si);margin-top:4px" id="prim-acik">%10 prim + her yorum 20₺</div>
+      </div></div>
+      <div id="garson-tablo"></div>
     </div>
-    <div class="kart" style="margin-bottom:12px">
-      <div class="kart-h"><div class="kart-ht">🕐 Saatlik Yoğunluk</div></div>
-      <div class="kart-body" id="saatlik-yogunluk"><div style="color:var(--si);font-size:12px">Yükleniyor...</div></div>
-    </div>
-    <div class="kart">
-      <div class="kart-h"><div class="kart-ht">👨‍🍳 Garson Performansı</div></div>
-      <div class="kart-body" id="garson-performans"><div style="color:var(--si);font-size:12px">Yükleniyor...</div></div>
-    </div>
-  </div>
 
-  <!-- KAMPANYA -->
-  <div class="tp" id="tp-kampanya">
-    <div class="kart" style="margin-bottom:12px">
-      <div class="kart-h"><div class="kart-ht">🔥 Anlık Kampanya Başlat</div></div>
-      <div class="kart-body">
-        <div class="ing"><div class="ing-l">Mesaj</div><input class="lb-inp" id="kamp-mesaj" placeholder="Tatlılar indirimde!" style="flex:1"></div>
-        <div class="ing"><div class="ing-l">Kategori</div>
-          <select class="lb-inp" id="kamp-kat" style="flex:1">
-            <option value="hepsi">Tüm Menü</option>
-            <option value="Izgara">Izgara</option>
-            <option value="Pide">Pide</option>
-            <option value="Corbalar">Çorbalar</option>
-            <option value="Tatlilar">Tatlılar</option>
-            <option value="Icecekler">İçecekler</option>
-          </select>
+    <div class="tp" id="tp-menu-kar">
+      <div class="kart"><div class="kart-h"><div class="kart-ht">💡 Karlılık Analizi</div></div><div class="kart-body"><div id="menu-kar-ic"></div></div></div>
+    </div>
+
+    <div class="tp" id="tp-musteriler">
+      <div class="kart"><div class="kart-h"><div class="kart-ht">👥 Segmentasyon</div></div><div class="kart-body"><div id="segment-ic"></div></div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">💬 WhatsApp Kampanya</div></div><div class="kart-body" id="wp-ic"></div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">🏆 En Sadık Müşteriler</div></div><div class="kart-body"><div id="musteri-liste"></div></div></div>
+    </div>
+
+    <div class="tp" id="tp-stok-onay">
+      <div class="kart"><div class="kart-h"><div class="kart-ht">📦 Bekleyen Talepler</div></div><div class="kart-body" id="stok-bekleyen"></div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">✅ Sonuçlanan</div></div><div class="kart-body" id="stok-sonuclandi"></div></div>
+    </div>
+
+    <div class="tp" id="tp-shift">
+      <div class="kart"><div class="kart-h"><div class="kart-ht">📅 Haftalık Shift Planı</div><button class="btn yes" style="font-size:11px;padding:5px 10px" onclick="shiftKaydet()">✅ Kaydet</button></div>
+        <div class="kart-body">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px" id="shift-ozet"></div>
+          <div style="overflow-x:auto"><table class="sg-tablo" id="shift-grid-tablo"></table></div>
+          <div style="font-size:11px;color:var(--si);margin-top:8px;text-align:center">Giriş/Çıkış saati girin. Toplam sütunu anlık hesaplar. Yeşil = dolu shift.</div>
         </div>
-        <div class="ing"><div class="ing-l">İndirim %</div><input class="lb-inp" id="kamp-oran" type="number" min="1" max="99" placeholder="20" style="width:100px"></div>
-        <div class="ing"><div class="ing-l">Süre</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-            <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kSure(10)">10dk</button>
-            <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kSure(20)">20dk</button>
-            <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kSure(30)">30dk</button>
-            <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kSure(60)">1sa</button>
-            <input class="lb-inp" id="kamp-sure" type="number" placeholder="dk" style="width:60px">
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-          <button class="btn yes" onclick="kampBaslat()">🚀 Başlat</button>
-          <button class="btn" style="background:var(--teh);color:#fff" onclick="kampDurdur()">⏹ Durdur</button>
-        </div>
-        <div id="kamp-durum" style="margin-top:8px;font-size:12px;color:var(--si);text-align:center;padding:6px;background:var(--ik);border-radius:8px;display:none"></div>
       </div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">📝 Geç Giriş Savunmaları</div><span class="ndot" id="sav-dot2" style="display:none"></span></div><div class="kart-body" id="savunma-liste"></div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">⚙️ Shift Kuralları</div></div><div class="kart-body">
+        <div class="ing"><div class="ing-l">Haftalık brüt saat hedefi</div><input class="inp" id="sh-hafta" type="number" value="54" style="width:70px"> saat</div>
+        <div class="ing"><div class="ing-l">Mola süresi</div><input class="inp" id="sh-mola" type="number" value="4" style="width:70px"> saat</div>
+        <div class="ing"><div class="ing-l">Hedef net saat</div><input class="inp" id="sh-net" type="number" value="51" style="width:70px"> saat</div>
+        <button class="btn bir" style="margin-top:6px" onclick="kuralKaydet()">Kuralları Kaydet</button>
+      </div></div>
     </div>
-    <div class="kart">
-      <div class="kart-h"><div class="kart-ht">🎁 Kombine Menü</div></div>
-      <div class="kart-body">
-        <div class="ing"><div class="ing-l">Combo Adı</div><input class="lb-inp" id="combo-ad" placeholder="Kebap Menüsü" style="flex:1"></div>
-        <div class="ing"><div class="ing-l">Açıklama</div><input class="lb-inp" id="combo-acik" placeholder="Adana + Çorba + İçecek" style="flex:1"></div>
-        <div class="ing"><div class="ing-l">Fiyat</div>
-          <div style="display:flex;gap:6px;align-items:center">
-            <input class="lb-inp" id="combo-normal" type="number" placeholder="Normal ₺" style="width:90px">
-            <span style="color:var(--si);font-size:12px">→</span>
-            <input class="lb-inp" id="combo-indirim" type="number" placeholder="İndirimli ₺" style="width:90px">
-          </div>
-        </div>
-        <div style="margin-top:8px">
-          <div style="font-size:11px;color:var(--si);margin-bottom:6px">Combo ürünleri seç:</div>
-          <div id="combo-urun-list" style="max-height:160px;overflow-y:auto;border:1px solid var(--bd);border-radius:10px;padding:6px"></div>
-        </div>
-        <button class="btn yes" style="margin-top:8px;width:100%" onclick="comboKaydet()">💾 Kaydet</button>
-        <div id="mevcut-combolar" style="margin-top:10px"></div>
-      </div>
-    </div>
-  </div>
 
-  <!-- AYARLAR -->
-  <div class="tp" id="tp-ayarlar">
-    <div class="kart" style="margin-bottom:12px">
-      <div class="kart-h"><div class="kart-ht">🔐 Patron Girişi</div></div>
-      <div class="kart-body">
-        <div class="ing"><div class="ing-l">Kullanıcı</div><input class="lb-inp" id="ay-kadi" placeholder="patron" style="flex:1"></div>
-        <div class="ing"><div class="ing-l">Şifre</div><input class="lb-inp" id="ay-sifre" type="password" placeholder="Yeni şifre" style="flex:1"></div>
-        <button class="btn yes" onclick="patronSifreKaydet()">Kaydet</button>
+
+
+    <!-- GARSON YÖNETİMİ -->
+    <div class="tp" id="tp-garson-yonetim">
+      <div class="kart">
+        <div class="kart-h">
+          <div class="kart-ht">👨‍💼 Garson Listesi</div>
+          <button class="btn yes" style="font-size:11px;padding:5px 10px" onclick="garsonEkleModal()">+ Yeni Garson</button>
+        </div>
+        <div class="kart-body" id="garson-yonetim-liste"></div>
       </div>
     </div>
-    <div class="kart">
-      <div class="kart-h"><div class="kart-ht">🏪 Restoran Bilgileri</div></div>
-      <div class="kart-body">
-        <div class="ing"><div class="ing-l">Restoran Adı</div><input class="lb-inp" id="r-ad" placeholder="MEER'S" style="flex:1"></div>
-        <div class="ing"><div class="ing-l">Masa Sayısı</div><input class="lb-inp" id="r-masa" type="number" value="20" style="width:80px"></div>
-        <button class="btn yes" onclick="restoranKaydet()">Kaydet</button>
+
+
+    <!-- QR KODLAR -->
+    <div class="tp" id="tp-qr-kodlar">
+      <div class="kart">
+        <div class="kart-h">
+          <div class="kart-ht">📱 Masa QR Kodları</div>
+          <div style="font-size:11px;color:var(--si)">Tıkla → Yazdır</div>
+        </div>
+        <div class="kart-body">
+          <div style="margin-bottom:12px;font-size:12px;color:var(--si)">Her QR kodu tıklayarak yeni sekmede aç, Ctrl+P ile yazdır ve masaya koy.</div>
+          <div id="qr-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+        </div>
       </div>
+    </div>
+
+    <!-- MENÜ YÖNETİMİ -->
+    <div class="tp" id="tp-menu-yonetim">
+      <div class="kart">
+        <div class="kart-h">
+          <div class="kart-ht">🍽️ Menü Ürünleri</div>
+          <button class="btn yes" style="font-size:11px;padding:5px 10px" onclick="menuEkleModal()">+ Yeni Ürün</button>
+        <button class="btn" style="font-size:11px;padding:5px 10px;background:rgba(212,160,23,.15);color:var(--al);border:1px solid rgba(212,160,23,.3)" onclick="topluIslemAc()">📊 Toplu İndirim/Zam</button>
+        </div>
+        <div class="kart-body" id="menu-yonetim-liste"></div>
+      </div>
+    </div>
+
+<div class="tp" id="tp-analitik" style="display:none;padding:12px">
+  <div class="kart" style="margin-bottom:12px"><div class="kart-h"><div class="kart-ht">🏆 En Çok Satan Ürünler</div></div><div class="kart-body" id="an-enCok"></div></div>
+  <div class="kart" style="margin-bottom:12px"><div class="kart-h"><div class="kart-ht">🕐 Saatlik Yoğunluk</div></div><div class="kart-body" id="an-saatlik"></div></div>
+  <div class="kart"><div class="kart-h"><div class="kart-ht">👨‍🍳 Garson Performansı</div></div><div class="kart-body" id="an-garson"></div></div>
+</div>
+<div class="tp" id="tp-kampanya" style="display:none;padding:12px">
+  <div class="kart" style="margin-bottom:12px"><div class="kart-h"><div class="kart-ht">🔥 Anlık Kampanya</div></div><div class="kart-body">
+    <div class="ing"><div class="ing-l">Mesaj</div><input class="inp lb-inp" id="kamp-mesaj" placeholder="Tatlilar indirimde!" style="flex:1"></div>
+    <div class="ing"><div class="ing-l">Kategori</div><select class="inp lb-inp" id="kamp-kat" style="flex:1"><option value="hepsi">Tum Menu</option><option value="Izgara">Izgara</option><option value="Pide">Pide</option><option value="Corbalar">Corbalar</option><option value="Tatlilar">Tatlilar</option><option value="Icecekler">Icecekler</option></select></div>
+    <div class="ing"><div class="ing-l">Indirim %</div><input class="inp lb-inp" id="kamp-oran" type="number" min="1" max="99" placeholder="20" style="width:100px"></div>
+    <div style="margin-top:8px"><div class="ing-l" style="margin-bottom:6px">Sure</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kSure(10)">10dk</button>
+        <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kSure(20)">20dk</button>
+        <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kSure(30)">30dk</button>
+        <button class="btn" style="padding:4px 8px;font-size:11px" onclick="kSure(60)">1sa</button>
+        <input class="inp lb-inp" id="kamp-sure" type="number" placeholder="dk" style="width:60px">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <button class="btn yes" onclick="kampBaslat()">Baslat</button>
+      <button class="btn" style="background:var(--teh);color:#fff" onclick="kampDurdur()">Durdur</button>
+    </div>
+    <div id="kamp-durum" style="margin-top:8px;font-size:12px;color:var(--si);text-align:center"></div>
+  </div></div>
+  <div class="kart"><div class="kart-h"><div class="kart-ht">🎁 Kombine Menu</div></div><div class="kart-body">
+    <div class="ing"><div class="ing-l">Combo Adi</div><input class="inp lb-inp" id="combo-ad" placeholder="Kebap Menusu" style="flex:1"></div>
+    <div class="ing"><div class="ing-l">Aciklama</div><input class="inp lb-inp" id="combo-acik" placeholder="Adana + Corba" style="flex:1"></div>
+    <div class="ing"><div class="ing-l">Fiyat</div><div style="display:flex;gap:6px"><input class="inp lb-inp" id="combo-normal" type="number" placeholder="Normal" style="width:90px"><input class="inp lb-inp" id="combo-indirim" type="number" placeholder="Indirimli" style="width:90px"></div></div>
+    <div style="margin-top:8px"><div style="font-size:11px;color:var(--si);margin-bottom:6px">Combo urunleri:</div><div id="combo-urun-list" style="max-height:160px;overflow-y:auto;border:1px solid var(--bd);border-radius:10px;padding:6px"></div></div>
+    <button class="btn yes" style="margin-top:8px;width:100%" onclick="comboKaydet()">Kaydet</button>
+    <div id="mevcut-combolar" style="margin-top:10px"></div>
+  </div></div>
+</div>
+
+    <div class="tp" id="tp-ayarlar">
+      <div class="kart" style="margin-bottom:12px">
+        <div class="kart-h"><div class="kart-ht">🔐 Patron Girişi</div></div>
+        <div class="kart-body">
+          <div class="ing"><div class="ing-l">Kullanıcı Adı</div><input class="inp" id="p-kadi" value="patron" style="width:140px"></div>
+          <div class="ing"><div class="ing-l">Şifre</div><input class="inp" type="password" id="p-sifre" placeholder="Yeni şifre" style="width:140px"></div>
+          <button class="btn yes" style="margin-top:6px" onclick="patronSifreDegistir()">Kaydet</button>
+        </div>
+      </div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">🎯 Satış Hedefleri</div></div><div class="kart-body">
+        <div class="ing"><div class="ing-l">Günlük ciro hedefi (₺)</div><input class="inp" id="h-gun" type="number" value="10000" style="width:110px"></div>
+        <div class="ing"><div class="ing-l">Haftalık ciro hedefi (₺)</div><input class="inp" id="h-haf" type="number" value="65000" style="width:110px"></div>
+        <div class="ing"><div class="ing-l">Aylık ciro hedefi (₺)</div><input class="inp" id="h-ay" type="number" value="280000" style="width:110px"></div>
+        <button class="btn yes" style="margin-top:6px" onclick="hedefKaydet()">✅ Kaydet</button>
+      </div></div>
+      <div class="kart"><div class="kart-h"><div class="kart-ht">🏪 Restoran Bilgileri</div></div><div class="kart-body">
+        <div class="ing"><div class="ing-l">Restoran Adı</div><input class="inp" id="r-ad" value="MEER'S" style="flex:1"></div>
+        <div class="ing"><div class="ing-l">Masa Sayısı</div><input class="inp" id="r-masa" type="number" value="20" style="width:70px"></div>
+        <button class="btn bir" style="margin-top:6px" id="restoran-kaydet-btn">Kaydet</button>
+      </div></div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- GARSON MODAL -->
+<div class="modal-bg" id="garson-modal">
+  <div class="modal" style="border-radius:18px;padding:22px;max-height:90vh;overflow-y:auto">
+    <div style="font-size:15px;font-weight:800;color:var(--mt);margin-bottom:14px" id="garson-modal-t">Yeni Garson Ekle</div>
+    <div style="margin-bottom:8px"><div class="lb-l">Ad Soyad</div><input class="inp lb-inp" id="gy-ad" placeholder="Zeynep K." style="margin-bottom:0"></div>
+    <div style="margin-bottom:8px"><div class="lb-l">Kısa Harf (Avatar)</div><input class="inp lb-inp" id="gy-harf" placeholder="Z" maxlength="2" style="margin-bottom:0;width:80px"></div>
+    <div style="margin-bottom:8px"><div class="lb-l">Şifre</div><input class="inp lb-inp" id="gy-sifre" placeholder="1234" style="margin-bottom:0"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+      <button class="btn yes" onclick="garsonKaydet()">✅ Kaydet</button>
+      <button class="btn ik" onclick="document.getElementById('garson-modal').classList.remove('ak')">İptal</button>
     </div>
   </div>
 </div>
 
-<!-- MODALLER -->
-<div class="modal-bg" id="modal-menu">
-  <div class="modal">
-    <div class="modal-t" id="modal-menu-t">Yeni Ürün</div>
-    <div class="ing"><div class="ing-l">Ürün Adı</div><input class="lb-inp" id="mu-ad" placeholder="Adana Kebap" style="flex:1"></div>
-    <div class="ing"><div class="ing-l">Emoji</div><input class="lb-inp" id="mu-em" placeholder="🥩" style="width:60px"></div>
-    <div class="ing"><div class="ing-l">Kategori</div>
-      <select class="lb-inp" id="mu-kat" style="flex:1">
-        <option>Izgara</option><option>Pide</option><option>Corbalar</option><option>Tatlilar</option><option>Icecekler</option>
+<!-- MENÜ MODAL -->
+<div class="modal-bg" id="menu-modal">
+  <div class="modal" style="border-radius:18px;padding:22px;max-height:90vh;overflow-y:auto">
+    <div style="font-size:15px;font-weight:800;color:var(--mt);margin-bottom:14px" id="menu-modal-t">Yeni Ürün Ekle</div>
+    <div style="margin-bottom:8px"><div class="lb-l">Ürün Adı</div><input class="inp lb-inp" id="mu-ad" placeholder="Adana Kebap" style="margin-bottom:0"></div>
+    <div style="margin-bottom:8px"><div class="lb-l">Emoji</div><input class="inp lb-inp" id="mu-em" placeholder="🥩" style="margin-bottom:0;width:80px"></div>
+    <div style="margin-bottom:8px"><div class="lb-l">Kalori (kcal)</div><input class="inp lb-inp" id="mu-kalori" type="number" placeholder="Örn: 450" style="margin-bottom:0;width:120px"></div>
+    <div style="margin-bottom:8px"><div class="lb-l">Resim URL (isteğe bağlı)</div><input class="inp lb-inp" id="mu-resim" placeholder="https://..." style="margin-bottom:0"></div>
+    <div style="margin-bottom:8px"><div class="lb-l">Kategori</div>
+      <select class="inp lb-inp" id="mu-kat" style="margin-bottom:0">
+        <option value="Izgara">🥩 Izgara</option>
+        <option value="Pide">🫓 Pide</option>
+        <option value="Corbalar">🍲 Çorbalar</option>
+        <option value="Tatlilar">🍮 Tatlılar</option>
+        <option value="Icecekler">🥤 İçecekler</option>
       </select>
     </div>
-    <div class="ing"><div class="ing-l">Satış Fiyatı</div><input class="lb-inp" id="mu-fiyat" type="number" placeholder="0" style="width:100px"></div>
-    <div class="ing"><div class="ing-l">Maliyet</div><input class="lb-inp" id="mu-maliyet" type="number" placeholder="0" style="width:100px"></div>
-    <div class="ing"><div class="ing-l">Kalori</div><input class="lb-inp" id="mu-kalori" type="number" placeholder="kcal" style="width:100px"></div>
-    <div class="ing"><div class="ing-l">Resim URL</div><input class="lb-inp" id="mu-resim" placeholder="https://..." style="flex:1"></div>
-    <div class="btn-row">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div><div class="lb-l">Satış Fiyatı (₺)</div><input class="inp" id="mu-fiyat" type="number" placeholder="0" style="width:100%"></div>
+      <div><div class="lb-l">Maliyet (₺)</div><input class="inp" id="mu-maliyet" type="number" placeholder="0" style="width:100%"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
       <button class="btn yes" onclick="menuKaydet()">✅ Kaydet</button>
-      <button class="btn" onclick="document.getElementById('modal-menu').classList.remove('ak')">İptal</button>
+      <button class="btn ik" onclick="document.getElementById('menu-modal').classList.remove('ak')">İptal</button>
     </div>
   </div>
 </div>
 
-<div class="modal-bg" id="modal-garson">
-  <div class="modal">
-    <div class="modal-t" id="modal-garson-t">Garson Ekle</div>
-    <div class="ing"><div class="ing-l">Ad</div><input class="lb-inp" id="gu-ad" placeholder="MELİH" style="flex:1"></div>
-    <div class="ing"><div class="ing-l">Harf</div><input class="lb-inp" id="gu-harf" placeholder="M" style="width:60px"></div>
-    <div class="ing"><div class="ing-l">Şifre</div><input class="lb-inp" id="gu-sifre" placeholder="1234" style="flex:1"></div>
-    <div class="btn-row">
-      <button class="btn yes" onclick="garsonKaydet()">✅ Kaydet</button>
-      <button class="btn" onclick="document.getElementById('modal-garson').classList.remove('ak')">İptal</button>
-    </div>
-  </div>
-</div>
 
+<script>
+
+
+const SUPABASE_URL = 'https://vdrjyngywjzuniwvsjtk.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg';
+
+const SB = {
+  get headers(){
+    return {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+    };
+  },
+  async get(tablo, params=''){
+    const r = await fetch(SUPABASE_URL+'/rest/v1/'+tablo+'?'+params, {headers:this.headers});
+    if(!r.ok) return [];
+    return r.json();
+  },
+  async post(tablo, data){
+    const r = await fetch(SUPABASE_URL+'/rest/v1/'+tablo, {
+      method:'POST', headers:{...this.headers,'Prefer':'return=representation'}, body:JSON.stringify(data)
+    });
+    return r.json();
+  },
+  async patch(tablo, filter, data){
+    const r = await fetch(SUPABASE_URL+'/rest/v1/'+tablo+'?'+filter, {
+      method:'PATCH', headers:{...this.headers,'Prefer':'return=representation'}, body:JSON.stringify(data)
+    });
+    return r.json();
+  },
+  async delete(tablo, filter){
+    await fetch(SUPABASE_URL+'/rest/v1/'+tablo+'?'+filter, {method:'DELETE', headers:this.headers});
+  },
+  poll(tablo, callback, interval=3000){
+    let son = null;
+    return setInterval(async ()=>{
+      try{
+        const veri = await this.get(tablo,'order=updated_at.desc&limit=100');
+        const hash = JSON.stringify(veri);
+        if(hash !== son){ son=hash; callback(veri); }
+      }catch(e){}
+    }, interval);
+  }
+};
+
+
+// ── VERİ ──
+var GUNLER = ['Pazartesi','Sali','Carsamba','Persembe','Cuma','Cumartesi','Pazar'];
+var GUN_K  = ['Pzt','Sal','Car','Per','Cum','Cmt','Paz'];
+
+var hedefler = {gun:10000, haf:65000, ay:280000};
+var primAyar = {oran:10, bonus:20};
+var aktifDonem = 'bugun';
+
+var DONEM = {
+  bugun:{ciro:8240,siparis:47,musteri:38,yorum:3,nakit:6180,kart:2060,
+    grafik:[{s:'09',v:320},{s:'10',v:480},{s:'11',v:720},{s:'12',v:1840},{s:'13',v:1960},{s:'14',v:980},{s:'15',v:420},{s:'16',v:380}]},
+  hafta:{ciro:52400,siparis:312,musteri:198,yorum:18,nakit:38200,kart:14200,
+    grafik:[{s:'Pzt',v:6800},{s:'Sal',v:7200},{s:'Car',v:8100},{s:'Per',v:9400},{s:'Cum',v:11200},{s:'Cmt',v:5300},{s:'Paz',v:4400}]},
+  ay:{ciro:218000,siparis:1340,musteri:720,yorum:67,nakit:152000,kart:66000,
+    grafik:[{s:'H1',v:48000},{s:'H2',v:55000},{s:'H3',v:61000},{s:'H4',v:54000}]},
+  yil:{ciro:2640000,siparis:15800,musteri:4200,yorum:312,nakit:1780000,kart:860000,
+    grafik:[{s:'Oca',v:190000},{s:'Sub',v:175000},{s:'Mar',v:210000},{s:'Nis',v:225000},{s:'May',v:248000},{s:'Haz',v:265000},{s:'Tem',v:280000},{s:'Agu',v:272000},{s:'Eyl',v:255000},{s:'Eki',v:245000},{s:'Kas',v:230000},{s:'Ara',v:245000}]}
+};
+var GARSONLAR = [
+  {harf:'Z',ad:'Zeynep K.',masa:18,ciro:42800,yorum:31},
+  {harf:'M',ad:'Mehmet A.',masa:22,ciro:51200,yorum:28},
+  {harf:'F',ad:'Fatma S.',masa:14,ciro:28400,yorum:18},
+  {harf:'C',ad:'Can Y.',masa:9,ciro:16800,yorum:8},
+];
+var MENU_KAR = [
+  {em:'🥩',ad:'Adana Kebap',fiyat:180,maliyet:65,adet:312},
+  {em:'🍗',ad:'Tavuk Sis',fiyat:160,maliyet:55,adet:142},
+  {em:'🫓',ad:'Kasarli Pide',fiyat:120,maliyet:30,adet:198},
+  {em:'🍲',ad:'Mercimek Corbasi',fiyat:60,maliyet:8,adet:210},
+  {em:'🍮',ad:'Baklava',fiyat:80,maliyet:20,adet:156},
+  {em:'🥛',ad:'Ayran',fiyat:25,maliyet:5,adet:490},
+  {em:'🍵',ad:'Cay',fiyat:15,maliyet:2,adet:580},
+];
+var MUSTERILER = [
+  {tel:'0532 *** **11',ziyaret:24,harcama:8640,favori:'Adana Kebap',seg:'sadik'},
+  {tel:'0541 *** **78',ziyaret:19,harcama:6650,favori:'Tavuk Sis',seg:'sadik'},
+  {tel:'0555 *** **34',ziyaret:3,harcama:1080,favori:'Pide',seg:'yeni'},
+  {tel:'0549 *** **23',ziyaret:0,harcama:2100,favori:'Kofte',seg:'kayip'},
+];
+var WP_K = [
+  {em:'🎂',ad:'Dogum Gunu Kampanyasi',acik:'Bu ay dogum gunu olan musterilere %20 indirim',kisi:8},
+  {em:'💤',ad:'Kayip Musteri',acik:'30+ gundur gelmeyen musterilere ozel teklif',kisi:2},
+  {em:'⭐',ad:'Sadik Musteri Tesekkur',acik:'10+ ziyaret yapan musterilere surpriz',kisi:3},
+];
+var KARS_H = [
+  {g:'Pazartesi',bu:6800,ge:5900},{g:'Sali',bu:7200,ge:6400},{g:'Carsamba',bu:8100,ge:7200},
+  {g:'Persembe',bu:9400,ge:8100},{g:'Cuma',bu:11200,ge:9800},
+];
+var giderler = [
+  {em:'🥩',kat:'Malzeme',ad:'Haftalik et alimi',tutar:8500,tarih:'Bugun'},
+  {em:'👨‍💼',kat:'Personel',ad:'Nisan maaslar',tutar:42000,tarih:'1 Nis'},
+  {em:'🏠',kat:'Kira',ad:'Nisan kirasi',tutar:18000,tarih:'1 Nis'},
+  {em:'💡',kat:'Fatura',ad:'Mart faturalari',tutar:4200,tarih:'Mar'},
+];
+// Shift grid — {garsonHarf: {gun: {bas,bit,mola,aktif}}}
+var SHIFT_GRID = {};
+
+// ── SAAT ──
+setInterval(function(){
+  var n=new Date();
+  var el=document.getElementById('tb-saat');
+  if(el) el.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+  var cl=document.getElementById('canli-zaman');
+  if(cl) cl.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
+},1000);
+
+function ftl(n){
+  if(n>=1000000) return '₺'+(n/1000000).toFixed(1)+'M';
+  if(n>=1000) return '₺'+(n/1000).toFixed(1)+'B';
+  return '₺'+n.toLocaleString('tr-TR');
+}
+function degisim(s,o){
+  var f=Math.round((s-o)/o*100);
+  return '<div class="ok-d '+(f>=0?'art':'az')+'">'+(f>=0?'▲':'▼')+' %'+Math.abs(f)+' onceki</div>';
+}
+function lsOku(){
+  try{ var r=localStorage.getItem('lezzet_kebap_v1'); return r?JSON.parse(r):{}; }catch(e){return {};}
+}
+function lsYaz(data){
+  try{ localStorage.setItem('lezzet_kebap_v1',JSON.stringify(data)); }catch(e){}
+}
+
+// ── GİRİŞ ──
+async function girisYap(){
+  const kullanici=document.getElementById('l-k').value.trim();
+  const sifre=document.getElementById('l-s').value.trim();
+  // Patron kontrolü — ayarlar tablosundan
+  try{
+    const data=await SB.get('ayarlar','key=eq.patron_giris');
+    let dogruKullanici='patron', dogruSifre='1234';
+    if(data&&data.length){
+      dogruKullanici=data[0].value.kullanici||'patron';
+      dogruSifre=data[0].value.sifre||'1234';
+    }
+    if(kullanici!==dogruKullanici||sifre!==dogruSifre){
+      alert("Hatali kullanici adi veya sifre!");
+      document.getElementById('l-s').value='';
+      return;
+    }
+  }catch(ex){
+    // DB'ye erişilemezse varsayılan ile devam et
+    if(kullanici!=='patron'||sifre!=='1234'){
+      alert("Hatali kullanici adi veya sifre!");
+      return;
+    }
+  }
+  document.getElementById('lw').style.display='none';
+  document.getElementById('panel').classList.add('ak');
+  shiftGridYukle();
+  renderHepsi();
+  // Restoran bilgisi yükle
+  setTimeout(function(){
+    SB.get('ayarlar','key=eq.restoran_bilgi').then(function(d){
+      if(d&&d.length){
+        var v=d[0].value;
+        var el=document.getElementById('r-ad');
+        if(el&&v&&v.ad) el.value=v.ad;
+      }
+    });
+  }, 500);
+  // Restoran bilgilerini DB'den yükle
+  SB.get('ayarlar','key=eq.restoran_bilgi').then(function(d){
+    if(d&&d.length&&d[0].value){
+      var v=d[0].value;
+      var rAd=document.getElementById('r-ad');
+      var rMasa=document.getElementById('r-masa');
+      if(rAd) rAd.value=v.ad||'';
+      if(rMasa) rMasa.value=v.masa||20;
+    }
+  }).catch(function(){});
+}
+function cikis(){
+  document.getElementById('lw').style.display='flex';
+  document.getElementById('panel').classList.remove('ak');
+}
+
+// ── TAB ──
+function tabGec(tab,el){
+  document.querySelectorAll('.tp').forEach(function(t){t.classList.remove('ak');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('ak');});
+  document.getElementById('tp-'+tab).classList.add('ak');
+  el.classList.add('ak');
+}
+
+// ── DÖNEM ──
+function donemSec(d,el){
+  aktifDonem=d;
+  document.querySelectorAll('#donem-btns .btn').forEach(function(b){b.className='btn ik';});
+  el.className='btn bir';
+  renderCiro();
+}
+
+// ── CANLI ──
+function renderCanli(){
+  document.getElementById('canli-ozet').innerHTML=
+    '<div class="ok al"><span class="ok-em">🪑</span><div class="ok-s">8/20</div><div class="ok-e">Dolu Masa</div></div>'+
+    '<div class="ok tu"><span class="ok-em">📋</span><div class="ok-s">7</div><div class="ok-e">Aktif Siparis</div></div>'+
+    '<div class="ok ye"><span class="ok-em">💰</span><div class="ok-s">'+ftl(DONEM.bugun.ciro)+'</div><div class="ok-e">Bugun Ciro</div></div>'+
+    '<div class="ok ki"><span class="ok-em">⚠️</span><div class="ok-s">2</div><div class="ok-e">Hesap Bekleyen</div></div>';
+  document.getElementById('masa-durumu').innerHTML='<div style="display:flex;flex-wrap:wrap;gap:4px">'+
+    [1,2,3,4,5,6,7,8,9,10,11,12].map(function(n){
+      var d=['bos','dolu','dolu','hazir','bekliyor','dolu','bos','dolu','bos','hazir','dolu','bos'][n-1];
+      return '<div class="masa-chip '+d+'">'+n+'</div>';
+    }).join('')+'</div>';
+  document.getElementById('mutfak-durumu').innerHTML=
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'+
+    '<div style="background:var(--tac);border-radius:10px;padding:10px;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--teh)">3</div><div style="font-size:10px;color:var(--si)">Yeni</div></div>'+
+    '<div style="background:var(--uac);border-radius:10px;padding:10px;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--uya)">4</div><div style="font-size:10px;color:var(--si)">Hazirlaniyor</div></div>'+
+    '<div style="background:var(--bac);border-radius:10px;padding:10px;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--bas)">12</div><div style="font-size:10px;color:var(--si)">Tamamlanan</div></div></div>';
+  document.getElementById('uyarilar').innerHTML=
+    '<div style="background:var(--tac);border-radius:10px;padding:9px;font-size:12px;color:var(--teh);margin-bottom:6px">⚠️ Dana Kiyma stoku kritik (3.2 kg)</div>'+
+    '<div style="background:var(--uac);border-radius:10px;padding:9px;font-size:12px;color:var(--uya);margin-bottom:6px">⏱ Masa 6 hesap bekliyor (67 dk)</div>'+
+    '<div style="background:var(--bic);border-radius:10px;padding:9px;font-size:12px;color:var(--bil)">📦 2 stok talebi bekliyor</div>';
+}
+
+// ── CİRO ──
+function renderCiro(){
+  var d=DONEM[aktifDonem];
+  var adlar={bugun:'Bugun',hafta:'Bu Hafta',ay:'Bu Ay',yil:'Bu Yil'};
+  var oc=Math.round(d.ciro*.88), os=Math.round(d.siparis*.88);
+  document.getElementById('ciro-donem-t').textContent=adlar[aktifDonem];
+  document.getElementById('ciro-ozet').innerHTML=
+    '<div class="ok al"><span class="ok-em">💰</span><div class="ok-s">'+ftl(d.ciro)+'</div><div class="ok-e">Toplam Ciro</div>'+degisim(d.ciro,oc)+'</div>'+
+    '<div class="ok ye"><span class="ok-em">📋</span><div class="ok-s">'+d.siparis+'</div><div class="ok-e">Siparis</div>'+degisim(d.siparis,os)+'</div>'+
+    '<div class="ok tu"><span class="ok-em">👥</span><div class="ok-s">'+d.musteri+'</div><div class="ok-e">Musteri</div><div class="ok-d art">▲ aktif</div></div>'+
+    '<div class="ok ma"><span class="ok-em">⭐</span><div class="ok-s">'+d.yorum+'</div><div class="ok-e">Yorum</div><div class="ok-d art">▲ 4.7 ort</div></div>';
+  var maxG=Math.max.apply(null,d.grafik.map(function(x){return x.v;}));
+  document.getElementById('ciro-grafik').innerHTML=d.grafik.map(function(x){
+    var w=Math.round(x.v/maxG*100);
+    return '<div class="g-satir"><div class="g-et">'+x.s+'</div><div class="g-bar"><div class="g-ic al" style="width:'+w+'%"><span class="g-lbl">'+ftl(x.v)+'</span></div></div></div>';
+  }).join('');
+  var hv=aktifDonem==='bugun'?hedefler.gun:aktifDonem==='hafta'?hedefler.haf:hedefler.ay;
+  var hy=Math.min(100,Math.round(d.ciro/hv*100));
+  var asil=d.ciro>=hv;
+  document.getElementById('hedef-ic').innerHTML=
+    '<div class="hb"><div class="hb-ust"><span>'+adlar[aktifDonem]+' Hedef: '+ftl(hv)+'</span><span style="font-weight:700;color:'+(asil?'var(--bas)':'var(--al)')+'">%'+hy+(asil?' 🎉':'')+'</span></div>'+
+    '<div class="hb-bar"><div class="hb-ic'+(asil?' asil':'')+'" style="width:'+hy+'%"></div></div>'+
+    '<div style="font-size:11px;color:var(--si);margin-top:4px">'+(asil?'Hedef asildi! +'+ftl(d.ciro-hv):'Hedefe '+ftl(hv-d.ciro)+' kaldi')+'</div></div>';
+  var tot=d.nakit+d.kart;
+  document.getElementById('odeme-ic').innerHTML=
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
+    '<div style="background:linear-gradient(135deg,var(--bas),#1E4D1E);border-radius:12px;padding:13px;text-align:center"><div style="font-size:20px;font-weight:800;color:#fff">'+ftl(d.nakit)+'</div><div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:3px">Nakit %'+Math.round(d.nakit/tot*100)+'</div></div>'+
+    '<div style="background:linear-gradient(135deg,var(--bil),#0D3D6E);border-radius:12px;padding:13px;text-align:center"><div style="font-size:20px;font-weight:800;color:#fff">'+ftl(d.kart)+'</div><div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:3px">Kart %'+Math.round(d.kart/tot*100)+'</div></div></div>';
+}
+
+// ── KARŞILAŞTIRMA ──
+function renderKarsilastirma(){
+  var h='<table class="tablo"><thead><tr><th>Gun</th><th>Bu Hafta</th><th>Gecen Hafta</th><th>Fark</th></tr></thead><tbody>';
+  KARS_H.forEach(function(r){
+    var f=r.bu-r.ge, fp=Math.round(f/r.ge*100);
+    h+='<tr><td>'+r.g+'</td><td style="font-weight:700">'+ftl(r.bu)+'</td><td>'+ftl(r.ge)+'</td><td style="font-weight:700;color:'+(f>=0?'var(--bas)':'var(--teh)')+'">'+(f>=0?'▲':'▼')+' %'+Math.abs(fp)+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById('kars-hafta').innerHTML=h;
+  document.getElementById('kars-ay').innerHTML='<div style="font-size:12px;color:var(--si);text-align:center;padding:12px">Bu ayin verileri devam ediyor...</div>';
+}
+
+// ── GELİR/GİDER ──
+function renderGelirGider(){
+  var tg=giderler.reduce(function(s,g){return s+g.tutar;},0);
+  var nk=DONEM.ay.ciro-tg;
+  document.getElementById('gg-ozet').innerHTML=
+    '<div class="gg-k gelir"><div style="font-size:22px;margin-bottom:6px">📈</div><div class="gg-s">'+ftl(DONEM.ay.ciro)+'</div><div class="gg-e">Aylik Gelir</div></div>'+
+    '<div class="gg-k gider"><div style="font-size:22px;margin-bottom:6px">📉</div><div class="gg-s">'+ftl(tg)+'</div><div class="gg-e">Toplam Gider</div></div>'+
+    '<div class="gg-k kar"><div style="font-size:22px;margin-bottom:6px">💵</div><div class="gg-s" style="color:var(--s)">'+ftl(nk)+'</div><div class="gg-e" style="color:rgba(0,0,0,.5)">Net Kar (%'+Math.round(nk/DONEM.ay.ciro*100)+')</div></div>';
+  document.getElementById('gider-liste').innerHTML=giderler.map(function(g){
+    return '<div class="gider-satir"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">'+g.em+'</span><div><div style="font-size:13px;color:var(--mt)">'+g.ad+'</div><div style="font-size:10px;color:var(--si)">'+g.kat+' · '+g.tarih+'</div></div></div><div style="font-size:14px;font-weight:700;color:var(--teh)">-'+ftl(g.tutar)+'</div></div>';
+  }).join('');
+  var aylar=['Oca','Sub','Mar','Nis','May','Haz']; var karlar=[28000,25000,35000,nk,42000,45000];
+  var mx=Math.max.apply(null,karlar);
+  document.getElementById('kar-trend').innerHTML=aylar.map(function(a,i){
+    return '<div class="g-satir"><div class="g-et">'+a+'</div><div class="g-bar"><div class="g-ic ye" style="width:'+Math.round(karlar[i]/mx*100)+'%"><span class="g-lbl">'+ftl(karlar[i])+'</span></div></div></div>';
+  }).join('');
+}
+
+// ── GARSONLAR ──
+function primGuncelle(){
+  primAyar.oran=parseInt(document.getElementById('prim-oran').value)||10;
+  primAyar.bonus=parseInt(document.getElementById('yorum-bonus').value)||20;
+  document.getElementById('prim-acik').textContent='%'+primAyar.oran+' prim + her yorum '+primAyar.bonus+'₺';
+  // DB'ye kaydet — garsonlar anında görsün
+  SB.patch('ayarlar','key=eq.prim',{value:{oran:primAyar.oran,yorumBonus:primAyar.bonus}})
+    .catch(function(){});
+  renderGarsonlar();
+  alert("Prim guncellendi! Garsonlara aninda yansidi.");
+}
+function renderGarsonlar(){
+  var maxC=Math.max.apply(null,GARSONLAR.map(function(g){return g.ciro;}));
+  document.getElementById('garson-tablo').innerHTML='<div class="kart"><div class="kart-h"><div class="kart-ht">📊 Prim Raporu</div></div><div class="kart-body">'+
+    GARSONLAR.map(function(g){
+      var prim=Math.round(g.ciro*primAyar.oran/100)+g.yorum*primAyar.bonus;
+      var w=Math.round(g.ciro/maxC*100);
+      return '<div style="padding:10px 0;border-bottom:1px solid var(--bd)">'+
+        '<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px">'+
+        '<div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--s),var(--sm));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--al);border:1.5px solid var(--al)">'+g.harf+'</div>'+
+        '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--mt)">'+g.ad+'</div><div style="font-size:11px;color:var(--si)">'+g.masa+' masa · '+g.yorum+' yorum · '+ftl(g.ciro)+'</div></div>'+
+        '<div style="text-align:right"><div style="font-size:17px;font-weight:800;color:var(--al)">'+ftl(prim)+'</div><div style="font-size:10px;color:var(--si)">prim</div></div></div>'+
+        '<div class="hb-bar"><div class="hb-ic" style="width:'+w+'%"></div></div></div>';
+    }).join('')+'</div></div>';
+}
+
+// ── MENÜ KAR ──
+function renderMenuKar(){
+  var s=[...MENU_KAR].sort(function(a,b){return (b.fiyat-b.maliyet)/b.fiyat-(a.fiyat-a.maliyet)/a.fiyat;});
+  document.getElementById('menu-kar-ic').innerHTML='<table class="tablo"><thead><tr><th>Urun</th><th>Fiyat</th><th>Maliyet</th><th>Kar</th><th>%</th><th>Toplam</th></tr></thead><tbody>'+
+    s.map(function(u){
+      var k=u.fiyat-u.maliyet, ky=Math.round(k/u.fiyat*100);
+      var bc=ky>=60?'y':ky>=40?'u':'t';
+      return '<tr><td>'+u.em+' '+u.ad+'</td><td>'+u.fiyat+'₺</td><td style="color:var(--teh)">'+u.maliyet+'₺</td><td style="font-weight:700;color:var(--bas)">'+k+'₺</td><td><span class="badge '+bc+'">%'+ky+'</span></td><td style="font-weight:700;color:var(--al)">'+ftl(k*u.adet)+'</td></tr>';
+    }).join('')+'</tbody></table>';
+}
+
+// ── MÜŞTERİLER ──
+function renderMusteriler(){
+  var sadik=MUSTERILER.filter(function(m){return m.seg==='sadik';}).length;
+  var yeni=MUSTERILER.filter(function(m){return m.seg==='yeni';}).length;
+  var kayip=MUSTERILER.filter(function(m){return m.seg==='kayip';}).length;
+  document.getElementById('segment-ic').innerHTML=
+    '<div class="seg-k"><div style="font-size:22px">💎</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--mt)">Sadik Musteriler</div><div style="font-size:11px;color:var(--si)">5+ ziyaret</div></div><div style="font-size:20px;font-weight:800;color:var(--bas)">'+sadik+'</div></div>'+
+    '<div class="seg-k"><div style="font-size:22px">🌱</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--mt)">Yeni Musteriler</div><div style="font-size:11px;color:var(--si)">1-4 ziyaret</div></div><div style="font-size:20px;font-weight:800;color:var(--bil)">'+yeni+'</div></div>'+
+    '<div class="seg-k"><div style="font-size:22px">💔</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--mt)">Kayip Musteriler</div><div style="font-size:11px;color:var(--si)">30+ gun gelmeyen</div></div><div style="font-size:20px;font-weight:800;color:var(--teh)">'+kayip+'</div></div>';
+  document.getElementById('wp-ic').innerHTML=WP_K.map(function(k){
+    return '<div class="wp-k"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div style="display:flex;align-items:center;gap:8px"><div style="font-size:22px">'+k.em+'</div><div><div style="font-size:13px;font-weight:600;color:var(--mt)">'+k.ad+'</div><div style="font-size:11px;color:var(--si)">'+k.acik+'</div></div></div><button class="btn yes" style="font-size:11px;padding:5px 10px;white-space:nowrap" onclick="alert(\''+k.kisi+' kisiye gonderildi!\')">📤 '+k.kisi+' kisi</button></div></div>';
+  }).join('');
+  document.getElementById('musteri-liste').innerHTML='<table class="tablo"><thead><tr><th>#</th><th>Telefon</th><th>Ziyaret</th><th>Harcama</th><th>Segment</th></tr></thead><tbody>'+
+    MUSTERILER.map(function(m,i){
+      return '<tr><td>'+(i+1)+'</td><td style="font-weight:600">'+m.tel+'</td><td>'+m.ziyaret+'</td><td style="font-weight:700;color:var(--al)">'+ftl(m.harcama)+'</td><td><span class="badge '+(m.seg==='sadik'?'y':m.seg==='yeni'?'m':'t')+'">'+(m.seg==='sadik'?'Sadik':m.seg==='yeni'?'Yeni':'Kayip')+'</span></td></tr>';
+    }).join('')+'</tbody></table>';
+}
+
+// ── STOK ONAY ──
+var stokTalepler=[
+  {id:1,sef:'Bas Sef Ali',malzeme:'Dana Kiyma',miktar:'15 kg',acil:true,durum:'bekliyor',fiyat:2250,tarih:'Bugun 10:30'},
+  {id:2,sef:'Bas Sef Ali',malzeme:'Un',miktar:'20 kg',acil:false,durum:'bekliyor',fiyat:600,tarih:'Bugun 09:15'},
+];
+function renderStokOnay(){
+  var bek=stokTalepler.filter(function(t){return t.durum==='bekliyor';});
+  var son=stokTalepler.filter(function(t){return t.durum!=='bekliyor';});
+  var dot=document.getElementById('stok-dot');
+  if(dot) dot.style.display=bek.length>0?'inline-block':'none';
+  document.getElementById('stok-bekleyen').innerHTML=bek.length?bek.map(function(t){
+    return '<div class="onay-k bekliyor"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:13px;font-weight:700;color:var(--mt)">'+t.malzeme+' — '+t.miktar+'</div><div style="font-size:11px;color:var(--si);margin-top:2px">'+t.sef+' · '+t.tarih+(t.acil?' · <span style="color:var(--teh);font-weight:700">ACİL</span>':'')+'</div></div><div style="font-size:15px;font-weight:800;color:var(--uya)">'+ftl(t.fiyat)+'</div></div><div style="display:flex;gap:6px"><button class="btn yes" style="font-size:11px;padding:5px 10px" onclick="stokOnayla('+t.id+')">✅ Onayla</button><button class="btn teh" style="font-size:11px;padding:5px 10px" onclick="stokReddet('+t.id+')">✕ Reddet</button></div></div>';
+  }).join(''):'<div style="text-align:center;color:var(--si);padding:14px">Bekleyen talep yok ✅</div>';
+  document.getElementById('stok-sonuclandi').innerHTML=son.map(function(t){
+    return '<div class="onay-k '+t.durum+'"><div style="display:flex;justify-content:space-between"><div><div style="font-size:13px;font-weight:600;color:var(--mt)">'+t.malzeme+' — '+t.miktar+'</div><div style="font-size:11px;color:var(--si)">'+t.sef+'</div></div><span class="badge '+(t.durum==='onaylandi'?'y':'t')+'">'+(t.durum==='onaylandi'?'✅ Onaylandi':'✕ Reddedildi')+'</span></div></div>';
+  }).join('')||'<div style="color:var(--si);font-size:12px;text-align:center;padding:10px">Sonuclanan yok</div>';
+}
+function stokOnayla(id){var t=stokTalepler.find(function(x){return x.id===id;});if(t)t.durum='onaylandi';renderStokOnay();}
+function stokReddet(id){var t=stokTalepler.find(function(x){return x.id===id;});if(t)t.durum='reddedildi';renderStokOnay();}
+
+// ── SHİFT ──
+var shiftAyar={hedef:51,brut:54,mola:4};
+
+function shiftGridYukle(){
+  var data=lsOku();
+  if(data.shiftGrid) SHIFT_GRID=JSON.parse(JSON.stringify(data.shiftGrid));
+  else {
+    GARSONLAR.forEach(function(g){
+      SHIFT_GRID[g.harf]={};
+      GUNLER.forEach(function(gun){SHIFT_GRID[g.harf][gun]={bas:'',bit:'',mola:30,aktif:false};});
+    });
+  }
+  if(data.shiftAyar) shiftAyar=data.shiftAyar;
+}
+
+function shiftCellDegis(harf,gun,alan,val){
+  if(!SHIFT_GRID[harf]) SHIFT_GRID[harf]={};
+  if(!SHIFT_GRID[harf][gun]) SHIFT_GRID[harf][gun]={bas:'',bit:'',mola:30,aktif:false};
+  SHIFT_GRID[harf][gun][alan]=alan==='mola'?parseInt(val):val;
+  SHIFT_GRID[harf][gun].aktif=!!(SHIFT_GRID[harf][gun].bas&&SHIFT_GRID[harf][gun].bit);
+  netGuncelle(harf);
+}
+
+function netGuncelle(harf){
+  var topDk=0;
+  GUNLER.forEach(function(gun){
+    var c=SHIFT_GRID[harf]&&SHIFT_GRID[harf][gun];
+    if(!c||!c.aktif||!c.bas||!c.bit)return;
+    var bas=c.bas.split(':').map(Number);
+    var bit=c.bit.split(':').map(Number);
+    var dk=(bit[0]*60+bit[1])-(bas[0]*60+bas[1])-(c.mola||30);
+    if(dk>0) topDk+=dk;
+  });
+  var net=+(topDk/60).toFixed(1);
+  var el=document.getElementById('sg-net-'+harf);
+  if(!el)return;
+  var renk=net===0?'var(--si)':net>shiftAyar.brut?'var(--teh)':Math.abs(net-shiftAyar.hedef)<=1?'var(--bas)':'var(--uya)';
+  el.textContent=net>0?net+'s':'—';
+  el.style.color=renk;
+  var td=el.parentElement;
+  if(td) td.style.background=net>0?(net>shiftAyar.brut?'var(--tac)':Math.abs(net-shiftAyar.hedef)<=1?'var(--bac)':'var(--uac)'):'transparent';
+}
+
+function shiftKaydet(){
+  // Validasyon
+  var uyarilar=[];
+  GARSONLAR.forEach(function(g){
+    var topDk=0;
+    GUNLER.forEach(function(gun){
+      var c=SHIFT_GRID[g.harf]&&SHIFT_GRID[g.harf][gun];
+      if(!c||!c.aktif||!c.bas||!c.bit)return;
+      var bas=c.bas.split(':').map(Number);
+      var bit=c.bit.split(':').map(Number);
+      var dk=(bit[0]*60+bit[1])-(bas[0]*60+bas[1])-(c.mola||30);
+      if(dk>0) topDk+=dk;
+    });
+    var net=+(topDk/60).toFixed(1);
+    if(net>0&&net>shiftAyar.brut) uyarilar.push(g.ad+': '+net+'s FAZLA MESAİ!');
+    else if(net>0&&net<shiftAyar.hedef-3) uyarilar.push(g.ad+': '+net+'s hedefin altinda');
+  });
+  if(uyarilar.length&&!confirm('Uyarilar:\n'+uyarilar.join('\n')+'\n\nYine de kaydet?'))return;
+
+  var data=lsOku();
+  data.shiftGrid=JSON.parse(JSON.stringify(SHIFT_GRID));
+  data.shiftAyar=shiftAyar;
+  // Garson ekrani icin duz liste
+  var liste=[];
+  GARSONLAR.forEach(function(g){
+    GUNLER.forEach(function(gun){
+      var c=SHIFT_GRID[g.harf]&&SHIFT_GRID[g.harf][gun];
+      if(!c||!c.aktif||!c.bas||!c.bit)return;
+      liste.push({id:g.harf+'_'+gun,garsonHarf:g.harf,garsonAd:g.ad,gun:gun,baslangic:c.bas,bitis:c.bit,mola:c.mola||30,durum:'planli'});
+    });
+  });
+  data.shiftler=liste;
+  lsYaz(data);
+  alert("Shift plani kaydedildi!");
+  renderShift();
+}
+
+function kuralKaydet(){
+  shiftAyar={
+    brut:parseFloat(document.getElementById('sh-hafta').value)||54,
+    mola:parseFloat(document.getElementById('sh-mola').value)||4,
+    hedef:parseFloat(document.getElementById('sh-net').value)||51
+  };
+  var data=lsOku(); data.shiftAyar=shiftAyar; lsYaz(data);
+  alert("Kurallar kaydedildi!");
+}
+
+function renderShift(){
+  // Özet
+  var planli=0,uyari=0;
+  GARSONLAR.forEach(function(g){
+    var topDk=0;
+    GUNLER.forEach(function(gun){
+      var c=SHIFT_GRID[g.harf]&&SHIFT_GRID[g.harf][gun];
+      if(!c||!c.aktif||!c.bas||!c.bit)return;
+      var bas=c.bas.split(':').map(Number);
+      var bit=c.bit.split(':').map(Number);
+      var dk=(bit[0]*60+bit[1])-(bas[0]*60+bas[1])-(c.mola||30);
+      if(dk>0){topDk+=dk;planli++;}
+    });
+    var net=+(topDk/60).toFixed(1);
+    if(net>0&&Math.abs(net-shiftAyar.hedef)>2)uyari++;
+  });
+  document.getElementById('shift-ozet').innerHTML=
+    '<div class="ok al"><span class="ok-em">📅</span><div class="ok-s">'+planli+'</div><div class="ok-e">Shift Sayisi</div></div>'+
+    '<div class="ok ye"><span class="ok-em">👤</span><div class="ok-s">'+GARSONLAR.length+'</div><div class="ok-e">Garson</div></div>'+
+    '<div class="ok '+(uyari>0?'ki':'ma')+'"><span class="ok-em">'+(uyari>0?'⚠️':'✅')+'</span><div class="ok-s">'+uyari+'</div><div class="ok-e">'+(uyari>0?'Uyari':'Sorun Yok')+'</div></div>';
+
+  // Grid tablo
+  var tbl='<thead><tr><th>Garson</th>';
+  GUNLER.forEach(function(g,i){tbl+='<th>'+GUN_K[i]+'</th>';});
+  tbl+='<th>Toplam</th></tr></thead><tbody>';
+  GARSONLAR.forEach(function(g){
+    tbl+='<tr><td><div style="font-size:12px;font-weight:700;color:var(--mt)">'+g.harf+'</div><div style="font-size:10px;color:var(--si)">'+g.ad.split(' ')[0]+'</div></td>';
+    GUNLER.forEach(function(gun){
+      var c=(SHIFT_GRID[g.harf]&&SHIFT_GRID[g.harf][gun])||{bas:'',bit:'',mola:30,aktif:false};
+      var bg=c.aktif?'background:var(--bac)':'';
+      tbl+='<td style="'+bg+'"><div class="sg-cell">'+
+        '<input type="time" class="sg-inp" value="'+c.bas+'" onchange="shiftCellDegis(\''+g.harf+'\',\''+gun+'\',\'bas\',this.value)">'+
+        '<input type="time" class="sg-inp" value="'+c.bit+'" onchange="shiftCellDegis(\''+g.harf+'\',\''+gun+'\',\'bit\',this.value)">'+
+        '<select class="sg-sel" onchange="shiftCellDegis(\''+g.harf+'\',\''+gun+'\',\'mola\',this.value)">'+
+        [0,15,30,45,60].map(function(m){return '<option value="'+m+'"'+(c.mola===m?' selected':'')+'>'+m+'dk</option>';}).join('')+
+        '</select></div></td>';
+    });
+    tbl+='<td id="sg-net-'+g.harf+'" class="sg-net" style="color:var(--si)">—</td></tr>';
+  });
+  tbl+='</tbody>';
+  document.getElementById('shift-grid-tablo').innerHTML=tbl;
+  // Net saatleri hesapla
+  GARSONLAR.forEach(function(g){netGuncelle(g.harf);});
+
+  // Savunmalar
+  renderSavunmalar();
+}
+
+// ── SAVUNMALAR ──
+function renderSavunmalar(){
+  var el=document.getElementById('savunma-liste');
+  if(!el)return;
+  var data=lsOku();
+  var savunmalar=data.savunmalar||[];
+  var bek=savunmalar.filter(function(s){return s.durum==='bekliyor';});
+  var dot1=document.getElementById('sav-dot');
+  var dot2=document.getElementById('sav-dot2');
+  var goster=bek.length>0?'inline-block':'none';
+  if(dot1)dot1.style.display=goster;
+  if(dot2)dot2.style.display=goster;
+  if(!savunmalar.length){
+    el.innerHTML='<div style="text-align:center;color:var(--si);padding:14px;font-size:13px">Savunma kaydi yok</div>';
+    return;
+  }
+  el.innerHTML=savunmalar.map(function(sv,i){
+    var cls=sv.durum==='bekliyor'?'bekliyor':sv.durum==='kabul'?'onaylandi':'reddedildi';
+    return '<div class="sav-k '+cls+'"><div style="display:flex;justify-content:space-between;margin-bottom:6px">'+
+      '<div><div style="font-size:13px;font-weight:700;color:var(--mt)">'+sv.garsonAd+' — '+sv.gun+'</div>'+
+      '<div style="font-size:11px;color:var(--si)">'+sv.tarih+' · Planlanan: '+sv.planliSaat+' · Giris: '+sv.girisSaati+' · <strong>'+sv.farkDk+' dk gec</strong></div></div>'+
+      '<span class="badge '+(sv.durum==='bekliyor'?'u':sv.durum==='kabul'?'y':'t')+'">'+(sv.durum==='bekliyor'?'Bekliyor':sv.durum==='kabul'?'Kabul':'Ret')+'</span></div>'+
+      '<div style="background:rgba(0,0,0,.05);border-radius:8px;padding:8px;font-size:12px;margin-bottom:8px">"'+sv.metin+'"</div>'+
+      (sv.durum==='bekliyor'?'<div style="display:flex;gap:6px"><button class="btn yes" style="font-size:11px;padding:5px 10px" onclick="savunmaYanit('+i+',\'kabul\')">✅ Kabul</button><button class="btn teh" style="font-size:11px;padding:5px 10px" onclick="savunmaYanit('+i+',\'ret\')">✕ Ret</button></div>':'')+
+      '</div>';
+  }).join('');
+}
+
+function savunmaYanit(idx,karar){
+  var data=lsOku();
+  if(data.savunmalar&&data.savunmalar[idx])data.savunmalar[idx].durum=karar;
+  lsYaz(data);
+  renderSavunmalar();
+}
+
+// ── HEDEF/GİDER ──
+function hedefKaydet(){
+  hedefler.gun=parseInt(document.getElementById('h-gun').value)||10000;
+  hedefler.haf=parseInt(document.getElementById('h-haf').value)||65000;
+  hedefler.ay=parseInt(document.getElementById('h-ay').value)||280000;
+  alert("Hedefler kaydedildi!");
+  renderCiro();
+}
+function giderEkleAc(){document.getElementById('gider-modal').classList.add('ak');}
+function giderKaydet(){
+  var kat=document.getElementById('g-kat').value;
+  var ad=document.getElementById('g-acik').value;
+  var t=parseFloat(document.getElementById('g-tutar').value)||0;
+  if(!ad||!t){alert("Aciklama ve tutar girin!");return;}
+  var emMap={'Malzeme/Hammadde':'🥩','Personel Maasi':'👨‍💼','Kira':'🏠','Elektrik/Su/Gaz':'💡','Bakim/Onarim':'🔧','Diger':'📦'};
+  giderler.unshift({em:emMap[kat]||'📦',kat:kat,ad:ad,tutar:t,tarih:'Bugun'});
+  document.getElementById('gider-modal').classList.remove('ak');
+  renderGelirGider();
+}
+
+// ── RENDER HEPSİ ──
+function renderHepsi(){
+  // Restoran bilgilerini yükle
+  SB.get('ayarlar','key=eq.restoran_bilgi').then(function(d){
+    if(d&&d.length){
+      var v=d[0].value;
+      if(document.getElementById('r-ad')) document.getElementById('r-ad').value=v.ad||'Lezzet Kebap';
+      if(document.getElementById('r-masa')) document.getElementById('r-masa').value=v.masa||20;
+    }
+  }).catch(function(){});
+  qrKodlariRender();
+  garsonYonetimYukle().catch(function(){});
+  menuYonetimYukle().catch(function(){});
+  // Sync renderlar
+  renderCanli();
+  renderCiro();
+  renderKarsilastirma();
+  renderGelirGider();
+  renderGarsonlar();
+  renderMenuKar();
+  renderMusteriler();
+  renderStokOnay();
+  renderShift();
+
+}
+
+// ── MENÜ YÖNETİMİ ──
+let duzenleMenuId = null;
+let menuListesi = [];
+
+async function menuYonetimYukle(){
+  const data = await SB.get('menu', 'order=kat.asc,ad.asc');
+  if(data && data.length) menuListesi = data;
+  else menuListesi = [];
+  renderMenuYonetim();
+}
+
+function renderMenuYonetim(){
+  var el=document.getElementById('menu-yonetim-liste');
+  if(!el)return;
+  if(!menuListesi.length){
+    el.innerHTML='<div style="text-align:center;color:var(--si);padding:20px">Menu bos. + Yeni Urun ekle.</div>';
+    return;
+  }
+  el.innerHTML='';
+  var katlar=[...new Set(menuListesi.map(function(u){return u.kat;}))];
+  katlar.forEach(function(kat){
+    var katDiv=document.createElement('div');
+    katDiv.style.cssText='font-size:10px;font-weight:700;color:var(--si);text-transform:uppercase;letter-spacing:.06em;margin:12px 0 6px';
+    katDiv.textContent=kat;
+    el.appendChild(katDiv);
+    var urunler=menuListesi.filter(function(u){return u.kat===kat;});
+    urunler.forEach(function(u){
+      var karYuzde=u.fiyat>0?Math.round((u.fiyat-u.maliyet)/u.fiyat*100):0;
+      var satir=document.createElement('div');
+      satir.className='menu-satir';
+      satir.innerHTML=
+        '<div class="menu-em">'+(u.em||'🍽️')+'</div>'+
+        (u.image_url?'<img src="'+u.image_url+'" width="44" height="44" style="border-radius:8px;object-fit:cover">':'<div class="menu-em">'+(u.em||'🍽️')+'</div>')+
+        '<div class="menu-bilgi"><div class="menu-ad">'+u.ad+'</div>'+
+        '<div class="menu-alt">Maliyet: ₺'+u.maliyet+' · Kar: %'+karYuzde+'</div></div>'+
+        '<div class="menu-fiyat">₺'+u.fiyat+'</div>';
+      // Toggle butonu
+      var tog=document.createElement('button');
+      tog.className='menu-aktif-tog '+(u.aktif?'ak':'pas');
+      tog.title=u.aktif?'Aktif - kapat':'Pasif - ac';
+      tog.onclick=(function(uid,uaktif){return function(){menuAktifToggle(uid,uaktif);};})(u.id,u.aktif);
+      satir.appendChild(tog);
+      // Düzenle butonu
+      var duzBtn=document.createElement('button');
+      duzBtn.className='btn ik';
+      duzBtn.style.cssText='font-size:11px;padding:4px 8px;margin-left:4px';
+      duzBtn.textContent='✏️';
+      duzBtn.onclick=(function(uid){return function(){menuDuzenle(uid);};})(u.id);
+      satir.appendChild(duzBtn);
+      // Sil butonu
+      var silBtn=document.createElement('button');
+      silBtn.className='btn teh';
+      silBtn.style.cssText='font-size:11px;padding:4px 8px;margin-left:2px';
+      silBtn.textContent='🗑️';
+      silBtn.onclick=(function(uid){return function(){menuSil(uid);};})(u.id);
+      satir.appendChild(silBtn);
+      el.appendChild(satir);
+    });
+  });
+}
+
+
+function menuEkleModal(){
+  duzenleMenuId = null;
+  document.getElementById('menu-modal-t').textContent = 'Yeni Ürün Ekle';
+  document.getElementById('mu-ad').value = '';
+  document.getElementById('mu-em').value = '';
+  document.getElementById('mu-fiyat').value = '';
+  document.getElementById('mu-maliyet').value = '';
+  document.getElementById('menu-modal').classList.add('ak');
+}
+
+function menuDuzenle(id){
+  const u = menuListesi.find(x=>x.id===id);
+  if(!u) return;
+  duzenleMenuId = id;
+  document.getElementById('menu-modal-t').textContent = 'Ürünü Düzenle';
+  document.getElementById('mu-ad').value = u.ad;
+  document.getElementById('mu-em').value = u.em||'';
+  document.getElementById('mu-kat').value = u.kat;
+  document.getElementById('mu-fiyat').value = u.fiyat;
+  document.getElementById('mu-maliyet').value = u.maliyet||0;
+  if(document.getElementById('mu-resim')) document.getElementById('mu-resim').value = u.image_url||'';
+  if(document.getElementById('mu-kalori')) document.getElementById('mu-kalori').value = u.kalori||'';
+  var resimInp = document.getElementById('mu-resim');
+  if(resimInp) resimInp.value = u.image_url||'';
+  document.getElementById('menu-modal').classList.add('ak');
+}
+
+async function menuKaydet(){
+  var ad = (document.getElementById('mu-ad').value||'').trim();
+  var em = (document.getElementById('mu-em').value||'').trim()||'🍽️';
+  var kat = document.getElementById('mu-kat').value;
+  var fiyat = parseFloat(document.getElementById('mu-fiyat').value)||0;
+  var maliyet = parseFloat(document.getElementById('mu-maliyet').value)||0;
+  var resim = '';
+  var resimEl = document.getElementById('mu-resim');
+  if(resimEl) resim = resimEl.value.trim();
+  var kalori = parseInt((document.getElementById('mu-kalori')||{}).value)||null;
+  if(!ad||!fiyat){ alert('Urun adi ve fiyat zorunlu!'); return; }
+  console.log('Kaydediliyor:', {ad,em,kat,fiyat,maliyet,resim,duzenleMenuId});
+  if(duzenleMenuId){
+    var kalori=parseInt((document.getElementById('mu-kalori')||{}).value)||null;
+    await SB.patch('menu','id=eq.'+duzenleMenuId,{
+      ad:ad, em:em, kat:kat, fiyat:fiyat, maliyet:maliyet, image_url:resim||null, kalori:kalori
+    });
+    console.log('Patch sonuc:', sonuc);
+  } else {
+    var yeniId = 'm_'+Date.now();
+    var sonuc2 = await SB.post('menu',{
+      id:yeniId, ad:ad, em:em, kat:kat, fiyat:fiyat, maliyet:maliyet, aktif:true, image_url:resim||null
+    });
+    console.log('Post sonuc:', sonuc2);
+  }
+  document.getElementById('menu-modal').classList.remove('ak');
+  await menuYonetimYukle();
+  alert('Kaydedildi!');
+}
+
+async function menuAktifToggle(id, mevcutDurum){
+  await SB.patch('menu','id=eq.'+id,{aktif:!mevcutDurum});
+  await menuYonetimYukle();
+}
+
+async function menuSil(id){
+  if(!confirm("Bu urunu silmek istediginizden emin misiniz?")) return;
+  await SB.delete('menu','id=eq.'+id);
+  await menuYonetimYukle();
+}
+
+
+async function patronSifreDegistir(){
+  const kadi=document.getElementById('p-kadi').value.trim();
+  const sifre=document.getElementById('p-sifre').value.trim();
+  if(!kadi||!sifre){alert("Kullanici adi ve sifre girin!");return;}
+  await SB.patch('ayarlar','key=eq.patron_giris',{value:{kullanici:kadi,sifre:sifre}}).catch(async function(){
+    await SB.post('ayarlar',{key:'patron_giris',value:{kullanici:kadi,sifre:sifre}});
+  });
+  alert("Giris bilgileri guncellendi!");
+}
+
+
+
+// ── GARSON YÖNETİMİ ──
+let duzenleGarsonId = null;
+let garsonListesi = [];
+
+async function garsonYonetimYukle(){
+  const data = await SB.get('garsonlar', 'order=id.asc');
+  if(data) garsonListesi = data;
+  renderGarsonYonetim();
+}
+
+function renderGarsonYonetim(){
+  var el = document.getElementById('garson-yonetim-liste');
+  if(!el) return;
+  if(!garsonListesi.length){
+    el.innerHTML = '<div style="text-align:center;color:var(--si);padding:20px">Garson yok. + Yeni Garson ekle.</div>';
+    return;
+  }
+  el.innerHTML = '';
+  garsonListesi.forEach(function(g){
+    var satir = document.createElement('div');
+    satir.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)';
+    // Avatar
+    var av = document.createElement('div');
+    av.style.cssText = 'width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--s),var(--sm));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--al);border:1.5px solid var(--al);flex-shrink:0';
+    av.textContent = g.harf || g.ad[0].toUpperCase();
+    satir.appendChild(av);
+    // Bilgi
+    var bilgi = document.createElement('div');
+    bilgi.style.flex = '1';
+    bilgi.innerHTML = '<div style="font-size:13px;font-weight:700;color:var(--mt)">'+g.ad+'</div>'
+      + '<div style="font-size:11px;color:var(--si);margin-top:2px">Sifre: '+g.sifre+' · '+(g.aktif?'Aktif':'Pasif')+'</div>';
+    satir.appendChild(bilgi);
+    // Aktif toggle
+    var tog = document.createElement('button');
+    tog.style.cssText = 'padding:4px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:'+(g.aktif?'var(--bac)':'var(--tac)')+';color:'+(g.aktif?'var(--bas)':'var(--teh)');
+    tog.textContent = g.aktif ? 'Aktif' : 'Pasif';
+    tog.onclick = (function(gid, gaktif){ return function(){ garsonAktifToggle(gid, gaktif); }; })(g.id, g.aktif);
+    satir.appendChild(tog);
+    // Düzenle
+    var duzBtn = document.createElement('button');
+    duzBtn.className = 'btn ik';
+    duzBtn.style.cssText = 'font-size:11px;padding:4px 8px;margin-left:4px';
+    duzBtn.textContent = '✏️';
+    duzBtn.onclick = (function(gid){ return function(){ garsonDuzenle(gid); }; })(g.id);
+    satir.appendChild(duzBtn);
+    // Sil
+    var silBtn = document.createElement('button');
+    silBtn.className = 'btn teh';
+    silBtn.style.cssText = 'font-size:11px;padding:4px 8px;margin-left:2px';
+    silBtn.textContent = '🗑️';
+    silBtn.onclick = (function(gid){ return function(){ garsonSilOnay(gid); }; })(g.id);
+    satir.appendChild(silBtn);
+    el.appendChild(satir);
+  });
+}
+
+function garsonEkleModal(){
+  duzenleGarsonId = null;
+  document.getElementById('garson-modal-t').textContent = 'Yeni Garson Ekle';
+  document.getElementById('gy-ad').value = '';
+  document.getElementById('gy-harf').value = '';
+  document.getElementById('gy-sifre').value = '1234';
+  document.getElementById('garson-modal').classList.add('ak');
+}
+
+function garsonDuzenle(id){
+  var g = garsonListesi.find(function(x){ return x.id===id; });
+  if(!g) return;
+  duzenleGarsonId = id;
+  document.getElementById('garson-modal-t').textContent = 'Garsonu Duzenle';
+  document.getElementById('gy-ad').value = g.ad;
+  document.getElementById('gy-harf').value = g.harf||'';
+  document.getElementById('gy-sifre').value = g.sifre||'1234';
+  document.getElementById('garson-modal').classList.add('ak');
+}
+
+async function garsonKaydet(){
+  var ad = document.getElementById('gy-ad').value.trim();
+  var harf = document.getElementById('gy-harf').value.trim().toUpperCase();
+  var sifre = document.getElementById('gy-sifre').value.trim();
+  if(!ad){ alert("Ad zorunlu!"); return; }
+  if(!sifre){ alert("Sifre zorunlu!"); return; }
+  if(!harf) harf = ad[0].toUpperCase();
+  if(duzenleGarsonId){
+    await SB.patch('garsonlar','id=eq.'+duzenleGarsonId,{ad:ad,harf:harf,sifre:sifre});
+  } else {
+    var maxId = garsonListesi.length ? Math.max.apply(null,garsonListesi.map(function(g){return g.id;})) : 0;
+    await SB.post('garsonlar',{id:maxId+1,ad:ad,harf:harf,sifre:sifre,aktif:true});
+  }
+  document.getElementById('garson-modal').classList.remove('ak');
+  await garsonYonetimYukle();
+  alert("Garson kaydedildi!");
+}
+
+async function garsonAktifToggle(id, mevcutDurum){
+  await SB.patch('garsonlar','id=eq.'+id,{aktif:!mevcutDurum});
+  await garsonYonetimYukle();
+}
+
+async function garsonSilOnay(id){
+  var g = garsonListesi.find(function(x){ return x.id===id; });
+  if(!g) return;
+  if(!confirm(g.ad+" garsonunu silmek istediginizden emin misiniz?")) return;
+  await SB.delete('garsonlar','id=eq.'+id);
+  await garsonYonetimYukle();
+}
+
+// ── QR KODLAR ──
+var SITE_URL = 'https://meers.vercel.app/';
+
+function qrKodlariRender(){
+  var el = document.getElementById('qr-grid');
+  if(!el) return;
+  var html = '';
+  for(var i = 1; i <= 20; i++){
+    var url = SITE_URL + 'musteri.html?masa=' + i;
+    var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=' + encodeURIComponent(url);
+    html += '<div style="background:var(--yz);border-radius:12px;border:1px solid var(--bd);padding:10px;text-align:center;cursor:pointer" onclick="qrAc('+i+')" title="Masa '+i+' QR">';
+    html += '<img src="'+qrUrl+'" width="80" height="80" style="border-radius:6px" loading="lazy">';
+    html += '<div style="font-size:12px;font-weight:700;color:var(--mt);margin-top:6px">Masa '+i+'</div>';
+    html += '<div style="font-size:9px;color:var(--si);margin-top:2px">Tıkla → Yazdır</div>';
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function qrAc(masaNo){
+  var url = SITE_URL + 'musteri.html?masa=' + masaNo;
+  window.open(url, '_blank');
+}
+async function garsonAktifToggle(id, mevcutDurum){
+  await SB.patch('garsonlar','id=eq.'+id,{aktif:!mevcutDurum});
+  await garsonYonetimYukle();
+}
+
+async function garsonSilOnay(id){
+  var g = garsonListesi.find(function(x){ return x.id===id; });
+  if(!g) return;
+  if(!confirm(g.ad+" garsonunu silmek istediginizden emin misiniz?")) return;
+  await SB.delete('garsonlar','id=eq.'+id);
+  await garsonYonetimYukle();
+}
+
+
+
+async function restoranKaydet(){
+  var ad = document.getElementById('r-ad') ? document.getElementById('r-ad').value.trim() : '';
+  var masa = document.getElementById('r-masa') ? parseInt(document.getElementById('r-masa').value) : 20;
+  if(!ad){ alert('Restoran adi bos olamaz!'); return; }
+  await SB.patch('ayarlar','key=eq.restoran_bilgi',{value:{ad:ad,masa:masa}}).catch(async function(){
+    await SB.post('ayarlar',{key:'restoran_bilgi',value:{ad:ad,masa:masa}});
+  });
+  // Sayfa basligini guncelle
+  var baslik = document.querySelector('.tb-t');
+  if(baslik) baslik.textContent = '🏪 ' + ad + ' — Patron';
+  alert('Restoran bilgileri kaydedildi!');
+}
+
+// Restoran kaydet — event listener ile
+document.addEventListener('DOMContentLoaded', function(){
+  var btn = document.getElementById('restoran-kaydet-btn');
+  if(btn){
+    btn.addEventListener('click', function(){
+      restoranKaydet();
+    });
+  }
+});
+
+// restoranKaydet — DB'ye yaz
+async function restoranKaydet(){
+  var adEl = document.getElementById('r-ad');
+  var masaEl = document.getElementById('r-masa');
+  if(!adEl){ alert('Input bulunamadi'); return; }
+  var ad = adEl.value.trim();
+  var masa = masaEl ? parseInt(masaEl.value)||20 : 20;
+  if(!ad){ alert('Restoran adi bos olamaz!'); return; }
+  try{
+    var r = await SB.patch('ayarlar','key=eq.restoran_bilgi',{value:{ad:ad,masa:masa}});
+    if(!r || !r.length){
+      await SB.post('ayarlar',{key:'restoran_bilgi',value:{ad:ad,masa:masa}});
+    }
+    alert('Restoran bilgileri kaydedildi!');
+  } catch(ex){
+    console.error('Restoran kaydet hata:', ex);
+    alert('Hata: ' + ex.message);
+  }
+}
+
+
+function topluIslemAc(){
+  document.getElementById('modal-toplu').classList.add('ak');
+}
+
+async function topluUygula(){
+  var kat = document.getElementById('toplu-kat').value;
+  var tip = document.getElementById('toplu-tip').value;
+  var oran = parseFloat(document.getElementById('toplu-oran').value)||0;
+  if(!oran||oran<=0||oran>=100){alert('Geçerli bir oran girin (1-99)');return;}
+  var liste = kat==='hepsi' ? menuListesi : menuListesi.filter(function(u){return u.kat===kat;});
+  if(!liste.length){alert('Ürün bulunamadı');return;}
+  if(!confirm(liste.length+' ürüne '+oran+'% '+(tip==='indirim'?'indirim':'zam')+' uygulanacak. Emin misiniz?'))return;
+  var btn=document.querySelector('[onclick="topluUygula()"]');
+  btn.disabled=true;btn.textContent='Uygulanıyor...';
+  for(var i=0;i<liste.length;i++){
+    var u=liste[i];
+    var yeniFiyat=tip==='indirim'
+      ? Math.round(u.fiyat*(1-oran/100))
+      : Math.round(u.fiyat*(1+oran/100));
+    await SB.patch('menu','id=eq.'+u.id,{fiyat:yeniFiyat});
+  }
+  btn.disabled=false;btn.textContent='✅ Uygula';
+  document.getElementById('modal-toplu').classList.remove('ak');
+  await menuYonetimYukle();
+  alert(oran+'% '+(tip==='indirim'?'indirim':'zam')+' uygulandı!');
+}
+
+function topluIslemAc(){
+  document.getElementById('modal-toplu').classList.add('ak');
+}
+async function topluUygula(){
+  var kat=document.getElementById('toplu-kat').value;
+  var tip=document.getElementById('toplu-tip').value;
+  var oran=parseFloat(document.getElementById('toplu-oran').value)||0;
+  if(!oran||oran<=0||oran>=100){alert('Gecerli oran girin (1-99)');return;}
+  var liste=kat==='hepsi'?menuListesi:menuListesi.filter(function(u){return u.kat===kat;});
+  if(!liste.length){alert('Urun bulunamadi');return;}
+  if(!confirm(liste.length+' urune %'+oran+' '+(tip==='indirim'?'indirim':'zam')+' uygulanacak. Emin misiniz?'))return;
+  for(var i=0;i<liste.length;i++){
+    var u=liste[i];
+    var yeni=tip==='indirim'?Math.round(u.fiyat*(1-oran/100)):Math.round(u.fiyat*(1+oran/100));
+    if(yeni<1)yeni=1;
+    await SB.patch('menu','id=eq.'+u.id,{fiyat:yeni});
+  }
+  document.getElementById('modal-toplu').classList.remove('ak');
+  await menuYonetimYukle();
+  alert('%'+oran+' '+(tip==='indirim'?'indirim':'zam')+' uygulandi!');
+}
+
+async function analitikYukle(){
+  var ecEl=document.getElementById('an-enCok');
+  var syEl=document.getElementById('an-saatlik');
+  var gpEl=document.getElementById('an-garson');
+  if(ecEl)ecEl.innerHTML='<div style="color:var(--si);font-size:12px">Yukleniyor...</div>';
+  var od=await SB.get('odemeler','order=created_at.desc&limit=500');
+  var sp=await SB.get('siparisler','order=created_at.desc&limit=500');
+  od=od||[];sp=sp||[];
+  var uc={};
+  sp.forEach(function(x){var u=x.urunler;if(!u)return;if(typeof u==='string'){try{u=JSON.parse(u)}catch(e){return;}}if(!Array.isArray(u))return;u.forEach(function(r){var a=r.ad||'?';if(!uc[a])uc[a]=0;uc[a]+=(r.adet||1);});});
+  var ec=Object.entries(uc).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+  var mx=ec.length?ec[0][1]:1;
+  var rk=['#D4A017','#E8952A','#2D6A2D','#3498db','#8e44ad','#e74c3c','#1abc9c','#f39c12','#2980b9','#27ae60'];
+  if(ecEl)ecEl.innerHTML=ec.length?ec.map(function(e,i){var y=Math.round(e[1]/mx*100);return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:700;color:var(--s)">'+(i+1)+'. '+e[0]+'</span><span style="font-size:11px;color:var(--si)">'+e[1]+' adet</span></div><div style="background:var(--bd);border-radius:6px;height:10px"><div style="width:'+y+'%;height:100%;background:'+rk[i%10]+';border-radius:6px"></div></div></div>';}).join(''):'<div style="color:var(--si);font-size:12px">Veri yok</div>';
+  var sh=new Array(24).fill(0);
+  od.forEach(function(o){if(!o.created_at)return;sh[new Date(o.created_at).getHours()]+=parseFloat(o.toplam||0);});
+  var mc=Math.max.apply(null,sh)||1;
+  var html='<div style="display:flex;align-items:flex-end;gap:2px;height:80px">';
+  for(var i=0;i<24;i++){var y=Math.round(sh[i]/mc*70);html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end"><div style="width:100%;background:'+(i>=10&&i<=22?'var(--al)':'var(--bd)')+';border-radius:2px 2px 0 0;height:'+y+'px"></div><div style="font-size:7px;color:var(--si);margin-top:2px">'+(i%4===0?i:'')+'</div></div>';}
+  html+='</div><div style="font-size:11px;color:var(--si);text-align:center;margin-top:6px">En yogun: '+sh.indexOf(Math.max.apply(null,sh))+':00</div>';
+  if(syEl)syEl.innerHTML=html;
+  var gd={};
+  od.forEach(function(o){var g=o.garson_ad||'-';if(!gd[g])gd[g]={n:0,c:0};gd[g].n++;gd[g].c+=parseFloat(o.toplam||0);});
+  var gl=Object.entries(gd).sort(function(a,b){return b[1].c-a[1].c;});
+  if(gpEl)gpEl.innerHTML=gl.length?gl.map(function(g,i){var r=['🥇','🥈','🥉'][i]||'⭐';return '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--ik);border-radius:10px;margin-bottom:6px"><div style="font-size:20px">'+r+'</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--s)">'+g[0]+'</div><div style="font-size:11px;color:var(--si)">'+g[1].n+' odeme</div></div><div style="font-size:15px;font-weight:800;color:var(--al)">'+Math.round(g[1].c).toLocaleString('tr-TR')+' TL</div></div>';}).join(''):'<div style="color:var(--si);font-size:12px">Veri yok</div>';
+}
+function kSure(dk){var el=document.getElementById('kamp-sure');if(el)el.value=dk;}
+async function kampanyaTabYukle(){
+  var d=await SB.get('ayarlar','key=eq.kampanya');
+  var el=document.getElementById('kamp-durum');
+  if(d&&d.length&&d[0].value&&d[0].value.aktif){
+    var k=d[0].value;var kalan=Math.max(0,Math.round((new Date(k.bitis)-new Date())/60000));
+    if(el){el.textContent='Aktif: '+k.mesaj+' (%'+k.oran+' - '+kalan+' dk kaldi)';el.style.color='green';}
+    var mel=document.getElementById('kamp-mesaj');if(mel)mel.value=k.mesaj||'';
+    var oel=document.getElementById('kamp-oran');if(oel)oel.value=k.oran||'';
+    var kel=document.getElementById('kamp-kat');if(kel)kel.value=k.kat||'hepsi';
+  }else if(el){el.textContent='Aktif kampanya yok.';el.style.color='var(--si)';}
+  var data=await SB.get('menu','aktif=eq.true&order=kat.asc,ad.asc');
+  var cuEl=document.getElementById('combo-urun-list');
+  if(cuEl&&data)cuEl.innerHTML=data.map(function(u){return '<label style="display:flex;align-items:center;gap:6px;padding:4px;cursor:pointer"><input type="checkbox" value="'+u.id+'" onchange="comboToggle(this)"><span style="font-size:12px">'+(u.em||'')+' '+u.ad+' ('+u.kat+') - '+u.fiyat+' TL</span></label>';}).join('');
+  var cd=await SB.get('ayarlar','key=eq.combo_menu');
+  var combolar=(cd&&cd.length&&cd[0].value)?cd[0].value.combolar||[]:[];
+  var mcEl=document.getElementById('mevcut-combolar');
+  if(!mcEl)return;
+  mcEl.innerHTML=combolar.length?combolar.map(function(c,i){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--ik);border-radius:8px;margin-bottom:6px"><div><b style="font-size:12px">'+c.ad+'</b><div style="font-size:11px;color:var(--si)">'+c.aciklama+'</div></div><div style="display:flex;align-items:center;gap:6px"><b style="color:var(--bas)">'+c.indirimFiyat+' TL</b><button onclick="comboSil('+i+')" style="padding:3px 7px;border-radius:6px;background:var(--tac);color:var(--teh);border:none;cursor:pointer;font-size:11px">Sil</button></div></div>';}).join(''):'<div style="font-size:12px;color:var(--si)">Henuz combo yok</div>';
+}
+async function kampBaslat(){
+  var m=(document.getElementById('kamp-mesaj').value||'').trim();
+  var k=document.getElementById('kamp-kat').value;
+  var o=parseInt(document.getElementById('kamp-oran').value)||0;
+  var sr=parseInt(document.getElementById('kamp-sure').value)||0;
+  if(!m||!o||!sr){alert('Tum alanlari doldurun');return;}
+  var b=new Date(Date.now()+sr*60*1000).toISOString();
+  var kp={aktif:true,mesaj:m,kat:k,oran:o,bitis:b};
+  await SB.patch('ayarlar','key=eq.kampanya',{value:kp}).catch(async function(){await SB.post('ayarlar',{key:'kampanya',value:kp});});
+  var el=document.getElementById('kamp-durum');
+  if(el){el.textContent='Kampanya basladi! '+sr+' dk.';el.style.color='green';}
+  toast('Kampanya basladi!');
+}
+async function kampDurdur(){
+  await SB.patch('ayarlar','key=eq.kampanya',{value:{aktif:false}}).catch(function(){});
+  var el=document.getElementById('kamp-durum');
+  if(el){el.textContent='Kampanya durduruldu.';el.style.color='red';}
+  toast('Kampanya durduruldu.');
+}
+var comboSecili=[];
+function comboToggle(cb){var id=cb.value;var idx=comboSecili.indexOf(id);if(cb.checked&&idx<0)comboSecili.push(id);else if(!cb.checked&&idx>=0)comboSecili.splice(idx,1);}
+async function comboKaydet(){
+  var ad=(document.getElementById('combo-ad').value||'').trim();
+  var acik=(document.getElementById('combo-acik').value||'').trim();
+  var normal=parseFloat(document.getElementById('combo-normal').value)||0;
+  var indirim=parseFloat(document.getElementById('combo-indirim').value)||0;
+  if(!ad||!comboSecili.length){alert('Ad ve en az 1 urun secin');return;}
+  var cd=await SB.get('ayarlar','key=eq.combo_menu');
+  var combolar=(cd&&cd.length&&cd[0].value)?cd[0].value.combolar||[]:[];
+  combolar.push({ad:ad,aciklama:acik,normalFiyat:normal,indirimFiyat:indirim,urunler:comboSecili.slice()});
+  await SB.patch('ayarlar','key=eq.combo_menu',{value:{combolar:combolar}}).catch(async function(){await SB.post('ayarlar',{key:'combo_menu',value:{combolar:combolar}});});
+  alert('Combo kaydedildi!');comboSecili=[];kampanyaTabYukle();
+}
+async function comboSil(idx){
+  var cd=await SB.get('ayarlar','key=eq.combo_menu');
+  var combolar=(cd&&cd.length&&cd[0].value)?cd[0].value.combolar||[]:[];
+  combolar.splice(idx,1);
+  await SB.patch('ayarlar','key=eq.combo_menu',{value:{combolar:combolar}});
+  kampanyaTabYukle();
+}
+
+</script>
+
+
+<!-- TOPLU İNDİRİM/ZAM MODAL -->
 <div class="modal-bg" id="modal-toplu">
   <div class="modal">
     <div class="modal-t">📊 Toplu İndirim / Zam</div>
-    <div class="ing"><div class="ing-l">Kategori</div>
-      <select class="lb-inp" id="toplu-kat" style="flex:1">
+    <div style="margin-bottom:12px;font-size:12px;color:var(--si)">Tüm menüye veya seçili kategoriye uygula</div>
+    <div class="ing">
+      <div class="ing-l">Kategori</div>
+      <select class="inp" id="toplu-kat" style="flex:1">
         <option value="hepsi">Tüm Menü</option>
-        <option value="Izgara">Izgara</option><option value="Pide">Pide</option>
-        <option value="Corbalar">Çorbalar</option><option value="Tatlilar">Tatlılar</option>
+        <option value="Izgara">Izgara</option>
+        <option value="Pide">Pide</option>
+        <option value="Corbalar">Çorbalar</option>
+        <option value="Tatlilar">Tatlılar</option>
         <option value="Icecekler">İçecekler</option>
       </select>
     </div>
-    <div class="ing"><div class="ing-l">İşlem</div>
-      <select class="lb-inp" id="toplu-tip" style="flex:1">
+    <div class="ing" style="margin-top:8px">
+      <div class="ing-l">İşlem</div>
+      <select class="inp" id="toplu-tip" style="flex:1">
         <option value="indirim">İndirim (azalt)</option>
         <option value="zam">Zam (artır)</option>
       </select>
     </div>
-    <div class="ing"><div class="ing-l">Oran (%)</div><input class="lb-inp" id="toplu-oran" type="number" min="1" max="99" placeholder="10" style="width:100px"></div>
-    <div class="btn-row">
+    <div class="ing" style="margin-top:8px">
+      <div class="ing-l">Oran (%)</div>
+      <input type="number" class="inp" id="toplu-oran" placeholder="10" min="1" max="99" style="width:100px">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
       <button class="btn yes" onclick="topluUygula()">✅ Uygula</button>
       <button class="btn" onclick="document.getElementById('modal-toplu').classList.remove('ak')">İptal</button>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
 
-<script>
-var SURL="https://vdrjyngywjzuniwvsjtk.supabase.co";
-var SKEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcmp5bmd5d2p6dW5pd3ZzanRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Nzc4MTMsImV4cCI6MjA5MDQ1MzgxM30.pD2vQT62f7XM7yFe_yuddPhJhfRg_1biCZ8ImV4LRjg";
-var SH={"apikey":SKEY,"Authorization":"Bearer "+SKEY,"Content-Type":"application/json"};
-
-async function sbGet(t,q){try{var r=await fetch(SURL+"/rest/v1/"+t+"?"+(q||""),{headers:SH});return r.ok?r.json():[]}catch(e){return[]}}
-async function sbPost(t,d){try{var r=await fetch(SURL+"/rest/v1/"+t,{method:"POST",headers:Object.assign({},SH,{"Prefer":"return=representation"}),body:JSON.stringify(d)});return r.json()}catch(e){return null}}
-async function sbPatch(t,q,d){try{var r=await fetch(SURL+"/rest/v1/"+t+"?"+q,{method:"PATCH",headers:Object.assign({},SH,{"Prefer":"return=representation"}),body:JSON.stringify(d)});return r.json()}catch(e){return null}}
-async function sbDel(t,q){try{await fetch(SURL+"/rest/v1/"+t+"?"+q,{method:"DELETE",headers:SH})}catch(e){}}
-
-var menuListesi=[],garsonListesi=[],aktifMenuId=null,aktifGarsonId=null,polling=null,comboSecili=[];
-
-async function girisYap(){
-  var kadi=document.getElementById("p-kadi").value.trim();
-  var sifre=document.getElementById("p-sifre").value.trim();
-  var hata=document.getElementById("giris-hata");
-  hata.style.display="none";
-  var ok=false;
-  try{
-    var ay=await sbGet("ayarlar","key=eq.patron_giris");
-    var dk="patron",ds="1234";
-    if(ay&&ay.length&&ay[0].value){dk=ay[0].value.kullanici||"patron";ds=ay[0].value.sifre||"1234";}
-    ok=(kadi===dk&&sifre===ds);
-  }catch(e){ok=(kadi==="patron"&&sifre==="1234");}
-  if(!ok){hata.style.display="block";return;}
-  document.getElementById("giris").style.display="none";
-  document.getElementById("panel").style.display="flex";
-  document.getElementById("panel").style.flexDirection="column";
-  yukle();
-  polling=setInterval(yukle,5000);
-  restoranYukle();
-}
-
-function cikis(){
-  if(polling){clearInterval(polling);polling=null;}
-  document.getElementById("panel").style.display="none";
-  document.getElementById("giris").style.display="flex";
-}
-
-async function yukle(){
-  var masalar=await sbGet("masalar","order=no.asc");
-  var odemeler=await sbGet("odemeler","order=created_at.desc&limit=200");
-  var bugun=new Date().toISOString().slice(0,10);
-  var ciro=(odemeler||[]).filter(function(o){return(o.created_at||"").slice(0,10)===bugun;}).reduce(function(s,o){return s+parseFloat(o.toplam||0);},0);
-  var dolu=0,bekl=0,html="";
-  (masalar||[]).forEach(function(m){
-    var d=m.durum||"bos";
-    if(d!=="bos")dolu++;
-    if(d==="bekliyor")bekl++;
-    var g=m.garson_ad&&m.garson_ad!=="-"?m.garson_ad.split(" ")[0]:"";
-    html+='<div class="mk '+d+'"><div class="mk-no">'+m.no+'</div>'+(g&&d!=="bos"?'<div class="mk-g">'+g+'</div>':"")+'</div>';
-  });
-  document.getElementById("st-dolu").textContent=dolu;
-  document.getElementById("st-bekleyen").textContent=bekl;
-  document.getElementById("st-ciro").textContent="₺"+Math.round(ciro).toLocaleString("tr-TR");
-  document.getElementById("masa-grid").innerHTML=html;
-}
-
-function tabGec(tab,el){
-  document.querySelectorAll(".tab-btn").forEach(function(b){b.classList.remove("ak");});
-  if(el)el.classList.add("ak");
-  document.querySelectorAll(".tp").forEach(function(t){t.classList.remove("ak");});
-  var tp=document.getElementById("tp-"+tab);
-  if(tp)tp.classList.add("ak");
-  if(tab==="menu")menuYukle();
-  if(tab==="garsonlar")garsonYukle();
-  if(tab==="qr")qrYukle();
-  if(tab==="analitik")analitikYukle();
-  if(tab==="kampanya")kampanyaTabYukle();
-}
-
-// MENÜ
-async function menuYukle(){
-  var data=await sbGet("menu","order=kat.asc,ad.asc");
-  if(data)menuListesi=data;
-  menuRender();
-}
-
-function menuRender(){
-  document.getElementById("menu-liste").innerHTML=menuListesi.map(function(u){
-    var kar=u.maliyet>0?Math.round((u.fiyat-u.maliyet)/u.fiyat*100):0;
-    var gorsel=u.image_url?'<img src="'+u.image_url+'" width="44" height="44" style="border-radius:8px;object-fit:cover;flex-shrink:0">':'<div style="font-size:22px;flex-shrink:0;width:44px;text-align:center">'+(u.em||"🍽️")+"</div>";
-    return '<div class="menu-satir">'+gorsel
-      +'<div class="menu-bilgi"><div class="menu-ad">'+u.ad+'</div>'
-      +'<div class="menu-alt">₺'+u.maliyet+' maliyet · %'+kar+' kar'+(u.kalori?' · '+u.kalori+'kcal':'')+'</div></div>'
-      +'<div class="menu-fiyat">₺'+u.fiyat+'</div>'
-      +'<button class="tog '+(u.aktif?'ak':'pas')+'" data-id="'+u.id+'" data-aktif="'+u.aktif+'" onclick="menuToggle(this)">'+(u.aktif?"✓":"✗")+'</button>'
-      +'<button class="edit-btn" data-id="'+u.id+'" onclick="menuDuzenle(this.dataset.id)">✏️</button>'
-      +'<button class="del-btn" data-id="'+u.id+'" onclick="menuSil(this.dataset.id)">🗑️</button>'
-      +'</div>';
-  }).join("");
-}
-
-function menuModalAc(){aktifMenuId=null;document.getElementById("modal-menu-t").textContent="Yeni Ürün";["mu-ad","mu-em","mu-resim"].forEach(function(id){document.getElementById(id).value="";});["mu-fiyat","mu-maliyet","mu-kalori"].forEach(function(id){document.getElementById(id).value="";});document.getElementById("modal-menu").classList.add("ak");}
-
-function menuDuzenle(id){
-  var u=menuListesi.find(function(m){return m.id===id;});
-  if(!u)return;
-  aktifMenuId=id;
-  document.getElementById("modal-menu-t").textContent="Ürünü Düzenle";
-  document.getElementById("mu-ad").value=u.ad||"";
-  document.getElementById("mu-em").value=u.em||"";
-  document.getElementById("mu-kat").value=u.kat||"Izgara";
-  document.getElementById("mu-fiyat").value=u.fiyat||0;
-  document.getElementById("mu-maliyet").value=u.maliyet||0;
-  document.getElementById("mu-kalori").value=u.kalori||"";
-  document.getElementById("mu-resim").value=u.image_url||"";
-  document.getElementById("modal-menu").classList.add("ak");
-}
-
-async function menuKaydet(){
-  var ad=document.getElementById("mu-ad").value.trim();
-  var em=document.getElementById("mu-em").value.trim()||"🍽️";
-  var kat=document.getElementById("mu-kat").value;
-  var fiyat=parseFloat(document.getElementById("mu-fiyat").value)||0;
-  var maliyet=parseFloat(document.getElementById("mu-maliyet").value)||0;
-  var kalori=parseInt(document.getElementById("mu-kalori").value)||null;
-  var resim=document.getElementById("mu-resim").value.trim()||null;
-  if(!ad||!fiyat){alert("Ad ve fiyat zorunlu");return;}
-  if(aktifMenuId){await sbPatch("menu","id=eq."+aktifMenuId,{ad:ad,em:em,kat:kat,fiyat:fiyat,maliyet:maliyet,kalori:kalori,image_url:resim});}
-  else{await sbPost("menu",{id:"m_"+Date.now(),ad:ad,em:em,kat:kat,fiyat:fiyat,maliyet:maliyet,aktif:true,kalori:kalori,image_url:resim});}
-  document.getElementById("modal-menu").classList.remove("ak");
-  await menuYukle();
-  toast("Kaydedildi!");
-}
-
-async function menuToggle(btn){
-  var id=btn.getAttribute("data-id");
-  var aktif=btn.getAttribute("data-aktif")==="true";
-  await sbPatch("menu","id=eq."+id,{aktif:!aktif});
-  await menuYukle();
-}
-
-async function menuSil(id){
-  if(!confirm("Silmek istediğinize emin misiniz?"))return;
-  await sbDel("menu","id=eq."+id);
-  await menuYukle();
-}
-
-function topluModalAc(){document.getElementById("modal-toplu").classList.add("ak");}
-
-async function topluUygula(){
-  var kat=document.getElementById("toplu-kat").value;
-  var tip=document.getElementById("toplu-tip").value;
-  var oran=parseFloat(document.getElementById("toplu-oran").value)||0;
-  if(!oran){alert("Oran girin");return;}
-  var liste=kat==="hepsi"?menuListesi:menuListesi.filter(function(u){return u.kat===kat;});
-  if(!confirm(liste.length+" ürüne %"+oran+" "+tip+" uygulanacak. Emin misiniz?"))return;
-  for(var i=0;i<liste.length;i++){
-    var yeni=tip==="indirim"?Math.round(liste[i].fiyat*(1-oran/100)):Math.round(liste[i].fiyat*(1+oran/100));
-    if(yeni<1)yeni=1;
-    await sbPatch("menu","id=eq."+liste[i].id,{fiyat:yeni});
-  }
-  document.getElementById("modal-toplu").classList.remove("ak");
-  await menuYukle();
-  toast("Uygulandı!");
-}
-
-// GARSONLAR
-async function garsonYukle(){
-  var data=await sbGet("garsonlar","order=id.asc");
-  if(data)garsonListesi=data;
-  garsonRender();
-}
-
-function garsonRender(){
-  document.getElementById("garson-liste").innerHTML=garsonListesi.map(function(g){
-    return '<div class="garson-satir">'
-      +'<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--s),var(--sm));color:var(--al);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0">'+(g.harf||g.ad[0])+'</div>'
-      +'<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--s)">'+g.ad+'</div><div style="font-size:10px;color:var(--si)">Şifre: '+g.sifre+'</div></div>'
-      +'<button class="edit-btn" data-id="'+g.id+'" onclick="garsonDuzenle(this.dataset.id)">✏️</button>'
-      +'<button class="del-btn" data-id="'+g.id+'" onclick="garsonSil(this.dataset.id)">🗑️</button>'
-      +'</div>';
-  }).join("");
-}
-
-function garsonModalAc(){aktifGarsonId=null;document.getElementById("modal-garson-t").textContent="Yeni Garson";["gu-ad","gu-harf","gu-sifre"].forEach(function(id){document.getElementById(id).value="";});document.getElementById("modal-garson").classList.add("ak");}
-
-function garsonDuzenle(id){
-  var g=garsonListesi.find(function(x){return String(x.id)===String(id);});
-  if(!g)return;
-  aktifGarsonId=id;
-  document.getElementById("modal-garson-t").textContent="Garson Düzenle";
-  document.getElementById("gu-ad").value=g.ad||"";
-  document.getElementById("gu-harf").value=g.harf||"";
-  document.getElementById("gu-sifre").value=g.sifre||"";
-  document.getElementById("modal-garson").classList.add("ak");
-}
-
-async function garsonKaydet(){
-  var ad=document.getElementById("gu-ad").value.trim();
-  var harf=document.getElementById("gu-harf").value.trim();
-  var sifre=document.getElementById("gu-sifre").value.trim();
-  if(!ad||!sifre){alert("Ad ve şifre zorunlu");return;}
-  if(aktifGarsonId){await sbPatch("garsonlar","id=eq."+aktifGarsonId,{ad:ad,harf:harf,sifre:sifre});}
-  else{await sbPost("garsonlar",{ad:ad,harf:harf,sifre:sifre});}
-  document.getElementById("modal-garson").classList.remove("ak");
-  await garsonYukle();
-  toast("Kaydedildi!");
-}
-
-async function garsonSil(id){
-  if(!confirm("Silmek istediğinize emin misiniz?"))return;
-  await sbDel("garsonlar","id=eq."+id);
-  await garsonYukle();
-}
-
-// QR
-async function qrYukle(){
-  var ay=await sbGet("ayarlar","key=eq.restoran_bilgi");
-  var masaSayisi=20;
-  if(ay&&ay.length&&ay[0].value)masaSayisi=ay[0].value.masa||20;
-  var grid=document.getElementById("qr-grid");
-  grid.innerHTML="";
-  for(var i=1;i<=masaSayisi;i++){
-    var url="https://meers.vercel.app/musteri.html?masa="+i;
-    var div=document.createElement("div");
-    div.className="qr-k";
-    div.innerHTML='<div class="qr-no">'+i+'</div><div class="qr-url">Kopyala</div>';
-    div.setAttribute("data-url",url);
-    div.onclick=(function(u,n){return function(){navigator.clipboard.writeText(u).then(function(){toast("Masa "+n+" linki kopyalandı!");}).catch(function(){toast(u);});}})(url,i);
-    grid.appendChild(div);
-  }
-}
-
-// ANALİTİK
-async function analitikYukle(){
-  var ecEl=document.getElementById("en-cok-satan");
-  var syEl=document.getElementById("saatlik-yogunluk");
-  var gpEl=document.getElementById("garson-performans");
-
-  var od=await sbGet("odemeler","order=created_at.desc&limit=500");
-  var sp=await sbGet("siparisler","order=created_at.desc&limit=500");
-  od=od||[];sp=sp||[];
-
-  // En çok satan
-  var uc={};
-  sp.forEach(function(x){
-    var u=x.urunler;
-    if(!u)return;
-    if(typeof u==="string"){try{u=JSON.parse(u)}catch(e){return;}}
-    if(!Array.isArray(u))return;
-    u.forEach(function(r){var a=r.ad||String(r);if(!uc[a])uc[a]=0;uc[a]+=(r.adet||1);});
-  });
-  var ec=Object.entries(uc).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
-  var mx=ec.length?ec[0][1]:1;
-  var rk=["#D4A017","#E8952A","#2D6A2D","#3498db","#8e44ad","#e74c3c","#1abc9c","#f39c12","#2980b9","#27ae60"];
-  if(ecEl)ecEl.innerHTML=ec.length?ec.map(function(e,i){
-    var y=Math.round(e[1]/mx*100);
-    return '<div style="margin-bottom:10px">'
-      +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
-      +'<span style="font-size:12px;font-weight:700;color:var(--s)">'+(i+1)+". "+e[0]+"</span>"
-      +'<span style="font-size:11px;color:var(--si)">'+e[1]+" adet</span></div>"
-      +'<div class="bar-wrap"><div class="bar-ic" style="width:'+y+"%;background:"+rk[i%10]+'"></div></div></div>';
-  }).join(""):'<div style="color:var(--si);font-size:12px">Henüz sipariş verisi yok</div>';
-
-  // Saatlik yoğunluk
-  var sh=new Array(24).fill(0);
-  od.forEach(function(o){if(!o.created_at)return;sh[new Date(o.created_at).getHours()]+=parseFloat(o.toplam||0);});
-  var mc=Math.max.apply(null,sh)||1;
-  var html='<div style="display:flex;align-items:flex-end;gap:2px;height:80px">';
-  for(var i=0;i<24;i++){
-    var y=Math.round(sh[i]/mc*70);
-    html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">'
-      +'<div style="width:100%;background:'+(i>=10&&i<=22?"var(--al)":"var(--bd)")+';border-radius:2px 2px 0 0;height:'+y+'px"></div>'
-      +'<div style="font-size:7px;color:var(--si);margin-top:2px">'+(i%4===0?i:"")+'</div></div>';
-  }
-  var enYogun=sh.indexOf(Math.max.apply(null,sh));
-  html+='</div><div style="font-size:11px;color:var(--si);text-align:center;margin-top:6px">En yoğun: '+enYogun+':00</div>';
-  if(syEl)syEl.innerHTML=html;
-
-  // Garson performansı
-  var gd={};
-  od.forEach(function(o){var g=o.garson_ad||"-";if(!gd[g])gd[g]={n:0,c:0};gd[g].n++;gd[g].c+=parseFloat(o.toplam||0);});
-  var gl=Object.entries(gd).sort(function(a,b){return b[1].c-a[1].c;});
-  if(gpEl)gpEl.innerHTML=gl.length?gl.map(function(g,i){
-    var r=["🥇","🥈","🥉"][i]||"⭐";
-    return '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--ik);border-radius:10px;margin-bottom:6px">'
-      +'<div style="font-size:20px">'+r+"</div>"
-      +'<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--s)">'+g[0]+"</div>"
-      +'<div style="font-size:11px;color:var(--si)">'+g[1].n+" ödeme</div></div>"
-      +'<div style="font-size:15px;font-weight:800;color:var(--al)">'+Math.round(g[1].c).toLocaleString("tr-TR")+" ₺</div></div>";
-  }).join(""):'<div style="color:var(--si);font-size:12px">Henüz ödeme verisi yok</div>';
-}
-
-// KAMPANYA
-function kSure(dk){var el=document.getElementById("kamp-sure");if(el)el.value=dk;}
-
-async function kampanyaTabYukle(){
-  // Mevcut kampanya durumunu göster
-  var d=await sbGet("ayarlar","key=eq.kampanya");
-  var el=document.getElementById("kamp-durum");
-  if(d&&d.length&&d[0].value&&d[0].value.aktif){
-    var k=d[0].value;
-    var bitis=new Date(k.bitis);
-    var kalan=Math.max(0,Math.round((bitis-new Date())/60000));
-    if(el){el.style.display="block";el.textContent="✅ Aktif: "+k.mesaj+" (%"+k.oran+" — "+kalan+" dk kaldı)";el.style.color="green";}
-    var mel=document.getElementById("kamp-mesaj");if(mel)mel.value=k.mesaj||"";
-    var oel=document.getElementById("kamp-oran");if(oel)oel.value=k.oran||"";
-    var kel=document.getElementById("kamp-kat");if(kel)kel.value=k.kat||"hepsi";
-  } else {
-    if(el){el.style.display="block";el.textContent="Aktif kampanya yok.";el.style.color="var(--si)";}
-  }
-  // Combo ürün listesi
-  var data=await sbGet("menu","aktif=eq.true&order=kat.asc,ad.asc");
-  var cuEl=document.getElementById("combo-urun-list");
-  if(cuEl&&data)cuEl.innerHTML=data.map(function(u){
-    return '<label style="display:flex;align-items:center;gap:6px;padding:4px;cursor:pointer">'
-      +'<input type="checkbox" value="'+u.id+'" onchange="comboToggle(this)">'
-      +'<span style="font-size:12px">'+(u.em||"")+" "+u.ad+" ("+u.kat+") — ₺"+u.fiyat+"</span></label>";
-  }).join("");
-  // Mevcut combolar
-  var cd=await sbGet("ayarlar","key=eq.combo_menu");
-  var combolar=(cd&&cd.length&&cd[0].value)?cd[0].value.combolar||[]:[];
-  var mcEl=document.getElementById("mevcut-combolar");
-  if(!mcEl)return;
-  if(!combolar.length){mcEl.innerHTML='<div style="font-size:12px;color:var(--si)">Henüz combo yok</div>';return;}
-  mcEl.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--si);margin-bottom:6px">Mevcut Combolar:</div>'
-    +combolar.map(function(c,i){
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--ik);border-radius:8px;margin-bottom:6px">'
-        +'<div><b style="font-size:12px">'+c.ad+'</b><div style="font-size:11px;color:var(--si)">'+c.aciklama+'</div></div>'
-        +'<div style="display:flex;align-items:center;gap:6px"><b style="color:var(--bas)">₺'+c.indirimFiyat+'</b>'
-        +'<button onclick="comboSil('+i+')" style="padding:3px 7px;border-radius:6px;background:var(--tac);color:var(--teh);border:none;cursor:pointer;font-size:11px">Sil</button>'
-        +'</div></div>';
-    }).join("");
-}
-
-async function kampBaslat(){
-  var mesaj=(document.getElementById("kamp-mesaj").value||"").trim();
-  var kat=document.getElementById("kamp-kat").value;
-  var oran=parseInt(document.getElementById("kamp-oran").value)||0;
-  var sure=parseInt(document.getElementById("kamp-sure").value)||0;
-  if(!mesaj||!oran||!sure){alert("Tüm alanları doldurun");return;}
-  var bitis=new Date(Date.now()+sure*60*1000).toISOString();
-  var k={aktif:true,mesaj:mesaj,kat:kat,oran:oran,bitis:bitis};
-  await sbPatch("ayarlar","key=eq.kampanya",{value:k}).catch(async function(){await sbPost("ayarlar",{key:"kampanya",value:k});});
-  var el=document.getElementById("kamp-durum");
-  if(el){el.style.display="block";el.textContent="✅ Kampanya başladı! "+sure+" dk sürecek.";el.style.color="green";}
-  toast("Kampanya başlatıldı!");
-}
-
-async function kampDurdur(){
-  await sbPatch("ayarlar","key=eq.kampanya",{value:{aktif:false}}).catch(function(){});
-  var el=document.getElementById("kamp-durum");
-  if(el){el.style.display="block";el.textContent="⏹ Kampanya durduruldu.";el.style.color="red";}
-  toast("Kampanya durduruldu.");
-}
-
-function comboToggle(cb){
-  var id=cb.value;
-  var idx=comboSecili.indexOf(id);
-  if(cb.checked&&idx<0)comboSecili.push(id);
-  else if(!cb.checked&&idx>=0)comboSecili.splice(idx,1);
-}
-
-async function comboKaydet(){
-  var ad=(document.getElementById("combo-ad").value||"").trim();
-  var acik=(document.getElementById("combo-acik").value||"").trim();
-  var normal=parseFloat(document.getElementById("combo-normal").value)||0;
-  var indirim=parseFloat(document.getElementById("combo-indirim").value)||0;
-  if(!ad||!comboSecili.length){alert("Ad ve en az 1 ürün seçin");return;}
-  var cd=await sbGet("ayarlar","key=eq.combo_menu");
-  var combolar=(cd&&cd.length&&cd[0].value)?cd[0].value.combolar||[]:[];
-  combolar.push({ad:ad,aciklama:acik,normalFiyat:normal,indirimFiyat:indirim,urunler:comboSecili.slice()});
-  await sbPatch("ayarlar","key=eq.combo_menu",{value:{combolar:combolar}}).catch(async function(){await sbPost("ayarlar",{key:"combo_menu",value:{combolar:combolar}});});
-  alert("Combo kaydedildi!");
-  comboSecili=[];
-  document.getElementById("combo-ad").value="";
-  document.getElementById("combo-acik").value="";
-  document.getElementById("combo-normal").value="";
-  document.getElementById("combo-indirim").value="";
-  kampanyaTabYukle();
-}
-
-async function comboSil(idx){
-  var cd=await sbGet("ayarlar","key=eq.combo_menu");
-  var combolar=(cd&&cd.length&&cd[0].value)?cd[0].value.combolar||[]:[];
-  combolar.splice(idx,1);
-  await sbPatch("ayarlar","key=eq.combo_menu",{value:{combolar:combolar}});
-  kampanyaTabYukle();
-}
-
-// AYARLAR
-async function restoranYukle(){
-  var d=await sbGet("ayarlar","key=eq.restoran_bilgi");
-  if(d&&d.length&&d[0].value){
-    var el=document.getElementById("r-ad");if(el)el.value=d[0].value.ad||"";
-    var ml=document.getElementById("r-masa");if(ml)ml.value=d[0].value.masa||20;
-  }
-}
-
-async function restoranKaydet(){
-  var ad=(document.getElementById("r-ad").value||"").trim();
-  var masa=parseInt(document.getElementById("r-masa").value)||20;
-  if(!ad){alert("Restoran adı girin");return;}
-  await sbPatch("ayarlar","key=eq.restoran_bilgi",{value:{ad:ad,masa:masa}}).catch(async function(){await sbPost("ayarlar",{key:"restoran_bilgi",value:{ad:ad,masa:masa}});});
-  toast("Kaydedildi!");
-}
-
-async function patronSifreKaydet(){
-  var kadi=(document.getElementById("ay-kadi").value||"").trim();
-  var sifre=(document.getElementById("ay-sifre").value||"").trim();
-  if(!kadi||!sifre){alert("Kullanıcı adı ve şifre girin");return;}
-  await sbPatch("ayarlar","key=eq.patron_giris",{value:{kullanici:kadi,sifre:sifre}}).catch(async function(){await sbPost("ayarlar",{key:"patron_giris",value:{kullanici:kadi,sifre:sifre}});});
-  toast("Şifre güncellendi!");
-}
-
-var toastT;
-function toast(msg){
-  var t=document.getElementById("toast");
-  t.textContent=msg;t.style.display="block";
-  clearTimeout(toastT);
-  toastT=setTimeout(function(){t.style.display="none";},3000);
-}
-</script>
+<div class="modal-bg" id="modal-toplu">
+  <div class="modal">
+    <div class="modal-t">📊 Toplu İndirim / Zam</div>
+    <div style="margin-bottom:12px;font-size:12px;color:var(--si)">Tüm menüye veya kategoriye uygula</div>
+    <div class="ing"><div class="ing-l">Kategori</div>
+      <select class="inp lb-inp" id="toplu-kat" style="flex:1">
+        <option value="hepsi">Tüm Menü</option>
+        <option value="Izgara">Izgara</option>
+        <option value="Pide">Pide</option>
+        <option value="Corbalar">Çorbalar</option>
+        <option value="Tatlilar">Tatlılar</option>
+        <option value="Icecekler">İçecekler</option>
+      </select>
+    </div>
+    <div class="ing" style="margin-top:8px"><div class="ing-l">İşlem</div>
+      <select class="inp lb-inp" id="toplu-tip" style="flex:1">
+        <option value="indirim">İndirim (azalt)</option>
+        <option value="zam">Zam (artır)</option>
+      </select>
+    </div>
+    <div class="ing" style="margin-top:8px"><div class="ing-l">Oran (%)</div>
+      <input type="number" class="inp lb-inp" id="toplu-oran" placeholder="10" min="1" max="99" style="width:100px">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+      <button class="btn yes" onclick="topluUygula()">✅ Uygula</button>
+      <button class="btn" onclick="document.getElementById('modal-toplu').classList.remove('ak')">İptal</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
