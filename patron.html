@@ -12,7 +12,26 @@
   --s:#1A1A1A;--sm:#2C2C2C;--si:#9A7B65;
   --kr:#FDF6EE;--bd:#EDD9C0;--yz:#FFF8F2;--ik:#F5E6D3;
 }
-bod
+body{font-family:-apple-system,sans-serif;background:var(--kr);min-height:100vh}
+#giris{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--s),var(--sm));padding:20px}
+.gb{background:var(--yz);border-radius:20px;padding:28px;width:100%;max-width:360px;border:1px solid var(--bd)}
+.gb-logo{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--s),var(--sm));border:2px solid var(--al);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 10px}
+.gb-t{font-size:20px;font-weight:800;color:var(--s);text-align:center;margin-bottom:4px}
+.gb-a{font-size:12px;color:var(--si);text-align:center;margin-bottom:18px}
+.inp{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--bd);font-size:13px;color:var(--s);background:var(--yz);outline:none;margin-bottom:8px}
+.inp:focus{border-color:var(--al)}
+.gb-btn{width:100%;padding:13px;border-radius:13px;background:linear-gradient(135deg,var(--s),var(--sm));color:var(--al);border:1.5px solid var(--al);font-size:14px;font-weight:700;cursor:pointer}
+.hata{color:var(--teh);font-size:12px;text-align:center;margin-top:8px;display:none}
+#panel{display:none;flex-direction:column;min-height:100vh}
+.topbar{background:linear-gradient(135deg,var(--s),var(--sm));padding:8px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--al);position:sticky;top:0;z-index:50;gap:8px}
+.tb-t{font-size:13px;font-weight:800;color:#fff;white-space:nowrap;flex-shrink:0}
+.tabs{display:flex;gap:4px;overflow-x:auto;flex-wrap:nowrap}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{padding:5px 10px;border-radius:8px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);white-space:nowrap;flex-shrink:0}
+.tab-btn.ak{background:var(--al);color:var(--s)}
+.cikis-btn{padding:5px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:11px;cursor:pointer;background:none;white-space:nowrap;flex-shrink:0}
+.tp{display:none;padding:12px}
+.tp.ak{display:block}
 .kart{background:var(--yz);border-radius:14px;border:1px solid var(--bd);margin-bottom:12px;overflow:hidden}
 .kart-h{padding:10px 14px;background:linear-gradient(135deg,var(--s),var(--sm));border-bottom:1px solid rgba(212,160,23,.2)}
 .kart-ht{font-size:13px;font-weight:700;color:var(--al)}
@@ -82,6 +101,10 @@ bod
       <button class="tab-btn" onclick="tabGec('menu',this)">🍽️ Menü</button>
       <button class="tab-btn" onclick="tabGec('garsonlar',this)">👨‍🍳 Garson</button>
       <button class="tab-btn" onclick="tabGec('stok',this)">📦 Stok</button>
+      <button class="tab-btn" onclick="tabGec('ciro',this)">📊 Ciro</button>
+      <button class="tab-btn" onclick="tabGec('karsilastirma',this)">🔀 Karş</button>
+      <button class="tab-btn" onclick="tabGec('musteriler',this)">👥 Müşteri</button>
+      <button class="tab-btn" onclick="tabGec('shift',this)">⏰ Shift</button>
       <button class="tab-btn" onclick="tabGec('qr',this)">📱 QR</button>
       <button class="tab-btn" onclick="tabGec('analitik',this)">📊 Analitik</button>
       <button class="tab-btn" onclick="tabGec('kampanya',this)">🔥 Kampanya</button>
@@ -130,6 +153,31 @@ bod
       <div class="kart-h"><div class="kart-ht">📦 Stok Takibi</div></div>
       <div class="kart-body" id="stok-liste"><div style="color:var(--si);font-size:12px">Yükleniyor...</div></div>
     </div>
+  </div>
+
+
+  <!-- CİRO -->
+  <div class="tp" id="tp-ciro">
+    <div class="kart"><div class="kart-h"><div class="kart-ht">📊 Ciro Özeti</div></div>
+    <div class="kart-body" id="ciro-ic"><div style="color:var(--si);font-size:12px">Yükleniyor...</div></div></div>
+  </div>
+
+  <!-- KARŞILAŞTIRMA -->
+  <div class="tp" id="tp-karsilastirma">
+    <div class="kart"><div class="kart-h"><div class="kart-ht">🔀 Dönem Karşılaştırma</div></div>
+    <div class="kart-body" id="kars-ic"><div style="color:var(--si);font-size:12px">Yükleniyor...</div></div></div>
+  </div>
+
+  <!-- MÜŞTERİLER -->
+  <div class="tp" id="tp-musteriler">
+    <div class="kart"><div class="kart-h"><div class="kart-ht">👥 Müşteriler</div></div>
+    <div class="kart-body" id="musteri-ic"><div style="color:var(--si);font-size:12px">Yükleniyor...</div></div></div>
+  </div>
+
+  <!-- SHİFT -->
+  <div class="tp" id="tp-shift">
+    <div class="kart"><div class="kart-h"><div class="kart-ht">⏰ Vardiya Planı</div></div>
+    <div class="kart-body" id="shift-ic"><div style="color:var(--si);font-size:12px">Yükleniyor...</div></div></div>
   </div>
 
   <!-- QR -->
@@ -358,6 +406,10 @@ function tabGec(tab,el){
   if(tab==="qr")qrYukle();
   if(tab==="analitik")analitikYukle();
   if(tab==="kampanya")kampanyaTabYukle();
+  if(tab==="ciro")ciroYukle();
+  if(tab==="karsilastirma")karsilastirmaYukle();
+  if(tab==="musteriler")musterilerYukle();
+  if(tab==="shift")shiftYukle();
 }
 
 async function menuYukle(){
@@ -485,6 +537,95 @@ async function patronSifreKaydet(){var kadi=(document.getElementById("ay-kadi").
 
 var toastT;
 function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.style.display="block";clearTimeout(toastT);toastT=setTimeout(function(){t.style.display="none";},3000);}
+
+async function ciroYukle(){
+  var el=document.getElementById("ciro-ic");
+  if(!el)return;
+  var od=await sbGet("odemeler","order=created_at.desc&limit=500");
+  od=od||[];
+  var bugun=new Date().toISOString().slice(0,10);
+  var bugunCiro=od.filter(function(o){return(o.created_at||"").slice(0,10)===bugun;}).reduce(function(s,o){return s+parseFloat(o.toplam||0);},0);
+  var haftaBas=new Date();haftaBas.setDate(haftaBas.getDate()-7);
+  var haftaCiro=od.filter(function(o){return new Date(o.created_at)>=haftaBas;}).reduce(function(s,o){return s+parseFloat(o.toplam||0);},0);
+  var toplamCiro=od.reduce(function(s,o){return s+parseFloat(o.toplam||0);},0);
+  el.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">'
+    +'<div style="text-align:center;padding:12px;background:var(--ik);border-radius:10px"><div style="font-size:18px;font-weight:800;color:var(--al)">'+Math.round(bugunCiro).toLocaleString("tr-TR")+'</div><div style="font-size:10px;color:var(--si);margin-top:4px">BUGÜN</div></div>'
+    +'<div style="text-align:center;padding:12px;background:var(--ik);border-radius:10px"><div style="font-size:18px;font-weight:800;color:var(--al)">'+Math.round(haftaCiro).toLocaleString("tr-TR")+'</div><div style="font-size:10px;color:var(--si);margin-top:4px">7 GÜN</div></div>'
+    +'<div style="text-align:center;padding:12px;background:var(--ik);border-radius:10px"><div style="font-size:18px;font-weight:800;color:var(--al)">'+Math.round(toplamCiro).toLocaleString("tr-TR")+'</div><div style="font-size:10px;color:var(--si);margin-top:4px">TOPLAM</div></div>'
+    +'</div>'
+    +'<div style="margin-top:12px;font-size:12px;font-weight:700;color:var(--s);margin-bottom:8px">Son Ödemeler</div>'
+    +od.slice(0,20).map(function(o){
+      return '<div style="display:flex;justify-content:space-between;padding:8px;background:var(--yz);border-radius:8px;border:1px solid var(--bd);margin-bottom:4px">'
+        +'<div><div style="font-size:12px;font-weight:700;color:var(--s)">Masa '+o.masa_no+'</div>'
+        +'<div style="font-size:10px;color:var(--si)">'+(o.garson_ad||"-")+'</div></div>'
+        +'<div style="text-align:right"><div style="font-size:13px;font-weight:700;color:var(--al)">'+parseFloat(o.toplam||0).toLocaleString("tr-TR")+" TL</div>"
+        +'<div style="font-size:10px;color:var(--si)">'+(o.created_at||"").slice(11,16)+'</div></div></div>';
+    }).join('');
+}
+
+async function karsilastirmaYukle(){
+  var el=document.getElementById("kars-ic");
+  if(!el)return;
+  var od=await sbGet("odemeler","order=created_at.desc&limit=500");
+  od=od||[];
+  var gunler={};
+  od.forEach(function(o){
+    var gun=(o.created_at||"").slice(0,10);
+    if(!gunler[gun])gunler[gun]=0;
+    gunler[gun]+=parseFloat(o.toplam||0);
+  });
+  var sirali=Object.entries(gunler).sort(function(a,b){return b[0].localeCompare(a[0]);}).slice(0,14);
+  var maxCiro=sirali.length?Math.max.apply(null,sirali.map(function(x){return x[1];})):1;
+  el.innerHTML='<div style="font-size:12px;font-weight:700;color:var(--s);margin-bottom:8px">Son 14 Günlük Ciro</div>'
+    +sirali.map(function(g){
+      var y=Math.round(g[1]/maxCiro*100);
+      return '<div style="margin-bottom:8px">'
+        +'<div style="display:flex;justify-content:space-between;margin-bottom:3px">'
+        +'<span style="font-size:11px;color:var(--s)">'+g[0]+'</span>'
+        +'<span style="font-size:11px;color:var(--al);font-weight:700">'+Math.round(g[1]).toLocaleString("tr-TR")+" TL</span></div>"
+        +'<div style="background:var(--bd);border-radius:4px;height:8px">'
+        +'<div style="width:'+y+'%;height:100%;background:var(--al);border-radius:4px"></div></div></div>';
+    }).join('');
+}
+
+async function musterilerYukle(){
+  var el=document.getElementById("musteri-ic");
+  if(!el)return;
+  var data=await sbGet("musteriler","order=puan.desc&limit=50");
+  data=data||[];
+  if(!data.length){el.innerHTML='<div style="color:var(--si);font-size:12px">Henuz musteri yok</div>';return;}
+  el.innerHTML='<div style="font-size:12px;color:var(--si);margin-bottom:8px">Toplam '+data.length+' müşteri</div>'
+    +data.slice(0,30).map(function(m,i){
+      return '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--yz);border-radius:10px;border:1px solid var(--bd);margin-bottom:6px">'
+        +'<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--s),var(--sm));color:var(--al);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">'+(i+1)+'</div>'
+        +'<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--s)">'+m.tel+'</div>'
+        +'<div style="font-size:10px;color:var(--si)">'+(m.ziyaret||0)+' ziyaret</div></div>'
+        +'<div style="font-size:13px;font-weight:800;color:var(--al)">⭐ '+(m.puan||0)+'</div></div>';
+    }).join('');
+}
+
+async function shiftYukle(){
+  var el=document.getElementById("shift-ic");
+  if(!el)return;
+  var garsonlar=await sbGet("garsonlar","order=id.asc");
+  garsonlar=garsonlar||[];
+  if(!garsonlar.length){el.innerHTML='<div style="color:var(--si);font-size:12px">Garson yok</div>';return;}
+  var shifts=await sbGet("shift_grid","order=created_at.desc&limit=1");
+  var gunler=["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
+  el.innerHTML='<div style="font-size:11px;color:var(--si);margin-bottom:8px">Haftalık Vardiya Planı</div>'
+    +'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px">'
+    +'<tr><th style="padding:4px;text-align:left;color:var(--si)">Garson</th>'
+    +gunler.map(function(g){return '<th style="padding:4px;text-align:center;color:var(--si)">'+g+'</th>';}).join('')
+    +'</tr>'
+    +garsonlar.map(function(g){
+      return '<tr><td style="padding:6px 4px;font-weight:700;color:var(--s)">'+g.ad+'</td>'
+        +gunler.map(function(){
+          return '<td style="padding:2px;text-align:center"><div style="width:28px;height:28px;border-radius:6px;background:var(--bac);border:1px solid var(--bas);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--bas);margin:0 auto">✓</div></td>';
+        }).join('')
+        +'</tr>';
+    }).join('')
+    +'</table></div>';
+}
 </script>
 </body>
 </html>
